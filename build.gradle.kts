@@ -1,10 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "3.1.3"
-    id("io.spring.dependency-management") version "1.1.3"
     kotlin("jvm") version "1.8.22"
-    kotlin("plugin.spring") version "1.8.22"
 }
 
 group = "com.roadlink"
@@ -19,15 +16,52 @@ repositories {
 }
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
+
+
+subprojects {
+    apply(plugin = "org.jetbrains.kotlin.jvm")
+
+    tasks.withType<KotlinCompile> {
+        kotlinOptions {
+            freeCompilerArgs = listOf("-Xjsr305=strict")
+            jvmTarget = "17"
+        }
+    }
+
+    dependencies {
+
+    }
+}
+
+allprojects {
+    apply(plugin = "java")
+    apply(plugin = "kotlin")
+    apply(plugin = "idea")
+
+    group = "com.roadlink"
+    version = "1.0.0-SNAPSHOT"
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+
+    tasks.test {
+        useJUnitPlatform {
+            includeEngines("junit-jupiter")
+        }
+        testLogging {
+            events("passed", "skipped", "failed")
+        }
+    }
+}
+
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
-        freeCompilerArgs += "-Xjsr305=strict"
+        freeCompilerArgs = listOf("-Xjsr305=strict")
         jvmTarget = "17"
     }
 }
