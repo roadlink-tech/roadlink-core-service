@@ -3,7 +3,9 @@ FROM gradle:7.3.3-jdk17 AS build
 WORKDIR /app
 
 # copy source code
-COPY build.gradle.kts settings.gradle.kts gradlew $APP_HOME
+COPY build.gradle.kts build.gradle.kts
+COPY settings.gradle.kts settings.gradle.kts
+COPY gradlew gradlew
 COPY gradle gradle
 COPY api api
 
