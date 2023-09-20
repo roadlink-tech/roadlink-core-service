@@ -1,5 +1,6 @@
 package com.roadlink.core.api
 
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.builder.SpringApplicationBuilder
 import org.springframework.boot.web.embedded.jetty.JettyServletWebServerFactory
@@ -25,11 +26,14 @@ fun main(args: Array<String>) {
 @Configuration
 internal class ServerDefinition {
     @Bean
-    fun webServerFactory(): ConfigurableServletWebServerFactory {
+    fun webServerFactory(
+        @Value("\${server.port}") port: Int,
+        @Value("\${server.netty.compression_enabled}") compressionEnabled: Boolean
+    ): ConfigurableServletWebServerFactory {
         return JettyServletWebServerFactory().apply {
             this.port = 8080
             this.compression = Compression().apply {
-                enabled = false
+                enabled = compressionEnabled
             }
         }
     }
