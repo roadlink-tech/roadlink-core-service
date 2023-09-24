@@ -11,17 +11,29 @@ version = "0.0.1-SNAPSHOT"
 repositories {
     mavenCentral()
 }
-ext["jakarta-servlet.version"] = "5.0.0"
+
+
+ext["jakarta-servlet.version"] =
+    "5.0.0" // This is needed if you want to use jetty instead of tomcat
+
 dependencies {
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation(project(":application"))
+    implementation(project(":domain"))
+    implementation(project(":infrastructure"))
+
+    // Junit
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.2")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
+    // Spring
     implementation("org.springframework.boot:spring-boot-starter-web") {
         exclude(module = "spring-boot-starter-tomcat")
     }
     implementation("org.springframework.boot:spring-boot-starter-jetty")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
+
+    // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 

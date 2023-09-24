@@ -10,6 +10,8 @@ COPY gradlew.bat gradle.bat
 COPY gradle gradle
 COPY api api
 COPY application application
+COPY domain domain
+COPY infrastructure infrastructure
 
 RUN gradle clean build -x test
 

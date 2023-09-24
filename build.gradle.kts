@@ -4,9 +4,6 @@ plugins {
     kotlin("jvm") version "1.8.22"
 }
 
-group = "com.roadlink"
-version = "0.0.1-SNAPSHOT"
-
 java {
     sourceCompatibility = JavaVersion.VERSION_17
 }
@@ -14,12 +11,6 @@ java {
 repositories {
     mavenCentral()
 }
-
-dependencies {
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-}
-
 
 subprojects {
     apply(plugin = "org.jetbrains.kotlin.jvm")
@@ -32,7 +23,7 @@ subprojects {
     }
 
     dependencies {
-
+        implementation("org.jetbrains.kotlin:kotlin-reflect")
     }
 }
 
@@ -43,6 +34,7 @@ allprojects {
 
     group = "com.roadlink"
     version = "1.0.0-SNAPSHOT"
+
     repositories {
         mavenLocal()
         mavenCentral()
