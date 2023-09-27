@@ -13,7 +13,7 @@ COPY application application
 COPY domain domain
 COPY infrastructure infrastructure
 
-RUN gradle clean build -x test
+RUN gradle clean build -x test --no-daemon
 
 # Etapa 2: Ejecutar la aplicación
 FROM openjdk:17-jdk-alpine
