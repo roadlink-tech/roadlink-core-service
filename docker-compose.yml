@@ -19,14 +19,15 @@ services:
     environment:
       - DOCKER_HOST=unix:///var/run/docker.sock
       - SERVICES=sqs,sns,secretsmanager,s3,kinesis,lambda,iam,ssm
+      - AWS_DEFAULT_REGION=us-west-2
     volumes:
       - ./infrastructure/src/main/resources/cloudformation:/etc/localstack/init/ready.d
       - /var/run/docker.sock:/var/run/docker.sock
     healthcheck:
-      test: "curl --silent --fail localstack:4566/_localstack/health | grep '\"s3\": \"running\"' | grep '\"sqs\": \"running\"' | grep '\"sns\": \"running\"'"
-      interval: 20s
+      test: "curl --silent --fail localstack:4566/_localstack/health || exit 1"
+      interval: 10s
       retries: 5
-      start_period: 20s
+      start_period: 10s
       timeout: 10s
 
   api:
@@ -34,8 +35,15 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      additional_contexts:
+        - resources=${HOME}/.m2
     ports:
       - "8080:8080"
+    environment:
+      - AWS_ENDPOINT=http://localhost:4566
+      - AWS_REGION=us-west-2
+      - AWS_ACCESS_KEY=key
+      - AWS_SECRET_KEY=secret
     depends_on:
       db:
         condition: service_started

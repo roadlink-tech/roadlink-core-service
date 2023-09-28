@@ -12,20 +12,8 @@ repositories {
     mavenCentral()
 }
 
-subprojects {
-    apply(plugin = "org.jetbrains.kotlin.jvm")
-
-    tasks.withType<KotlinCompile> {
-        kotlinOptions {
-            freeCompilerArgs = listOf("-Xjsr305=strict")
-            jvmTarget = "17"
-        }
-    }
-
-    dependencies {
-        implementation("org.jetbrains.kotlin:kotlin-reflect")
-    }
-}
+val awsSdkVersion = "1.12.429"
+    //"1.12.472"
 
 allprojects {
     apply(plugin = "java")
@@ -47,6 +35,22 @@ allprojects {
         testLogging {
             events("passed", "skipped", "failed")
         }
+    }
+}
+
+project(":api") {
+    dependencies {
+        // AWS
+        implementation("com.amazonaws:aws-java-sdk-core:$awsSdkVersion")
+        implementation("com.amazonaws:aws-java-sdk-ssm:$awsSdkVersion")
+    }
+}
+
+project(":application") {
+    dependencies {
+        // AWS
+        implementation("com.amazonaws:aws-java-sdk-core:$awsSdkVersion")
+        implementation("com.amazonaws:aws-java-sdk-ssm:$awsSdkVersion")
     }
 }
 

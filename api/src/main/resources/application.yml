@@ -2,3 +2,15 @@ server:
   port: 8080
   netty:
     compression_enabled: false
+
+cloud:
+  aws:
+    endpoint: ${AWS_ENDPOINT:http://localhost:4566}
+    region:
+      static: ${AWS_REGION:us-west-2}
+      auto: true
+    credentials:
+      accessKey: ${AWS_ACCESS_KEY:key}
+      secretKey: ${AWS_SECRET_KEY:secret}
+    stack:
+      auto: false

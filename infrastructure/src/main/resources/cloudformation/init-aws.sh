@@ -5,7 +5,11 @@ set -euo pipefail
 echo "========================================================================================================================="
 echo "========================================== Creating Secrets ============================================================="
 echo "========================================================================================================================="
-awslocal secretsmanager create-secret --name /local/roadlink-core-service/rds/credentials --secret-string '{"dbuser":"root","password":"root"}'
+
+awslocal ssm put-parameter \
+  --name /local/roadlink-core-service/rds/credentials \
+  --value '{"dbuser":"root","password":"root"}' \
+  --type "SecureString"
 
 echo "========================================================================================================================="
 echo "======================================= Localstack Setup Ends ==========================================================="
