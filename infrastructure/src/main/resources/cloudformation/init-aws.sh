@@ -8,7 +8,7 @@ echo "==========================================================================
 
 awslocal ssm put-parameter \
   --name /local/roadlink-core-service/rds/credentials \
-  --value '{"user":"my_root_user","password":"my_root_password","url":"jdbc:mysql://localstack:3306/roadlink_core_db"}' \
+  --value '{"user":"my_user","password":"my_db_password","url":"jdbc:mysql://db:3306/roadlink_core_db?useSSL=false&requireSSL=false"}' \
   --type "SecureString"
 
 echo "========================================================================================================================="

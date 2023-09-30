@@ -4,10 +4,10 @@ services:
   db:
     image: mysql:8.0.0
     environment:
-      MYSQL_ROOT_PASSWORD: my_password_db
+      MYSQL_ROOT_PASSWORD: my_db_password
       MYSQL_DATABASE: roadlink_core_db
-      MYSQL_USER: my_root_user
-      MYSQL_PASSWORD: my_root_password
+      MYSQL_USER: my_user
+      MYSQL_PASSWORD: my_db_password
     ports:
       - "3306:3306"
 
@@ -40,7 +40,7 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - AWS_ENDPOINT=http://localhost:4566
+      - AWS_ENDPOINT=http://localstack:4566
       - AWS_REGION=us-west-2
       - AWS_ACCESS_KEY=key
       - AWS_SECRET_KEY=secret
