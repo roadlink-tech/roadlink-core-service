@@ -12,7 +12,6 @@ repositories {
     mavenCentral()
 }
 
-
 ext["jakarta-servlet.version"] =
     "5.0.0" // This is needed if you want to use jetty instead of tomcat
 
@@ -32,6 +31,11 @@ dependencies {
         exclude(module = "spring-boot-starter-tomcat")
     }
     implementation("org.springframework.boot:spring-boot-starter-jetty")
+
+    // Datasource
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("com.zaxxer:HikariCP:5.0.1")
+    implementation("mysql:mysql-connector-java:8.0.33")
 
     // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
