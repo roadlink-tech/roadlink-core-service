@@ -36,7 +36,7 @@ services:
       context: .
       dockerfile: Dockerfile
       additional_contexts:
-        - resources=${HOME}/.m2
+        - resources=${HOME}/.gradle
     ports:
       - "8080:8080"
     environment:
