@@ -3,7 +3,8 @@ package com.roadlink.core.domain.user
 import java.util.UUID
 
 interface UserRepositoryPort {
-    fun findOrFail(criteria: UserCriteria): User
+//    fun findOrFail(criteria: UserCriteria): User
+    fun save(user: User): User
 }
 
 class UserCriteria(

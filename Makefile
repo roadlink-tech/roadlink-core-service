@@ -6,6 +6,9 @@ setup:
 	sudo chmod 755 $DESTINATION
 	## setup de gradle 7.4, de docker, etc
 
+setup_dev_env:
+	docker-compose up dynamo localstack
+
 build:
 	./gradlew clean build -x test --no-daemon
 

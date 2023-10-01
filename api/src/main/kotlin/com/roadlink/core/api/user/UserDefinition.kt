@@ -1,5 +1,6 @@
 package com.roadlink.core.api.user
 
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper
 import com.roadlink.application.command.CommandHandler
 import com.roadlink.application.user.UserCreationCommand
 import com.roadlink.application.user.UserCreationCommandHandler
@@ -13,8 +14,8 @@ import org.springframework.context.annotation.Configuration
 class UserDefinition {
 
     @Bean
-    fun userRepository(): UserRepositoryPort {
-        return UserRepositoryAdapter()
+    fun userRepository(dynamoDBMapper: DynamoDBMapper): UserRepositoryPort {
+        return UserRepositoryAdapter(dynamoDBMapper)
     }
 
     @Bean("user_creation_command_handler")
