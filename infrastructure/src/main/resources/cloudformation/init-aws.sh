@@ -6,9 +6,10 @@ echo "==========================================================================
 echo "========================================== Creating Secrets ============================================================="
 echo "========================================================================================================================="
 
+# TODO use the following environment variable AWS_DEFAULT_REGION=us-west-2
 awslocal ssm put-parameter \
-  --name /local/roadlink-core-service/rds/credentials \
-  --value '{"user":"my_user","password":"my_db_password","url":"jdbc:mysql://db:3306/roadlink_core_db?useSSL=false&requireSSL=false"}' \
+  --name /local/roadlink-core-service/dynamo/credentials \
+  --value '{"endpoint":"http://localstack:8000", "region": "us-west-2"}' \
   --type "SecureString"
 
 echo "========================================================================================================================="

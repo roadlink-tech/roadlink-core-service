@@ -1,5 +1,6 @@
 package com.roadlink.core.api
 
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.builder.SpringApplicationBuilder
@@ -14,10 +15,16 @@ import java.util.*
 @SpringBootApplication
 class RoadlinkCoreServiceApplication
 
+private val logger = LoggerFactory.getLogger("RoadlinkCoreServiceApplication")
+
 fun main(args: Array<String>) {
+
+    val environment = System.getenv().getOrDefault("ENVIRONMENT", Environment.local)
+    logger.info("Application is running in {} environment", environment)
 
     TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
     SpringApplicationBuilder(RoadlinkCoreServiceApplication::class.java)
+        .profiles(environment)
         .build()
         .run(*args)
 

@@ -33,10 +33,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-jetty")
 
     // Datasource
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("com.zaxxer:HikariCP:5.0.1")
-    implementation("mysql:mysql-connector-java:8.0.33")
-    implementation("software.aws.rds:aws-mysql-jdbc:1.1.8")
+    implementation("com.github.derjust:spring-data-dynamodb:5.1.0")
 
     // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test")

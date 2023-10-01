@@ -5,17 +5,17 @@ server:
 
 cloud:
   aws:
-    endpoint: ${AWS_ENDPOINT:http://localhost:4566}
+    endpoint: http://localhost:4566
     region:
-      static: ${AWS_REGION:us-west-2}
+      static: us-west-2
       auto: true
     credentials:
-      accessKey: ${AWS_ACCESS_KEY:key}
-      secretKey: ${AWS_SECRET_KEY:secret}
+      accessKey: key
+      secretKey: secret
     stack:
       auto: false
 
 parameter_names:
   db:
-    rds:
-      credentials: /local/roadlink-core-service/rds/credentials
+    dynamo:
+      credentials: /local/roadlink-core-service/dynamo/credentials

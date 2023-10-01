@@ -11,8 +11,11 @@ repositories {
 
 dependencies {
     implementation(project(":domain"))
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
+    //implementation("software.amazon.awssdk:dynamodb:2.20.68")
+
+    // DynamoDB
+    implementation("com.amazonaws:aws-java-sdk-dynamodb:1.11.573")
+    implementation("com.github.derjust:spring-data-dynamodb:5.1.0")
 }
 
 tasks.getByName<Test>("test") {
