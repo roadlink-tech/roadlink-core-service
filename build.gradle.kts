@@ -13,9 +13,10 @@ repositories {
 }
 
 val awsSdkVersion = "1.12.429"
-    //"1.12.472"
+val kotestRunnerVersion = "5.5.5"
+val kotestExtensionSpring = "1.1.2"
 
-    allprojects {
+allprojects {
     apply(plugin = "java")
     apply(plugin = "kotlin")
     apply(plugin = "idea")
@@ -28,11 +29,16 @@ val awsSdkVersion = "1.12.429"
         mavenCentral()
     }
 
-    tasks.test {
-        useJUnitPlatform {
-            includeEngines("junit-jupiter")
-        }
+    dependencies {
+        testImplementation("io.kotest:kotest-runner-junit5:$kotestRunnerVersion")
+        testImplementation("io.kotest.extensions:kotest-extensions-spring:$kotestExtensionSpring")
+    }
+
+    tasks.withType<Test> {
+        useJUnitPlatform()
         testLogging {
+            showExceptions = true
+            showStandardStreams = true
             events("passed", "skipped", "failed")
         }
     }
@@ -59,8 +65,4 @@ tasks.withType<KotlinCompile> {
         freeCompilerArgs = listOf("-Xjsr305=strict")
         jvmTarget = "17"
     }
-}
-
-tasks.withType<Test> {
-    useJUnitPlatform()
 }

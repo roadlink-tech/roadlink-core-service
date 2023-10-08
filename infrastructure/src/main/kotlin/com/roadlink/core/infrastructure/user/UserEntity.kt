@@ -9,7 +9,7 @@ data class UserDynamoEntity(
     /**
      * Partition key: DynamoDB uses the partition key's value as input to an internal hash function.
      * The output from the hash function determines the partition (physical storage internal to DynamoDB) in which the item will be stored.
-     * TODO: an id is a not appropriated pk
+     * TODO: an id is a not an appropriated pk
      */
     @get:DynamoDBHashKey(attributeName = "id")
     var id: UUID? = null,
