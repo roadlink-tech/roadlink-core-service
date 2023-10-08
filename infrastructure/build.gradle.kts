@@ -11,7 +11,6 @@ repositories {
 
 dependencies {
     implementation(project(":domain"))
-    //implementation("software.amazon.awssdk:dynamodb:2.20.68")
 
     // DynamoDB
     implementation("com.amazonaws:aws-java-sdk-dynamodb:1.11.573")

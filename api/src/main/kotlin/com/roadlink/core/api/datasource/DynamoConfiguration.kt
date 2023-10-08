@@ -17,11 +17,6 @@ import org.springframework.context.annotation.Configuration
 class DynamoConfiguration {
 
     @Bean
-    fun dynamoDBMapper(amazonDynamoDB: AmazonDynamoDB): DynamoDBMapper? {
-        return DynamoDBMapper(amazonDynamoDB)
-    }
-
-    @Bean
     fun objectMapper(): ObjectMapper {
         return ObjectMapper()
     }
@@ -49,6 +44,11 @@ class DynamoConfiguration {
             )
             .build()
     }
+
+    @Bean
+    fun dynamoDBMapper(amazonDynamoDB: AmazonDynamoDB): DynamoDBMapper? {
+        return DynamoDBMapper(amazonDynamoDB)
+    }
 }
 
 data class DynamoCredentials(
@@ -57,3 +57,4 @@ data class DynamoCredentials(
     @JsonProperty("region")
     val region: String
 )
+

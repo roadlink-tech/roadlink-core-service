@@ -87,3 +87,4 @@ class UserRepositoryAdapter(private val mapper: DynamoDBMapper) : UserRepository
 //        return mapper.scan(UserDynamoEntity::class.java, query)
 //    }
 }
+

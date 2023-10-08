@@ -13,6 +13,7 @@ import java.util.*
 
 
 @SpringBootApplication
+
 class RoadlinkCoreServiceApplication
 
 private val logger = LoggerFactory.getLogger("RoadlinkCoreServiceApplication")

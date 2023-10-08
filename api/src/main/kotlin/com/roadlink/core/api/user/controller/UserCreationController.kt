@@ -1,5 +1,6 @@
 package com.roadlink.core.api.user.controller
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.roadlink.application.command.CommandBus
 import com.roadlink.application.user.UserCreationCommand
 import com.roadlink.application.user.UserCreationCommandResponse
@@ -24,6 +25,7 @@ class UserCreationController(private val commandBus: CommandBus) {
 }
 
 data class UserCreationBody(
+    @JsonProperty("email")
     val email: String
 ) {
     fun toDto(): UserDTO {
