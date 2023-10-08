@@ -14,7 +14,8 @@ repositories {
 
 val awsSdkVersion = "1.12.429"
 val kotestRunnerVersion = "5.5.5"
-val kotestExtensionSpring = "1.1.2"
+val kotestExtensionSpringVersion = "1.1.2"
+val mockkVersion = "1.13.4"
 
 allprojects {
     apply(plugin = "java")
@@ -31,9 +32,8 @@ allprojects {
 
     dependencies {
         testImplementation("io.kotest:kotest-runner-junit5:$kotestRunnerVersion")
-        testImplementation("io.kotest.extensions:kotest-extensions-spring:$kotestExtensionSpring")
-        testImplementation("io.mockk:mockk:1.13.4")
-
+        testImplementation("io.kotest.extensions:kotest-extensions-spring:$kotestExtensionSpringVersion")
+        testImplementation("io.mockk:mockk:$mockkVersion")
     }
 
     tasks.withType<Test> {
@@ -48,7 +48,6 @@ allprojects {
 
 project(":api") {
     dependencies {
-        // AWS
         implementation("com.amazonaws:aws-java-sdk-core:$awsSdkVersion")
         implementation("com.amazonaws:aws-java-sdk-ssm:$awsSdkVersion")
     }
@@ -56,7 +55,6 @@ project(":api") {
 
 project(":application") {
     dependencies {
-        // AWS
         implementation("com.amazonaws:aws-java-sdk-core:$awsSdkVersion")
         implementation("com.amazonaws:aws-java-sdk-ssm:$awsSdkVersion")
     }
