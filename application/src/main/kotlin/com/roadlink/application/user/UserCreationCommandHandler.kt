@@ -3,9 +3,10 @@ package com.roadlink.application.user
 import com.roadlink.application.command.Command
 import com.roadlink.application.command.CommandHandler
 import com.roadlink.application.command.CommandResponse
+import com.roadlink.core.domain.user.User
 import com.roadlink.core.domain.user.UserRepositoryPort
 
-class UserCreationCommandResponse : CommandResponse
+class UserCreationCommandResponse(val user: UserDTO) : CommandResponse
 
 class UserCreationCommand(val user: UserDTO) : Command
 
@@ -14,6 +15,6 @@ class UserCreationCommandHandler(private val userRepository: UserRepositoryPort)
 
     override fun handle(command: UserCreationCommand): UserCreationCommandResponse {
         val user = userRepository.save(command.user.toModel())
-        return UserCreationCommandResponse()
+        return UserCreationCommandResponse(user = UserDTO.from(user))
     }
 }

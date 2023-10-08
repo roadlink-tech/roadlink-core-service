@@ -11,4 +11,10 @@ data class UserDTO(
     fun toModel(): User {
         return User(id = id, email = email)
     }
+
+    companion object {
+        fun from(user: User): UserDTO {
+            return UserDTO(id = user.id, email = user.email)
+        }
+    }
 }
