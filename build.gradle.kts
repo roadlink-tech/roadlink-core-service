@@ -32,6 +32,8 @@ allprojects {
     dependencies {
         testImplementation("io.kotest:kotest-runner-junit5:$kotestRunnerVersion")
         testImplementation("io.kotest.extensions:kotest-extensions-spring:$kotestExtensionSpring")
+        testImplementation("io.mockk:mockk:1.13.4")
+
     }
 
     tasks.withType<Test> {
