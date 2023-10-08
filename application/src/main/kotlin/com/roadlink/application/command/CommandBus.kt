@@ -14,6 +14,10 @@ interface CommandHandler<C : Command, R : CommandResponse> {
     fun handle(command: C): R
 }
 
+/**
+ * This will be the event bus through which the various commands handled by the application will be sent.
+ * The commands are mapped to their corresponding handlers, which will contain the execution logic.
+ * Make sure that you've registered the command with their own command handler.*/
 class SimpleCommandBus : CommandBus {
 
     private val handlers =

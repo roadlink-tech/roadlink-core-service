@@ -15,7 +15,7 @@ repositories {
 val awsSdkVersion = "1.12.429"
     //"1.12.472"
 
-allprojects {
+    allprojects {
     apply(plugin = "java")
     apply(plugin = "kotlin")
     apply(plugin = "idea")

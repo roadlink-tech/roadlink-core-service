@@ -1,11 +1,8 @@
 package com.roadlink.application.parameterstore
 
-class LocalParametersStoreService : ParametersStoreService {
-
-    private val secrets =
-        mapOf("/local/roadlink-core-service/dynamo/credentials" to "{\"endpoint\":\"http://localstack:4566\", \"region\": \"us-west-2\"}")
-
+class LocalParametersStoreService(private val secrets: Map<String, String>) : ParametersStoreService {
     override fun getOrFail(name: String): String {
         return secrets[name]!!
     }
 }
+

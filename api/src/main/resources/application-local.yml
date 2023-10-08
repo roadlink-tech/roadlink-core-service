@@ -1,0 +1,3 @@
+secrets:
+  # define map keys in this way to allow map binding to work with unescaped characters. Check this issue out: https://github.com/spring-projects/spring-boot/issues/13404
+  "[/local/roadlink-core-service/dynamo/credentials]": "{\"endpoint\":\"http://localhost:4566\", \"region\": \"us-west-2\"}"
