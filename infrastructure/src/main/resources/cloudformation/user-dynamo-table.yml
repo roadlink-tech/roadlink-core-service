@@ -16,15 +16,15 @@ Resources:
       KeySchema:
         - AttributeName: id
           KeyType: HASH
-        - AttributeName: created_date
+        - AttributeName: email
           KeyType: RANGE
       ProvisionedThroughput:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
       GlobalSecondaryIndexes:
-        - IndexName: email
+        - IndexName: created_date
           KeySchema:
-            - AttributeName: email
+            - AttributeName: created_date
               KeyType: HASH
           Projection:
             ProjectionType: KEYS_ONLY

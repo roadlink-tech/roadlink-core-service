@@ -17,16 +17,25 @@ class UserCreationCommandHandlerTest : BehaviorSpec({
         When("receives a command and the user could be saved successfully") {
             val userId = UUID.randomUUID()
             val email = "cabrerajjorge@gmail.com"
-            val command = UserCreationCommand(user = UserDTO(id = userId, email = email))
+            val command = UserCreationCommand(
+                user = UserDTO(
+                    id = userId,
+                    email = email,
+                    firstName = "jorge",
+                    lastName = "cabrera"
+                )
+            )
             every { userRepository.save(user = match { it.id == userId }) } returns User(
                 id = userId,
-                email = email
+                email = email,
+                firstName = "jorge",
+                lastName = "cabrera"
             )
 
             val response = handler.handle(command)
 
             Then("the response must not be null") {
-                response.user shouldBe UserDTO(id = userId, email = email)
+                response.user shouldBe UserDTO(id = userId, email = email, firstName = "jorge", lastName = "cabrera")
             }
         }
     }

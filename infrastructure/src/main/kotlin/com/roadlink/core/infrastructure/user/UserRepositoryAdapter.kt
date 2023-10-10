@@ -1,8 +1,11 @@
 package com.roadlink.core.infrastructure.user
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression
+import com.amazonaws.services.dynamodbv2.model.AttributeValue
 import com.roadlink.core.domain.user.User
+import com.roadlink.core.domain.user.UserCriteria
 import com.roadlink.core.domain.user.UserRepositoryPort
 import java.text.SimpleDateFormat
 import java.util.*
@@ -15,14 +18,24 @@ class UserRepositoryAdapter(private val mapper: DynamoDBMapper) : UserRepository
         dateFormatter.timeZone = TimeZone.getTimeZone("UTC")
     }
 
-    fun findAll(): List<UserDynamoEntity> {
-        val query = DynamoDBScanExpression()
-        return mapper.scan(UserDynamoEntity::class.java, query)
-    }
+//    fun findAll(): List<UserDynamoEntity> {
+//        val query = DynamoDBScanExpression()
+//        return mapper.scan(UserDynamoEntity::class.java, query)
+//    }
 
     override fun save(user: User): User {
         mapper.save(UserDynamoEntity.from(user))
         return user
+    }
+
+    // TODO implementar criteria query
+    override fun findOrFail(criteria: UserCriteria): User {
+        val eav = mutableMapOf<String, AttributeValue>()
+        eav[":val1"] = AttributeValue().withS(criteria.id.toString())
+        val q = DynamoDBQueryExpression<UserDynamoEntity>()
+            .withKeyConditionExpression("id = :val1")
+            .withExpressionAttributeValues(eav)
+        return mapper.query(UserDynamoEntity::class.java, q).first()!!.toDomain()
     }
 
 //    fun save(book: UserDynamoEntity) {

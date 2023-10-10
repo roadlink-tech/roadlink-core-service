@@ -25,10 +25,14 @@ class UserCreationController(private val commandBus: CommandBus) {
 
 data class UserCreationBody(
     @JsonProperty("email")
-    val email: String
+    val email: String,
+    @JsonProperty("first_name")
+    val firstName: String,
+    @JsonProperty("last_name")
+    val lastName: String
 ) {
     fun toDto(): UserDTO {
-        return UserDTO(email = email)
+        return UserDTO(email = email, firstName = firstName, lastName = lastName)
     }
 }
 

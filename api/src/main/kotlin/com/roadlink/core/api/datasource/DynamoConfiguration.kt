@@ -7,6 +7,7 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.roadlink.application.parameterstore.ParametersStoreService
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
@@ -18,7 +19,7 @@ class DynamoConfiguration {
 
     @Bean
     fun objectMapper(): ObjectMapper {
-        return ObjectMapper()
+        return ObjectMapper().registerKotlinModule()
     }
 
     @Bean("dynamo_credentials")
