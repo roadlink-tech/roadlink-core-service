@@ -1,11 +1,11 @@
 plugins {
     id("java")
-    id("org.jetbrains.kotlin.plugin.noarg") version "1.4.10"
+    //id("org.jetbrains.kotlin.plugin.noarg") version "1.4.10"
 
 }
-noArg {
-    annotation("software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean")
-}
+//noArg {
+//    annotation("software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean")
+//}
 
 group = "com.roadlink.core.infrastructure"
 version = "1.0.0-SNAPSHOT"
