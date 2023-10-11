@@ -13,6 +13,8 @@ COPY application application
 COPY domain domain
 COPY infrastructure infrastructure
 
+RUN false
+
 RUN gradle clean build -x test --no-daemon
 
 # Etapa 2: Ejecutar la aplicación
