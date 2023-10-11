@@ -12,11 +12,11 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
 
 @Configuration
-class AwsConfiguration {
+open class AwsConfiguration {
 
     @Primary
     @Bean("aws_credentials")
-    internal fun awsCredentials(
+    internal open fun awsCredentials(
         @Value("\${cloud.aws.credentials.accessKey}") accessKey: String,
         @Value("\${cloud.aws.credentials.secretKey}") secretKey: String,
     ): AWSStaticCredentialsProvider {
@@ -25,7 +25,7 @@ class AwsConfiguration {
     }
 
     @Bean("aws_endpoint_configuration")
-    internal fun awsEndpointConfiguration(
+    internal open fun awsEndpointConfiguration(
         @Value("\${cloud.aws.endpoint}") endpoint: String,
         @Value("\${cloud.aws.region.static}") region: String,
     ): AwsClientBuilder.EndpointConfiguration {
@@ -33,7 +33,7 @@ class AwsConfiguration {
     }
 
     @Bean
-    fun localSimpleSystemManagementClient(
+    open fun localSimpleSystemManagementClient(
         @Qualifier("aws_credentials") awsCredentials: AWSStaticCredentialsProvider,
         @Qualifier("aws_endpoint_configuration") endpointConfiguration: AwsClientBuilder.EndpointConfiguration,
     ): AWSSimpleSystemsManagement {

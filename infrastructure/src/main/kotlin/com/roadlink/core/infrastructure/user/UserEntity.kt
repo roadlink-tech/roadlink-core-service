@@ -5,6 +5,7 @@ import com.roadlink.core.domain.user.User
 import java.util.*
 
 @DynamoDBTable(tableName = "User")
+
 data class UserDynamoEntity @JvmOverloads constructor(
 
     /**

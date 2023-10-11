@@ -8,7 +8,7 @@ services:
       - '4575:4575'
     environment:
       - DOCKER_HOST=unix:///var/run/docker.sock
-      - SERVICES=sqs,sns,secretsmanager,s3,kinesis,lambda,iam,ssm
+      - SERVICES=secretsmanager,dynamodb
       - AWS_DEFAULT_REGION=us-west-2
     volumes:
       - ./infrastructure/src/main/resources/cloudformation:/etc/localstack/init/ready.d

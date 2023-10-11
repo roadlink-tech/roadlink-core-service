@@ -13,17 +13,17 @@ import org.springframework.stereotype.Component
 
 
 @Configuration
-class ParameterStoreDefinition {
+open class ParameterStoreDefinition {
 
     @Bean
     @Profile(Environment.cloud)
-    fun awsParameterStoreService(simpleSystemManagementClient: AWSSimpleSystemsManagement): ParametersStoreService {
+    open fun awsParameterStoreService(simpleSystemManagementClient: AWSSimpleSystemsManagement): ParametersStoreService {
         return AwsParametersStoreService(simpleSystemManagementClient)
     }
 
     @Bean
     @Profile(Environment.local)
-    fun localParameterStoreService(
+    open fun localParameterStoreService(
         localProperties: LocalProperties
     ): ParametersStoreService {
         return LocalParametersStoreService(localProperties.secrets)

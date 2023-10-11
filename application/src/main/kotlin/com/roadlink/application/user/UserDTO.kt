@@ -10,7 +10,7 @@ data class UserDTO(
     val firstName: String,
     val lastName: String
 ) {
-    fun toModel(): User {
+    fun toDomain(): User {
         return User(id = id, email = email, firstName = firstName, lastName = lastName)
     }
 

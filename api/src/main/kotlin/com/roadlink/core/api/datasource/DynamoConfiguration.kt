@@ -15,15 +15,15 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-class DynamoConfiguration {
+open class DynamoConfiguration {
 
     @Bean
-    fun objectMapper(): ObjectMapper {
+    open fun objectMapper(): ObjectMapper {
         return ObjectMapper().registerKotlinModule()
     }
 
     @Bean("dynamo_credentials")
-    fun dynamoCredentials(
+    open fun dynamoCredentials(
         @Value("\${parameter_names.db.dynamo.credentials}") dynamoDbCredentialsParameterName: String,
         objectMapper: ObjectMapper,
         parametersStoreService: ParametersStoreService
@@ -33,7 +33,7 @@ class DynamoConfiguration {
     }
 
     @Bean
-    fun amazonDynamoDB(
+    open fun amazonDynamoDB(
         @Qualifier("aws_credentials") amazonAWSCredentials: AWSStaticCredentialsProvider,
         @Qualifier("dynamo_credentials") dynamoCredentials: DynamoCredentials
     ): AmazonDynamoDB? {
@@ -47,7 +47,7 @@ class DynamoConfiguration {
     }
 
     @Bean
-    fun dynamoDBMapper(amazonDynamoDB: AmazonDynamoDB): DynamoDBMapper? {
+    open fun dynamoDBMapper(amazonDynamoDB: AmazonDynamoDB): DynamoDBMapper? {
         return DynamoDBMapper(amazonDynamoDB)
     }
 }

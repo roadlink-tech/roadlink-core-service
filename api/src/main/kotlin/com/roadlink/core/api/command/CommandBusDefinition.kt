@@ -11,10 +11,10 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-class CommandBusDefinition {
+open class CommandBusDefinition {
 
     @Bean
-    internal fun commandBus(
+    internal open fun commandBus(
         @Qualifier("user_creation_command_handler") userCreationCommandHandler: CommandHandler<UserCreationCommand, UserCreationCommandResponse>
     ): CommandBus {
         return SimpleCommandBus().also {

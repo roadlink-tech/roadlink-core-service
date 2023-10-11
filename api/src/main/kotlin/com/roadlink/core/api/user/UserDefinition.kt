@@ -11,15 +11,15 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-class UserDefinition {
+open class UserDefinition {
 
     @Bean
-    fun userRepository(dynamoDBMapper: DynamoDBMapper): UserRepositoryPort {
+    open fun userRepository(dynamoDBMapper: DynamoDBMapper): UserRepositoryPort {
         return UserRepositoryAdapter(dynamoDBMapper)
     }
 
     @Bean("user_creation_command_handler")
-    fun userCreationCommandHandler(userRepositoryPort: UserRepositoryPort): CommandHandler<UserCreationCommand, UserCreationCommandResponse> {
+    open fun userCreationCommandHandler(userRepositoryPort: UserRepositoryPort): CommandHandler<UserCreationCommand, UserCreationCommandResponse> {
         return UserCreationCommandHandler(userRepositoryPort)
     }
 }

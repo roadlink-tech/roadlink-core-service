@@ -16,14 +16,14 @@ class UserCreationController(private val commandBus: CommandBus) {
     @PostMapping("/users")
     @ResponseBody
     @ResponseStatus(value = HttpStatus.CREATED)
-    fun createUser(@RequestBody user: UserCreationBody): UserCreationResponse {
+    fun createUser(@RequestBody user: UserCreationRequest): UserCreationResponse {
         val response =
             commandBus.publish<UserCreationCommand, UserCreationCommandResponse>(UserCreationCommand(user.toDto()))
         return UserCreationResponse.from(response.user)
     }
 }
 
-data class UserCreationBody(
+data class UserCreationRequest(
     @JsonProperty("email")
     val email: String,
     @JsonProperty("first_name")

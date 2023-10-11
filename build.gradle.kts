@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.8.22"
+    kotlin("jvm") version "1.9.10"
 }
 
 java {
@@ -20,7 +20,6 @@ val mockkVersion = "1.13.4"
 allprojects {
     apply(plugin = "java")
     apply(plugin = "kotlin")
-    apply(plugin = "idea")
 
     group = "com.roadlink"
     version = "1.0.0-SNAPSHOT"

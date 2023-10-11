@@ -14,7 +14,7 @@ import java.util.*
 
 @SpringBootApplication
 
-class RoadlinkCoreServiceApplication
+open class RoadlinkCoreServiceApplication
 
 private val logger = LoggerFactory.getLogger("RoadlinkCoreServiceApplication")
 
@@ -32,9 +32,9 @@ fun main(args: Array<String>) {
 }
 
 @Configuration
-internal class ServerDefinition {
+internal open class ServerDefinition {
     @Bean
-    fun webServerFactory(
+    open fun webServerFactory(
         @Value("\${server.port}") port: Int,
         @Value("\${server.netty.compression_enabled}") compressionEnabled: Boolean
     ): ConfigurableServletWebServerFactory {
