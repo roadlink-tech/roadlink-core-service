@@ -37,8 +37,6 @@ services:
       - AWS_ACCESS_KEY_ID=key
       - AWS_SECRET_ACCESS_KEY=secret
       - ENVIRONMENT=cloud
-    volumes:
-      - C:/Users/54116/.gradle:/root/.gradle
     depends_on:
       localstack:
         condition: service_healthy
