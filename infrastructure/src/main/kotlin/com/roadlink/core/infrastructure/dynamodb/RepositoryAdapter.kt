@@ -36,6 +36,11 @@ class RepositoryAdapter<T : DomainEntity, E : BaseDynamoDbEntity, C : DomainCrit
         }
         return result.first()
     }
+
+    override fun findOrNull(criteria: C): T? {
+        return findAll(criteria)
+            .firstOrNull()
+    }
 }
 
 abstract class BaseDynamoRepository(

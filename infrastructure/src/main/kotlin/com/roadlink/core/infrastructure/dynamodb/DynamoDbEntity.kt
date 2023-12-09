@@ -30,6 +30,8 @@ abstract class BaseDynamoDbEntity(override var id: String, override var createdD
 }
 
 interface DynamoDbEntityMapper<T : DomainEntity, E : BaseDynamoDbEntity> {
+    // TODO: in this method we should receive the dynamodb entity and
+    //  not the domain entity
     fun toItem(entity: T): Map<String, AttributeValue>
     fun from(item: Map<String, AttributeValue>): E
     fun mapAll(response: QueryResponse): List<T>

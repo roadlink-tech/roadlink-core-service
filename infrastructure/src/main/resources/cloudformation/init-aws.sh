@@ -13,6 +13,12 @@ awslocal ssm put-parameter \
   --type "SecureString" \
   --output table
 
+awslocal ssm put-parameter \
+  --name /local/roadlink-core-service/google/credentials \
+  --value '{"client_id":"REPLACE_ME"}' \
+  --type "SecureString" \
+  --output table
+
 echo "========================================================================================================================="
 echo "======================================= Creating Dynamo Table ==========================================================="
 echo "========================================================================================================================="

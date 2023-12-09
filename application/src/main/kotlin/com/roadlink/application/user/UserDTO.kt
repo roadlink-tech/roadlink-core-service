@@ -1,6 +1,6 @@
 package com.roadlink.application.user
 
-import com.roadlink.application.DefaultIdGenerator
+import com.roadlink.core.domain.DefaultIdGenerator
 import com.roadlink.core.domain.user.User
 import java.util.*
 

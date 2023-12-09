@@ -18,7 +18,8 @@ class UserDynamoDbEntity constructor(
     var lastName: String = "",
     /** EmailLSI */
     var email: String = "",
-    var friends: Set<UUID> = emptySet()
+    var friends: Set<UUID> = emptySet(),
+    val profilePhotoUrl: String
 ) : BaseDynamoDbEntity(id, createdDate) {
 
     override fun toDomain(): DomainEntity {
@@ -28,7 +29,8 @@ class UserDynamoDbEntity constructor(
             firstName = this.firstName,
             lastName = this.lastName,
             creationDate = this.createdDate,
-            friends = this.friends.toMutableSet()
+            friends = this.friends.toMutableSet(),
+            profilePhotoUrl = this.profilePhotoUrl
         )
     }
 
@@ -42,7 +44,8 @@ class UserDynamoDbEntity constructor(
                 email = item["Email"]!!.s(),
                 firstName = item["FirstName"]!!.s(),
                 lastName = item["LastName"]!!.s(),
-                friends = item["Friends"]?.ss()?.map { UUID.fromString(it) }?.toSet() ?: emptySet()
+                friends = item["Friends"]?.ss()?.map { UUID.fromString(it) }?.toSet() ?: emptySet(),
+                profilePhotoUrl = item["ProfilePhotoUrl"]!!.s()
             )
         }
     }
@@ -71,6 +74,7 @@ class UserDynamoDbEntityMapper : BaseDynamoDbEntityMapper<User, UserDynamoDbEnti
             "FirstName" to AttributeValue.builder().s(entity.firstName).build(),
             "LastName" to AttributeValue.builder().s(entity.lastName).build(),
             "Friends" to friendsAttributeValue,
+            "ProfilePhotoUrl" to AttributeValue.builder().s(entity.profilePhotoUrl).build()
         )
     }
 }

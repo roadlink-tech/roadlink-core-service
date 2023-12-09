@@ -19,3 +19,5 @@ parameter_names:
   db:
     dynamo:
       credentials: /local/roadlink-core-service/dynamo/credentials
+  google:
+    credentials: /local/roadlink-core-service/google/credentials

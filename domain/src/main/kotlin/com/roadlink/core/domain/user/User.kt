@@ -2,7 +2,9 @@ package com.roadlink.core.domain.user
 
 import com.roadlink.core.domain.DomainEntity
 import com.roadlink.core.domain.DomainException
+import com.roadlink.core.domain.IdGenerator
 import com.roadlink.core.domain.RepositoryPort
+import com.roadlink.core.domain.user.google.GoogleIdTokenPayload
 import java.util.*
 
 sealed class UserException(override val message: String, cause: Throwable? = null) :
@@ -26,7 +28,8 @@ data class User(
     val firstName: String = "",
     val lastName: String = "",
     val creationDate: Date = Date(),
-    val friends: MutableSet<UUID> = mutableSetOf()
+    val friends: MutableSet<UUID> = mutableSetOf(),
+    val profilePhotoUrl: String = "",
 ) : DomainEntity {
 
     fun save(userRepository: RepositoryPort<User, UserCriteria>): User {
@@ -54,6 +57,15 @@ data class User(
     }
 
     companion object {
+
+        fun from(googleIdTokenPayload: GoogleIdTokenPayload, idGenerator: IdGenerator): User =
+            User(
+                id = idGenerator.next(),
+                email = googleIdTokenPayload.email,
+                firstName = googleIdTokenPayload.givenName,
+                lastName = googleIdTokenPayload.familyName,
+                profilePhotoUrl = googleIdTokenPayload.profilePhotoUrl,
+            )
 
         fun checkIfUserCanBeCreated(
             userRepository: RepositoryPort<User, UserCriteria>,
