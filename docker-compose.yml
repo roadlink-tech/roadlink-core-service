@@ -9,7 +9,7 @@ services:
     environment:
       - DOCKER_HOST=unix:///var/run/docker.sock
       # Make sure that all the services that you use in init-aws.sh script are present here. Otherwise, the container could not start well.
-      - SERVICES=secretsmanager,ssm,cf:cloudformation
+      - SERVICES=secretsmanager,dynamodb,ssm,cf:cloudformation
       - AWS_DEFAULT_REGION=us-west-2
     volumes:
       - ./infrastructure/src/main/resources/cloudformation:/etc/localstack/init/ready.d
