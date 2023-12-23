@@ -4,24 +4,26 @@ import com.amazonaws.services.dynamodbv2.datamodeling.*
 import com.roadlink.core.domain.user.User
 import java.util.*
 
-@DynamoDBTable(tableName = "User")
+@DynamoDBTable(tableName = "RoadlinkCore")
 data class UserDynamoEntity @JvmOverloads constructor(
 
     /**
      * Partition key: DynamoDB uses the partition key's value as input to an internal hash function.
      * The output from the hash function determines the partition (physical storage internal to DynamoDB) in which the item will be stored.
      */
-    @get:DynamoDBHashKey(attributeName = "id")
-    var id: UUID? = null,
+    @get:DynamoDBHashKey(attributeName = "EntityId")
+    var entityId: String = "User",
 
     /**
      *  Sorting key: The main purpose of a sorting key in Amazon DynamoDB is to allow for efficient querying and sorting of data within a DynamoDB table.
      *  Sorting keys are a fundamental component of DynamoDB's data model, which uses a composite primary key consisting of a partition key
      *  (also known as a hash key) and a sorting key (also known as a range key).
      */
-    @get:DynamoDBAttribute(attributeName = "email")
+    @get:DynamoDBAttribute(attributeName = "Id")
     @DynamoDBRangeKey
-    //@DynamoDBIndexHashKey(globalSecondaryIndexName = "email")
+    var id: UUID? = null,
+
+    @get:DynamoDBAttribute(attributeName = "email")
     var email: String = "",
 
     @get:DynamoDBAttribute(attributeName = "created_date")
