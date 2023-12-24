@@ -30,11 +30,14 @@ class UserRepositoryAdapter(private val mapper: DynamoDBMapper) : UserRepository
 
     // TODO implementar criteria query
     override fun findOrFail(criteria: UserCriteria): User {
-        val eav = mutableMapOf<String, AttributeValue>()
-        eav[":val1"] = AttributeValue().withS(criteria.id.toString())
         val q = DynamoDBQueryExpression<UserDynamoEntity>()
-            .withKeyConditionExpression("id = :val1")
-            .withExpressionAttributeValues(eav)
+            .withKeyConditionExpression("EntityId = :val1 AND Id = :val2")
+            .withExpressionAttributeValues(
+                mapOf(
+                    ":val1" to AttributeValue().withS("User"),
+                    ":val2" to AttributeValue().withS(criteria.id.toString())
+                )
+            )
         return mapper.query(UserDynamoEntity::class.java, q).first()!!.toDomain()
     }
 
