@@ -17,12 +17,14 @@ open class CommandBusDefinition {
     internal open fun commandBus(
         @Qualifier("user_creation_command_handler") userCreationCommandHandler: CommandHandler<UserCreationCommand, UserCreationCommandResponse>,
         @Qualifier("retrieve_user_command_handler") retrieveUserCommandHandler: CommandHandler<RetrieveUserCommand, RetrieveUserCommandResponse>,
+        @Qualifier("search_user_command_handler") searchUserCommandHandler: CommandHandler<SearchUserCommand, SearchUserCommandResponse>,
         @Qualifier("feedback_creation_command_handler") feedbackCreationCommandHandler: CommandHandler<FeedbackCreationCommand, FeedbackCreationCommandResponse>
     ): CommandBus {
         return SimpleCommandBus().also {
             it.registerHandler(userCreationCommandHandler)
             it.registerHandler(feedbackCreationCommandHandler)
             it.registerHandler(retrieveUserCommandHandler)
+            it.registerHandler(searchUserCommandHandler)
         }
     }
 }

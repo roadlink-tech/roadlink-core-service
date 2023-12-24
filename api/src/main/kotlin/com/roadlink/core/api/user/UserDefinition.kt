@@ -25,4 +25,9 @@ open class UserDefinition {
     open fun retrieveUserCommandHandler(userRepositoryPort: UserRepositoryPort): CommandHandler<RetrieveUserCommand, RetrieveUserCommandResponse> {
         return RetrieveUserCommandHandler(userRepositoryPort)
     }
+
+    @Bean("search_user_command_handler")
+    open fun searchUserCommandHandler(userRepositoryPort: UserRepositoryPort): CommandHandler<SearchUserCommand, SearchUserCommandResponse> {
+        return SearchUserCommandHandler(userRepositoryPort)
+    }
 }

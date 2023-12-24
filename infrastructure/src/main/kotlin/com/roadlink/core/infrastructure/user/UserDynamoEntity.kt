@@ -12,7 +12,7 @@ data class UserDynamoEntity @JvmOverloads constructor(
      * The output from the hash function determines the partition (physical storage internal to DynamoDB) in which the item will be stored.
      */
     @get:DynamoDBHashKey(attributeName = "EntityId")
-    var entityId: String = "User",
+    var entityId: String = "EntityId#User",
 
     /**
      *  Sorting key: The main purpose of a sorting key in Amazon DynamoDB is to allow for efficient querying and sorting of data within a DynamoDB table.
@@ -28,6 +28,7 @@ data class UserDynamoEntity @JvmOverloads constructor(
     var createdDate: Date? = Date(),
     
     @get:DynamoDBAttribute(attributeName = "Email")
+    @get:DynamoDBIndexRangeKey(localSecondaryIndexName = "EmailLSI")
     var email: String = "",
 
     @get:DynamoDBAttribute(attributeName = "FirstName")
