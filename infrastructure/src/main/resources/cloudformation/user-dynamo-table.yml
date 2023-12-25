@@ -5,46 +5,69 @@ Resources:
   UserDynamoDBTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: User
+      TableName: RoadlinkCore
       AttributeDefinitions:
-        - AttributeName: id
-          AttributeType: S # String type for the partition key
-        - AttributeName: email
-          AttributeType: S # String type for the GSI
-        - AttributeName: created_date
+        - AttributeName: EntityId
+          AttributeType: S
+        - AttributeName: Id
+          AttributeType: S
+        - AttributeName: Rating
+          AttributeType: N
+        - AttributeName: ReceiverId
+          AttributeType: S
+        - AttributeName: ReviewerId
+          AttributeType: S
+        - AttributeName: Email
           AttributeType: S
       KeySchema:
-        - AttributeName: id
+        - AttributeName: EntityId
           KeyType: HASH
-        - AttributeName: email
+        - AttributeName: Id
           KeyType: RANGE
       ProvisionedThroughput:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
       GlobalSecondaryIndexes:
-        - IndexName: created_date
+        - IndexName: RatingIndex
           KeySchema:
-            - AttributeName: created_date
+            - AttributeName: Rating
               KeyType: HASH
           Projection:
-            ProjectionType: KEYS_ONLY
+            ProjectionType: ALL
           ProvisionedThroughput:
             ReadCapacityUnits: 5
             WriteCapacityUnits: 5
-  FeedbackDynamoDBTable:
-    Type: AWS::DynamoDB::Table
-    Properties:
-      TableName: Feedback
-      AttributeDefinitions:
-        - AttributeName: id
-          AttributeType: S # String type for the partition key
-        - AttributeName: rating
-          AttributeType: N # String type for the GSI
-      KeySchema:
-        - AttributeName: id
-          KeyType: HASH
-        - AttributeName: rating
-          KeyType: RANGE
-      ProvisionedThroughput:
-        ReadCapacityUnits: 5
-        WriteCapacityUnits: 5
+      LocalSecondaryIndexes:
+        - IndexName: IdLSI
+          KeySchema:
+            - AttributeName: EntityId
+              KeyType: HASH
+            - AttributeName: Id
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+        - IndexName: ReceiverIdLSI
+          KeySchema:
+            - AttributeName: EntityId
+              KeyType: HASH
+            - AttributeName: ReceiverId
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+        - IndexName: ReviewerIdLSI
+          KeySchema:
+            - AttributeName: EntityId
+              KeyType: HASH
+            - AttributeName: ReviewerId
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+        - IndexName: EmailLSI
+          KeySchema:
+            - AttributeName: EntityId
+              KeyType: HASH
+            - AttributeName: Email
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+

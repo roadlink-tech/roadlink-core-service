@@ -8,6 +8,7 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper
 import org.testcontainers.containers.BindMode.READ_WRITE
 import org.testcontainers.containers.localstack.LocalStackContainer
+import org.testcontainers.containers.localstack.LocalStackContainer.Service.CLOUDFORMATION
 import org.testcontainers.containers.localstack.LocalStackContainer.Service.DYNAMODB
 import org.testcontainers.utility.DockerImageName
 
@@ -22,14 +23,13 @@ object LocalStackHelper {
     fun containerWithDynamoDb(): LocalStackContainer {
         val localstackImage = DockerImageName.parse(LOCALSTACK_IMAGE_VERSION)
         return LocalStackContainer(localstackImage)
-            .withServices(DYNAMODB)
+            .withServices(DYNAMODB,CLOUDFORMATION)
             .withClasspathResourceMapping(
                 "/cloudformation/user-dynamo-table.yml",
                 USER_DYNAMO_TABLE_CLASSPATH,
                 READ_WRITE
             )
     }
-
     fun createUserTableIn(
         container: LocalStackContainer,
     ) {
@@ -45,7 +45,6 @@ object LocalStackHelper {
             container.region
         )
     }
-
     private fun awsStaticCredentialsProvider(container: LocalStackContainer): AWSStaticCredentialsProvider {
         val credentials = BasicAWSCredentials(container.accessKey, container.secretKey)
         return AWSStaticCredentialsProvider(credentials)

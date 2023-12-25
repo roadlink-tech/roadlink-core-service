@@ -7,6 +7,7 @@ import com.amazonaws.services.dynamodbv2.model.AttributeValue
 import com.roadlink.core.domain.user.User
 import com.roadlink.core.domain.user.UserCriteria
 import com.roadlink.core.domain.user.UserRepositoryPort
+import org.w3c.dom.Attr
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -18,29 +19,46 @@ class UserRepositoryAdapter(private val mapper: DynamoDBMapper) : UserRepository
         dateFormatter.timeZone = TimeZone.getTimeZone("UTC")
     }
 
-//    fun findAll(): List<UserDynamoEntity> {
-//        val query = DynamoDBScanExpression()
-//        return mapper.scan(UserDynamoEntity::class.java, query)
-//    }
-
     override fun save(user: User): User {
         mapper.save(UserDynamoEntity.from(user))
         return user
     }
 
-    // TODO implementar criteria query
     override fun findOrFail(criteria: UserCriteria): User {
-        val eav = mutableMapOf<String, AttributeValue>()
-        eav[":val1"] = AttributeValue().withS(criteria.id.toString())
-        val q = DynamoDBQueryExpression<UserDynamoEntity>()
-            .withKeyConditionExpression("id = :val1")
-            .withExpressionAttributeValues(eav)
+        val expressionAttributeValues = mutableMapOf(
+            ":entityId" to AttributeValue().withS("EntityId#User"),
+        )
+        var conditionExpression = "EntityId = :entityId"
+
+        if (criteria.id != null) {
+            expressionAttributeValues[":id"] = AttributeValue().withS(criteria.id.toString())
+            conditionExpression = "$conditionExpression AND Id = :id"
+        }
+
+        if (criteria.email != null && criteria.email != "") {
+            expressionAttributeValues[":email"] = AttributeValue().withS(criteria.email.toString())
+            conditionExpression = "$conditionExpression AND Email = :email"
+        }
+
+        val q = buildQuery(conditionExpression, expressionAttributeValues)
         return mapper.query(UserDynamoEntity::class.java, q).first()!!.toDomain()
     }
 
-//    fun save(book: UserDynamoEntity) {
-//        mapper.save(book)
-//    }
+    private fun buildQuery(
+        conditionExpression: String,
+        expressionAttributeValues: MutableMap<String, AttributeValue>
+    ): DynamoDBQueryExpression<UserDynamoEntity>? {
+        if (expressionAttributeValues[":email"] != null) {
+            return DynamoDBQueryExpression<UserDynamoEntity>()
+                .withIndexName("EmailLSI")
+                .withKeyConditionExpression(conditionExpression)
+                .withExpressionAttributeValues(expressionAttributeValues)
+        }
+        return DynamoDBQueryExpression<UserDynamoEntity>()
+            .withKeyConditionExpression(conditionExpression)
+            .withExpressionAttributeValues(expressionAttributeValues)
+    }
+
 
 //    fun findAllByCategory(category: String): List<UserDynamoEntity> {
 //        val eav = mutableMapOf<String, AttributeValue>()
