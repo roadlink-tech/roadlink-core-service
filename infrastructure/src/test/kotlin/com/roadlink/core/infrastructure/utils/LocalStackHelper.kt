@@ -15,6 +15,7 @@ import org.testcontainers.utility.DockerImageName
 private const val BASE_CONTAINER_CLASSPATH = "/opt/code/localstack/"
 private const val USER_DYNAMO_TABLE_CLASSPATH =
     "${BASE_CONTAINER_CLASSPATH}user-dynamo-table.yml"
+private const val CLEAR_DYNAMO_TABLE_CLASSPATH = "${BASE_CONTAINER_CLASSPATH}clear-dynamo-table.sh"
 
 
 object LocalStackHelper {
@@ -23,13 +24,20 @@ object LocalStackHelper {
     fun containerWithDynamoDb(): LocalStackContainer {
         val localstackImage = DockerImageName.parse(LOCALSTACK_IMAGE_VERSION)
         return LocalStackContainer(localstackImage)
-            .withServices(DYNAMODB,CLOUDFORMATION)
+            .withServices(DYNAMODB, CLOUDFORMATION)
             .withClasspathResourceMapping(
                 "/cloudformation/user-dynamo-table.yml",
                 USER_DYNAMO_TABLE_CLASSPATH,
                 READ_WRITE
             )
+            .withClasspathResourceMapping(
+                "/scripts/clear-dynamo-table.sh",
+                CLEAR_DYNAMO_TABLE_CLASSPATH,
+                READ_WRITE
+            )
     }
+
+
     fun createUserTableIn(
         container: LocalStackContainer,
     ) {
@@ -45,6 +53,16 @@ object LocalStackHelper {
             container.region
         )
     }
+
+    fun clearDynamoTableIn(
+        container: LocalStackContainer
+    ) {
+        container.execInContainer(
+            "sh",
+            "clear-dynamo-table.sh"
+        )
+    }
+
     private fun awsStaticCredentialsProvider(container: LocalStackContainer): AWSStaticCredentialsProvider {
         val credentials = BasicAWSCredentials(container.accessKey, container.secretKey)
         return AWSStaticCredentialsProvider(credentials)

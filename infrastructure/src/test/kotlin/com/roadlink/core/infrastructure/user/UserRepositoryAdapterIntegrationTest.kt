@@ -12,6 +12,9 @@ import java.util.*
 class UserRepositoryAdapterIntegrationTest : BehaviorSpec({
     val container = LocalStackHelper.containerWithDynamoDb()
     listener(container.perSpec())
+    afterEach {
+        LocalStackHelper.clearDynamoTableIn(container)
+    }
 
     Given("a container with dynamo and the user table already created") {
         val mapper = LocalStackHelper.dynamoMapper(container)
@@ -35,6 +38,20 @@ class UserRepositoryAdapterIntegrationTest : BehaviorSpec({
             repository.save(user)
 
             val response = repository.findOrFail(UserCriteria(id = id))
+            Then("the response should not be null") {
+                response.id shouldBe id
+                response.firstName shouldBe "Jorge Javier"
+                response.lastName shouldBe "Cabrera Vera"
+                response.email shouldBe "cabrerajjorge@gmail.com"
+            }
+        }
+
+        When("save a new user and then find it by email") {
+            val id = UUID.randomUUID()
+            val user = UserFactory.common(id = id)
+            repository.save(user)
+
+            val response = repository.findOrFail(UserCriteria(email = user.email))
             Then("the response should not be null") {
                 response.id shouldBe id
                 response.firstName shouldBe "Jorge Javier"

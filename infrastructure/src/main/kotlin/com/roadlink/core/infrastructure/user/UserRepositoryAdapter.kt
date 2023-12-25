@@ -7,6 +7,7 @@ import com.amazonaws.services.dynamodbv2.model.AttributeValue
 import com.roadlink.core.domain.user.User
 import com.roadlink.core.domain.user.UserCriteria
 import com.roadlink.core.domain.user.UserRepositoryPort
+import com.roadlink.core.infrastructure.user.error.UserInfrastructureError
 import org.w3c.dom.Attr
 import java.text.SimpleDateFormat
 import java.util.*
@@ -41,7 +42,12 @@ class UserRepositoryAdapter(private val mapper: DynamoDBMapper) : UserRepository
         }
 
         val q = buildQuery(conditionExpression, expressionAttributeValues)
-        return mapper.query(UserDynamoEntity::class.java, q).first()!!.toDomain()
+        val userDynamoEntity = mapper.query(UserDynamoEntity::class.java, q)
+        if (userDynamoEntity.isEmpty()) {
+            throw UserInfrastructureError.UserNotFound(conditionExpression)
+        }
+
+        return userDynamoEntity.first()!!.toDomain()
     }
 
     private fun buildQuery(
