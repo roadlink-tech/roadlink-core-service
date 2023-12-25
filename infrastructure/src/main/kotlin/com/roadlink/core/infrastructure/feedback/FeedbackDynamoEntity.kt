@@ -13,7 +13,6 @@ import java.util.*
 
 @DynamoDBTable(tableName = "RoadlinkCore")
 class FeedbackDynamoEntity @JvmOverloads constructor(
-
     /**
      * Partition key: DynamoDB uses the partition key's value as input to an internal hash function.
      * The output from the hash function determines the partition (physical storage internal to DynamoDB) in which the item will be stored.
@@ -35,15 +34,15 @@ class FeedbackDynamoEntity @JvmOverloads constructor(
     var createdDate: Date? = Date(),
 
     @get:DynamoDBAttribute(attributeName = "Rating")
-    var rating: Int,
+    var rating: Int? = 0,
 
     @get:DynamoDBAttribute(attributeName = "ReceiverId")
     @get:DynamoDBIndexRangeKey(localSecondaryIndexName = "ReceiverIdLSI")
-    var receiverId: UUID,
+    var receiverId: UUID? = null,
 
     @get:DynamoDBAttribute(attributeName = "ReviewerId")
     @get:DynamoDBIndexRangeKey(localSecondaryIndexName = "ReviewerIdLSI")
-    var reviewerId: UUID,
+    var reviewerId: UUID? = null,
 
     @get:DynamoDBAttribute(attributeName = "comment")
     var comment: String = "",
@@ -53,9 +52,9 @@ class FeedbackDynamoEntity @JvmOverloads constructor(
         check(this.id != null) { "User id could not be null." }
         return Feedback(
             id = this.id!!,
-            rating = this.rating,
-            receiverId = this.receiverId,
-            reviewerId = this.reviewerId,
+            rating = this.rating!!,
+            receiverId = this.receiverId!!,
+            reviewerId = this.reviewerId!!,
             comment = this.comment
         )
     }
