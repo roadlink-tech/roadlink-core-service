@@ -5,7 +5,6 @@ import com.roadlink.application.command.CommandHandler
 import com.roadlink.application.command.CommandResponse
 import com.roadlink.core.domain.user.UserCriteria
 import com.roadlink.core.domain.user.UserRepositoryPort
-import java.util.*
 
 class SearchUserCommandResponse(val user: UserDTO) : CommandResponse
 

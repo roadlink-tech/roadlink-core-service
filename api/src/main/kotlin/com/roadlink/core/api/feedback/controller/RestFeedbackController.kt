@@ -5,6 +5,8 @@ import com.roadlink.application.command.CommandBus
 import com.roadlink.application.feedback.FeedbackCreationCommand
 import com.roadlink.application.feedback.FeedbackCreationCommandResponse
 import com.roadlink.application.feedback.FeedbackDTO
+import com.roadlink.application.feedback.RetrieveFeedbacksCommand
+import com.roadlink.application.feedback.RetrieveFeedbacksCommandResponse
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -17,33 +19,33 @@ import org.springframework.web.bind.annotation.RestController
 import java.util.*
 
 @RestController
-@RequestMapping
-
+@RequestMapping("/users/{receiverId}/feedbacks")
 class FeedbackController(private val commandBus: CommandBus) {
 
-
-    @PostMapping("/users/{receiverId}/feedbacks")
+    @PostMapping
     @ResponseBody
     @ResponseStatus(value = HttpStatus.CREATED)
     fun createFeedback(
         @PathVariable receiverId: String,
         @RequestBody request: FeedbackCreationRequest
-    ): FeedbackCreationResponse {
+    ): FeedbackResponse {
         val response =
             commandBus.publish<FeedbackCreationCommand, FeedbackCreationCommandResponse>(
                 FeedbackCreationCommand(request.toDto(receiverId))
             )
-        return FeedbackCreationResponse.from(response.feedback)
+        return FeedbackResponse.from(response.feedback)
     }
 
-    @GetMapping("/users/{receiverId}/feedbacks/{feedbackId}")
+    @GetMapping
     @ResponseBody
     @ResponseStatus(value = HttpStatus.OK)
-    fun retrieveFeedback(
-        @PathVariable receiverId: String,
-        @PathVariable feedbackId: String,
+    fun retrieveUserFeedbacks(@PathVariable receiverId: String): List<FeedbackResponse> {
+        val response =
+            commandBus.publish<RetrieveFeedbacksCommand, RetrieveFeedbacksCommandResponse>(
+                RetrieveFeedbacksCommand(receiverId)
+            )
 
-        ) {
+        return response.feedbacks.map { FeedbackResponse.from(it) }
     }
 }
 
