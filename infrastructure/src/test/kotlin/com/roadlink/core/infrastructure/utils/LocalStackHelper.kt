@@ -38,7 +38,7 @@ object LocalStackHelper {
     }
 
 
-    fun createUserTableIn(
+    fun createTableIn(
         container: LocalStackContainer,
     ) {
         container.execInContainer(

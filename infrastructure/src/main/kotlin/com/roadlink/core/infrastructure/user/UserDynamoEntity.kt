@@ -1,6 +1,7 @@
 package com.roadlink.core.infrastructure.user
 
 import com.roadlink.core.domain.user.User
+import com.roadlink.core.infrastructure.dynamodb.DynamoDbDateFormatter
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue
 import java.text.SimpleDateFormat
 import java.util.*
@@ -46,12 +47,10 @@ data class UserDynamoEntity @JvmOverloads constructor(
     companion object {
 
         fun from(item: Map<String, AttributeValue>): UserDynamoEntity {
-            val dateFormatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-            dateFormatter.timeZone = TimeZone.getTimeZone("UTC")
             return UserDynamoEntity(
                 entityId = item["EntityId"]!!.s(),
                 id = UUID.fromString(item["Id"]!!.s()),
-                createdDate = dateFormatter.parse(item["CreatedDate"]!!.s()),
+                createdDate = DynamoDbDateFormatter.instance().parse(item["CreatedDate"]!!.s()),
                 email = item["Email"]!!.s(),
                 firstName = item["FirstName"]!!.s(),
                 lastName = item["LastName"]!!.s()
@@ -59,12 +58,10 @@ data class UserDynamoEntity @JvmOverloads constructor(
         }
 
         fun toItem(user: User): Map<String, AttributeValue> {
-            val dateFormatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-            dateFormatter.timeZone = TimeZone.getTimeZone("UTC")
             return mapOf(
                 "EntityId" to AttributeValue.builder().s("EntityId#User").build(),
                 "Id" to AttributeValue.builder().s(user.id.toString()).build(),
-                "CreatedDate" to AttributeValue.builder().s(dateFormatter.format(Date())).build(),
+                "CreatedDate" to AttributeValue.builder().s(DynamoDbDateFormatter.instance().format(Date())).build(),
                 "Email" to AttributeValue.builder().s(user.email).build(),
                 "FirstName" to AttributeValue.builder().s(user.firstName).build(),
                 "LastName" to AttributeValue.builder().s(user.lastName).build()

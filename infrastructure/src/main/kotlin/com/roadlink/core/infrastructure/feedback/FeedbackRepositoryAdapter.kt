@@ -3,11 +3,15 @@ package com.roadlink.core.infrastructure.feedback
 import com.roadlink.core.domain.feedback.Feedback
 import com.roadlink.core.domain.feedback.FeedbackCriteria
 import com.roadlink.core.domain.feedback.FeedbackRepositoryPort
+import com.roadlink.core.infrastructure.dynamodb.error.DynamoDbError
+import com.roadlink.core.infrastructure.user.error.UserInfrastructureError
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient
+import software.amazon.awssdk.services.dynamodb.model.AttributeValue
 import software.amazon.awssdk.services.dynamodb.model.PutItemRequest
+import software.amazon.awssdk.services.dynamodb.model.QueryRequest
 
 class FeedbackRepositoryAdapter(
-    private val mapper: DynamoDbClient,
+    private val dynamoDbClient: DynamoDbClient,
     private val tableName: String = "RoadlinkCore"
 ) : FeedbackRepositoryPort {
     override fun save(feedback: Feedback): Feedback {
@@ -18,43 +22,69 @@ class FeedbackRepositoryAdapter(
             .item(item)
             .build()
 
-        mapper.putItem(request).also { return feedback }
+        dynamoDbClient.putItem(request).also { return feedback }
     }
 
     override fun findOrFail(criteria: FeedbackCriteria): Feedback {
-        TODO("Not yet implemented")
+        val result = this.findAll(criteria)
+        if (result.isEmpty()) {
+            throw UserInfrastructureError.NotFound(FeedbackDynamoCriteria.from(criteria).keyConditionExpression())
+        }
+
+        return result.first()
+    }
+
+    private fun buildQuery(
+        keyConditionExpression: String,
+        expressionAttributeValues: Map<String, AttributeValue>
+    ): QueryRequest {
+        if (expressionAttributeValues[":id"] != null) {
+            return QueryRequest.builder()
+                .tableName(tableName)
+                .keyConditionExpression(keyConditionExpression)
+                .expressionAttributeValues(expressionAttributeValues)
+                .build()
+        }
+        if (expressionAttributeValues[":rating"] != null) {
+            return QueryRequest.builder()
+                .indexName("RatingGSI")
+                .tableName(tableName)
+                .keyConditionExpression(keyConditionExpression)
+                .expressionAttributeValues(expressionAttributeValues)
+                .build()
+        }
+        if (expressionAttributeValues[":reviewerId"] != null) {
+            return QueryRequest.builder()
+                .indexName("ReviewerIdLSI")
+                .tableName(tableName)
+                .keyConditionExpression(keyConditionExpression)
+                .expressionAttributeValues(expressionAttributeValues)
+                .build()
+        }
+        if (expressionAttributeValues[":receiverId"] != null) {
+            return QueryRequest.builder()
+                .indexName("ReceiverIdLSI")
+                .tableName(tableName)
+                .keyConditionExpression(keyConditionExpression)
+                .expressionAttributeValues(expressionAttributeValues)
+                .build()
+        }
+        throw DynamoDbError.InvalidQuery()
     }
 
     override fun findAll(criteria: FeedbackCriteria): List<Feedback> {
-        TODO()
-    //        val expressionAttributeValues = mutableMapOf(
-//            ":entityId" to AttributeValue().withS("EntityId#Feedback"),
-//        )
-//        var conditionExpression = "EntityId = :entityId"
-//
-//        if (criteria.id != null) {
-//            expressionAttributeValues[":id"] = AttributeValue().withS(criteria.id.toString())
-//            conditionExpression = "$conditionExpression AND Id = :id"
-//        }
-//
-//        if (criteria.receiverId != null) {
-//            expressionAttributeValues[":receiverId"] =
-//                AttributeValue().withS(criteria.receiverId.toString())
-//            conditionExpression = "$conditionExpression AND ReceiverId = :receiverId"
-//        }
-//
-//        val q = buildQuery(conditionExpression, expressionAttributeValues)
-//        return mapper.query(FeedbackDynamoEntity::class.java, q).map { it.toDomain() }
-    }
+        val feedbackDynamoCriteria = FeedbackDynamoCriteria.from(criteria)
+        val query = buildQuery(
+            feedbackDynamoCriteria.keyConditionExpression(),
+            feedbackDynamoCriteria.expressionAttributeValues()
+        )
+        val queryResponse = dynamoDbClient.query(query)
+        val feedbacks: MutableList<FeedbackDynamoEntity> = ArrayList()
 
-//    private fun buildQuery(
-//        conditionExpression: String,
-//        expressionAttributeValues: MutableMap<String, AttributeValue>
-//    ): DynamoDBQueryExpression<FeedbackDynamoEntity>? {
-//        return DynamoDBQueryExpression<FeedbackDynamoEntity>()
-//            .withIndexName("ReceiverIdLSI")
-//            .withKeyConditionExpression(conditionExpression)
-//            .withExpressionAttributeValues(expressionAttributeValues)
-//
-//    }
+        queryResponse.items().forEach { item ->
+            feedbacks.add(FeedbackDynamoEntity.from(item))
+        }
+
+        return feedbacks.map { it.toDomain() }
+    }
 }

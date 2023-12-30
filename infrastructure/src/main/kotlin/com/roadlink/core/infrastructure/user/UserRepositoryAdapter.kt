@@ -8,36 +8,6 @@ import software.amazon.awssdk.services.dynamodb.DynamoDbClient
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue
 import software.amazon.awssdk.services.dynamodb.model.PutItemRequest
 import software.amazon.awssdk.services.dynamodb.model.QueryRequest
-import java.util.*
-import kotlin.collections.ArrayList
-
-
-class UserDynamoCriteria(
-    val id: UUID? = null,
-    private val email: String = ""
-) {
-    fun keyConditionExpression(): String {
-        val keyConditionExpression = "EntityId = :entityId"
-        return if (email.isNotEmpty()) {
-            "$keyConditionExpression AND Email = :email"
-        } else {
-            return "$keyConditionExpression AND Id = :id"
-        }
-    }
-
-    fun expressionAttributeValues(): Map<String, AttributeValue> {
-        val expressionAttributeValues = mutableMapOf(
-            ":entityId" to AttributeValue.builder().s("EntityId#User").build(),
-        )
-        if (id != null) {
-            expressionAttributeValues[":id"] = AttributeValue.builder().s(id.toString()).build()
-        }
-        if (email != "") {
-            expressionAttributeValues[":email"] = AttributeValue.builder().s(email).build()
-        }
-        return expressionAttributeValues
-    }
-}
 
 class UserRepositoryAdapter(
     private val dynamoDbClient: DynamoDbClient,
@@ -54,14 +24,14 @@ class UserRepositoryAdapter(
     }
 
     override fun findOrFail(criteria: UserCriteria): User {
-        val userDynamoCriteria = UserDynamoCriteria(id = criteria.id, email = criteria.email)
+        val userDynamoCriteria = UserDynamoCriteria.from(criteria)
         val query = buildQuery(
             userDynamoCriteria.keyConditionExpression(),
             userDynamoCriteria.expressionAttributeValues()
         )
         val queryResponse = dynamoDbClient.query(query)
         if (queryResponse.items().isEmpty()) {
-            throw UserInfrastructureError.UserNotFound(userDynamoCriteria.keyConditionExpression())
+            throw UserInfrastructureError.NotFound(userDynamoCriteria.keyConditionExpression())
         }
 
         val users: MutableList<UserDynamoEntity> = ArrayList()

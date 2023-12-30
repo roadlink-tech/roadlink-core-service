@@ -21,6 +21,9 @@ class FeedbackDynamoEntity @JvmOverloads constructor(
 
     var createdDate: Date? = Date(),
 
+    /*
+    * GSI RatingGSI
+    * */
     var rating: Int? = 0,
 
     /*
@@ -49,13 +52,13 @@ class FeedbackDynamoEntity @JvmOverloads constructor(
 
     companion object {
 
-        fun from(feedback: Feedback): FeedbackDynamoEntity {
+        fun from(item: Map<String, AttributeValue>): FeedbackDynamoEntity {
             return FeedbackDynamoEntity(
-                id = feedback.id,
-                rating = feedback.rating,
-                receiverId = feedback.receiverId,
-                reviewerId = feedback.reviewerId,
-                comment = feedback.comment
+                id = UUID.fromString(item["Id"]!!.s()),
+                rating = Integer.valueOf(item["Rating"]!!.n()),
+                receiverId = UUID.fromString(item["ReceiverId"]!!.s()),
+                reviewerId = UUID.fromString(item["ReviewerId"]!!.s()),
+                comment = item["Comment"]!!.s()
             )
         }
 

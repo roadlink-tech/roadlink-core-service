@@ -10,7 +10,7 @@ interface FeedbackRepositoryPort {
 
 class FeedbackCriteria(
     val id: UUID? = null,
-    val email: String? = null,
+    val rating: Int = 0,
     val receiverId: UUID? = null,
     val reviewerId: UUID? = null
 )
