@@ -1,19 +1,19 @@
 package com.roadlink.core.api.user
 
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper
 import com.roadlink.application.command.CommandHandler
 import com.roadlink.application.user.*
 import com.roadlink.core.domain.user.UserRepositoryPort
 import com.roadlink.core.infrastructure.user.UserRepositoryAdapter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import software.amazon.awssdk.services.dynamodb.DynamoDbClient
 
 @Configuration
 open class UserDefinition {
 
     @Bean
-    open fun userRepository(dynamoDBMapper: DynamoDBMapper): UserRepositoryPort {
-        return UserRepositoryAdapter(dynamoDBMapper)
+    open fun userRepository(dynamoDbClient: DynamoDbClient): UserRepositoryPort {
+        return UserRepositoryAdapter(dynamoDbClient)
     }
 
     @Bean("user_creation_command_handler")

@@ -17,7 +17,7 @@ class UserRepositoryAdapterIntegrationTest : BehaviorSpec({
     }
 
     Given("a container with dynamo and the user table already created") {
-        val mapper = LocalStackHelper.dynamoMapper(container)
+        val mapper = LocalStackHelper.dynamoDbClient(container)
         val repository = UserRepositoryAdapter(mapper)
         LocalStackHelper.createUserTableIn(container)
 
@@ -48,15 +48,16 @@ class UserRepositoryAdapterIntegrationTest : BehaviorSpec({
 
         When("save a new user and then find it by email") {
             val id = UUID.randomUUID()
-            val user = UserFactory.common(id = id)
+            val email = "jorgejcabrera@hotmail.com.ar"
+            val user = UserFactory.common(id = id, email = email)
             repository.save(user)
 
             val response = repository.findOrFail(UserCriteria(email = user.email))
             Then("the response should not be null") {
                 response.id shouldBe id
+                response.email shouldBe email
                 response.firstName shouldBe "Jorge Javier"
                 response.lastName shouldBe "Cabrera Vera"
-                response.email shouldBe "cabrerajjorge@gmail.com"
             }
         }
     }

@@ -85,6 +85,8 @@ data class FeedbackResponse(
     val id: UUID,
     @JsonProperty("reviewer_id")
     val reviewerId: UUID,
+    @JsonProperty("receiver_id")
+    val receiverId: UUID,
     @JsonProperty("comment")
     val comment: String,
     @JsonProperty("rating")
@@ -96,7 +98,8 @@ data class FeedbackResponse(
                 id = feedback.id,
                 reviewerId = feedback.reviewerId,
                 comment = feedback.comment,
-                rating = feedback.rating
+                rating = feedback.rating,
+                receiverId = feedback.receiverId
             )
         }
     }

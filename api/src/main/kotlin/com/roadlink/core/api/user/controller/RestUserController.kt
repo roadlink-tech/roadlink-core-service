@@ -3,8 +3,6 @@ package com.roadlink.core.api.user.controller
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.roadlink.application.command.CommandBus
 import com.roadlink.application.user.*
-import org.socialsignin.spring.data.dynamodb.repository.Query
-import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatus.*
 import org.springframework.web.bind.annotation.*
 import java.util.*

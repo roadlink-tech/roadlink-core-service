@@ -38,14 +38,6 @@ Resources:
             ReadCapacityUnits: 5
             WriteCapacityUnits: 5
       LocalSecondaryIndexes:
-        - IndexName: IdLSI
-          KeySchema:
-            - AttributeName: EntityId
-              KeyType: HASH
-            - AttributeName: Id
-              KeyType: RANGE
-          Projection:
-            ProjectionType: ALL
         - IndexName: ReceiverIdLSI
           KeySchema:
             - AttributeName: EntityId

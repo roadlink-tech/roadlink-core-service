@@ -1,10 +1,6 @@
 package com.roadlink.core.api.datasource
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider
-import com.amazonaws.client.builder.AwsClientBuilder
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDB
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
@@ -13,6 +9,11 @@ import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider
+import software.amazon.awssdk.regions.Region
+import software.amazon.awssdk.services.dynamodb.DynamoDbClient
+import java.net.URI
 
 @Configuration
 open class DynamoConfiguration {
@@ -33,23 +34,18 @@ open class DynamoConfiguration {
     }
 
     @Bean
-    open fun amazonDynamoDB(
-        @Qualifier("aws_credentials") amazonAWSCredentials: AWSStaticCredentialsProvider,
+    open fun dynamoDbClient(
+        @Qualifier("aws_credentials") awsCredentials: AWSStaticCredentialsProvider,
         @Qualifier("dynamo_credentials") dynamoCredentials: DynamoCredentials
-    ): AmazonDynamoDB? {
-        return AmazonDynamoDBClientBuilder
-            .standard()
-            .withCredentials(amazonAWSCredentials)
-            .withEndpointConfiguration(
-                AwsClientBuilder.EndpointConfiguration(dynamoCredentials.endpoint, dynamoCredentials.region)
-            )
+    ): DynamoDbClient? {
+        val credentials = AwsBasicCredentials.create("accessKey", "secretKey")
+        return DynamoDbClient.builder()
+            .region(Region.of(dynamoCredentials.region))
+            .credentialsProvider(StaticCredentialsProvider.create(credentials))
+            .endpointOverride(URI(dynamoCredentials.endpoint))
             .build()
     }
 
-    @Bean
-    open fun dynamoDBMapper(amazonDynamoDB: AmazonDynamoDB): DynamoDBMapper? {
-        return DynamoDBMapper(amazonDynamoDB)
-    }
 }
 
 data class DynamoCredentials(

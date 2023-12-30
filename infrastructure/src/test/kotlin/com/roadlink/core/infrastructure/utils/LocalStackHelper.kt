@@ -1,16 +1,16 @@
 package com.roadlink.core.infrastructure.utils
 
 
-import com.amazonaws.auth.AWSStaticCredentialsProvider
-import com.amazonaws.auth.BasicAWSCredentials
-import com.amazonaws.client.builder.AwsClientBuilder
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper
 import org.testcontainers.containers.BindMode.READ_WRITE
 import org.testcontainers.containers.localstack.LocalStackContainer
 import org.testcontainers.containers.localstack.LocalStackContainer.Service.CLOUDFORMATION
 import org.testcontainers.containers.localstack.LocalStackContainer.Service.DYNAMODB
 import org.testcontainers.utility.DockerImageName
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider
+import software.amazon.awssdk.regions.Region
+import software.amazon.awssdk.services.dynamodb.DynamoDbClient
+import java.net.URI
 
 private const val BASE_CONTAINER_CLASSPATH = "/opt/code/localstack/"
 private const val USER_DYNAMO_TABLE_CLASSPATH =
@@ -61,29 +61,21 @@ object LocalStackHelper {
             "sh",
             "clear-dynamo-table.sh"
         )
+        Thread.sleep(500)
     }
 
-    private fun awsStaticCredentialsProvider(container: LocalStackContainer): AWSStaticCredentialsProvider {
-        val credentials = BasicAWSCredentials(container.accessKey, container.secretKey)
-        return AWSStaticCredentialsProvider(credentials)
+    private fun awsStaticCredentialsProvider(container: LocalStackContainer): StaticCredentialsProvider? {
+        val credentials = AwsBasicCredentials.create(container.accessKey, container.secretKey)
+        return StaticCredentialsProvider.create(credentials)
     }
 
-    private fun endpointConfiguration(container: LocalStackContainer): AwsClientBuilder.EndpointConfiguration {
-        val endpoint = "http://${container.host}:${container.firstMappedPort}"
-        return AwsClientBuilder.EndpointConfiguration(endpoint, container.region)
-    }
-
-    fun dynamoMapper(container: LocalStackContainer): DynamoDBMapper {
-        val config = endpointConfiguration(container)
+    fun dynamoDbClient(container: LocalStackContainer): DynamoDbClient {
         val credentials = awsStaticCredentialsProvider(container)
-        return DynamoDBMapper(
-            AmazonDynamoDBClientBuilder
-                .standard()
-                .withCredentials(credentials)
-                .withEndpointConfiguration(
-                    config
-                )
-                .build()
-        )
+        val endpoint = "http://${container.host}:${container.firstMappedPort}"
+        return DynamoDbClient.builder()
+            .region(Region.of(container.region))
+            .credentialsProvider(credentials)
+            .endpointOverride(URI(endpoint))
+            .build()
     }
 }

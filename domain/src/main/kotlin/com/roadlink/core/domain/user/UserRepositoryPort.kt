@@ -9,5 +9,5 @@ interface UserRepositoryPort {
 
 class UserCriteria(
     val id: UUID? = null,
-    val email: String? = null
+    val email: String = ""
 )

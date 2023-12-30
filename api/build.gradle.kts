@@ -8,6 +8,7 @@ plugins {
 group = "com.roadlink.core.api"
 
 val springDataDynamodbVersion = "5.1.0"
+val awsJavaSdkDynamodbVersion = "2.22.5"
 
 ext["jakarta-servlet.version"] =
     "5.0.0" // This is needed if you want to use jetty instead of tomcat
@@ -26,7 +27,10 @@ dependencies {
     }
     implementation("org.springframework.boot:spring-boot-starter-jetty")
     // Datasource
-    implementation("com.github.derjust:spring-data-dynamodb:$springDataDynamodbVersion")
+    //implementation("com.github.derjust:spring-data-dynamodb:$springDataDynamodbVersion")
+    implementation("software.amazon.awssdk:dynamodb:$awsJavaSdkDynamodbVersion")
+    implementation("software.amazon.awssdk:sts:$awsJavaSdkDynamodbVersion")
+
     // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

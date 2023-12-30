@@ -1,68 +1,95 @@
 package com.roadlink.core.infrastructure.user
 
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression
-import com.amazonaws.services.dynamodbv2.model.AttributeValue
 import com.roadlink.core.domain.user.User
 import com.roadlink.core.domain.user.UserCriteria
 import com.roadlink.core.domain.user.UserRepositoryPort
 import com.roadlink.core.infrastructure.user.error.UserInfrastructureError
-import org.w3c.dom.Attr
-import java.text.SimpleDateFormat
+import software.amazon.awssdk.services.dynamodb.DynamoDbClient
+import software.amazon.awssdk.services.dynamodb.model.AttributeValue
+import software.amazon.awssdk.services.dynamodb.model.PutItemRequest
+import software.amazon.awssdk.services.dynamodb.model.QueryRequest
 import java.util.*
+import kotlin.collections.ArrayList
 
-class UserRepositoryAdapter(private val mapper: DynamoDBMapper) : UserRepositoryPort {
 
-    private var dateFormatter: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-
-    init {
-        dateFormatter.timeZone = TimeZone.getTimeZone("UTC")
+class UserDynamoCriteria(
+    val id: UUID? = null,
+    private val email: String = ""
+) {
+    fun keyConditionExpression(): String {
+        val keyConditionExpression = "EntityId = :entityId"
+        return if (email.isNotEmpty()) {
+            "$keyConditionExpression AND Email = :email"
+        } else {
+            return "$keyConditionExpression AND Id = :id"
+        }
     }
 
+    fun expressionAttributeValues(): Map<String, AttributeValue> {
+        val expressionAttributeValues = mutableMapOf(
+            ":entityId" to AttributeValue.builder().s("EntityId#User").build(),
+        )
+        if (id != null) {
+            expressionAttributeValues[":id"] = AttributeValue.builder().s(id.toString()).build()
+        }
+        if (email != "") {
+            expressionAttributeValues[":email"] = AttributeValue.builder().s(email).build()
+        }
+        return expressionAttributeValues
+    }
+}
+
+class UserRepositoryAdapter(
+    private val dynamoDbClient: DynamoDbClient,
+    private val tableName: String = "RoadlinkCore"
+) : UserRepositoryPort {
+
     override fun save(user: User): User {
-        mapper.save(UserDynamoEntity.from(user))
-        return user
+        val item = UserDynamoEntity.toItem(user)
+        val putItemRequest = PutItemRequest.builder()
+            .tableName(tableName)
+            .item(item)
+            .build()
+        dynamoDbClient.putItem(putItemRequest).also { return user }
     }
 
     override fun findOrFail(criteria: UserCriteria): User {
-        val expressionAttributeValues = mutableMapOf(
-            ":entityId" to AttributeValue().withS("EntityId#User"),
+        val userDynamoCriteria = UserDynamoCriteria(id = criteria.id, email = criteria.email)
+        val query = buildQuery(
+            userDynamoCriteria.keyConditionExpression(),
+            userDynamoCriteria.expressionAttributeValues()
         )
-        var conditionExpression = "EntityId = :entityId"
-
-        if (criteria.id != null) {
-            expressionAttributeValues[":id"] = AttributeValue().withS(criteria.id.toString())
-            conditionExpression = "$conditionExpression AND Id = :id"
+        val queryResponse = dynamoDbClient.query(query)
+        if (queryResponse.items().isEmpty()) {
+            throw UserInfrastructureError.UserNotFound(userDynamoCriteria.keyConditionExpression())
         }
 
-        if (criteria.email != null && criteria.email != "") {
-            expressionAttributeValues[":email"] = AttributeValue().withS(criteria.email.toString())
-            conditionExpression = "$conditionExpression AND Email = :email"
+        val users: MutableList<UserDynamoEntity> = ArrayList()
+
+        queryResponse.items().forEach { item ->
+            users.add(UserDynamoEntity.from(item))
         }
 
-        val q = buildQuery(conditionExpression, expressionAttributeValues)
-        val userDynamoEntity = mapper.query(UserDynamoEntity::class.java, q)
-        if (userDynamoEntity.isEmpty()) {
-            throw UserInfrastructureError.UserNotFound(conditionExpression)
-        }
-
-        return userDynamoEntity.first()!!.toDomain()
+        return users.first().toDomain()
     }
 
     private fun buildQuery(
         conditionExpression: String,
-        expressionAttributeValues: MutableMap<String, AttributeValue>
-    ): DynamoDBQueryExpression<UserDynamoEntity>? {
+        expressionAttributeValues: Map<String, AttributeValue>
+    ): QueryRequest {
         if (expressionAttributeValues[":email"] != null) {
-            return DynamoDBQueryExpression<UserDynamoEntity>()
-                .withIndexName("EmailLSI")
-                .withKeyConditionExpression(conditionExpression)
-                .withExpressionAttributeValues(expressionAttributeValues)
+            return QueryRequest.builder()
+                .indexName("EmailLSI")
+                .tableName(tableName)
+                .keyConditionExpression(conditionExpression)
+                .expressionAttributeValues(expressionAttributeValues)
+                .build()
         }
-        return DynamoDBQueryExpression<UserDynamoEntity>()
-            .withKeyConditionExpression(conditionExpression)
-            .withExpressionAttributeValues(expressionAttributeValues)
+        return QueryRequest.builder()
+            .tableName(tableName)
+            .keyConditionExpression(conditionExpression)
+            .expressionAttributeValues(expressionAttributeValues)
+            .build()
     }
 
 

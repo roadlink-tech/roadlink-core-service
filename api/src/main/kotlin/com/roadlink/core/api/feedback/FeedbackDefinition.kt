@@ -1,6 +1,5 @@
 package com.roadlink.core.api.feedback
 
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper
 import com.roadlink.application.command.CommandHandler
 import com.roadlink.application.feedback.FeedbackCreationCommand
 import com.roadlink.application.feedback.FeedbackCreationCommandHandler
@@ -12,13 +11,14 @@ import com.roadlink.core.domain.feedback.FeedbackRepositoryPort
 import com.roadlink.core.infrastructure.feedback.FeedbackRepositoryAdapter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import software.amazon.awssdk.services.dynamodb.DynamoDbClient
 
 @Configuration
 open class FeedbackDefinition {
 
     @Bean
-    open fun feedbackRepository(dynamoDBMapper: DynamoDBMapper): FeedbackRepositoryPort {
-        return FeedbackRepositoryAdapter(dynamoDBMapper)
+    open fun feedbackRepository(dynamoDbClient: DynamoDbClient): FeedbackRepositoryPort {
+        return FeedbackRepositoryAdapter(dynamoDbClient)
     }
 
     @Bean("feedback_creation_command_handler")
