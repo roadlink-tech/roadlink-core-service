@@ -30,7 +30,8 @@ class FeedbackDynamoCriteriaTest : BehaviorSpec({
             val criteria = FeedbackDynamoDbQuery(reviewerId = expectedId)
 
             Then("the key condition expression and attribute values must be ok") {
-                criteria.keyConditionExpression().shouldBe("ReviewerId = :reviewerId AND EntityId = :entityId")
+                criteria.keyConditionExpression()
+                    .shouldBe("ReviewerId = :reviewerId AND EntityId = :entityId")
                 criteria.expressionAttributeValues().shouldBe(
                     mapOf(
                         ":reviewerId" to AttributeValue.builder().s(expectedId.toString()).build(),
@@ -45,7 +46,8 @@ class FeedbackDynamoCriteriaTest : BehaviorSpec({
             val criteria = FeedbackDynamoDbQuery(receiverId = expectedId)
 
             Then("the key condition expression and attribute values must be ok") {
-                criteria.keyConditionExpression().shouldBe("ReceiverId = :receiverId AND EntityId = :entityId")
+                criteria.keyConditionExpression()
+                    .shouldBe("ReceiverId = :receiverId AND EntityId = :entityId")
                 criteria.expressionAttributeValues().shouldBe(
                     mapOf(
                         ":receiverId" to AttributeValue.builder().s(expectedId.toString()).build(),
@@ -60,10 +62,12 @@ class FeedbackDynamoCriteriaTest : BehaviorSpec({
             val criteria = FeedbackDynamoDbQuery(receiverId = expectedId, reviewerId = expectedId)
 
             Then("the key condition expression and attribute values must be ok") {
-                criteria.keyConditionExpression().shouldBe("ReceiverId = :receiverId AND EntityId = :entityId")
+                criteria.keyConditionExpression()
+                    .shouldBe("ReceiverId = :receiverId AND EntityId = :entityId")
                 criteria.expressionAttributeValues().shouldBe(
                     mapOf(
                         ":receiverId" to AttributeValue.builder().s(expectedId.toString()).build(),
+                        ":reviewerId" to AttributeValue.builder().s(expectedId.toString()).build(),
                         ":entityId" to AttributeValue.builder().s("EntityId#Feedback").build()
                     )
                 )
@@ -93,7 +97,8 @@ class FeedbackDynamoCriteriaTest : BehaviorSpec({
                 criteria.keyConditionExpression().shouldBe("Rating = :rating")
                 criteria.expressionAttributeValues().shouldBe(
                     mapOf(
-                        ":rating" to AttributeValue.builder().s(expectedRating.toString()).build()
+                        ":rating" to AttributeValue.builder().n(expectedRating.toString()).build(),
+                        ":entityId" to AttributeValue.builder().s("EntityId#Feedback").build()
                     )
                 )
             }
