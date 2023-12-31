@@ -5,10 +5,13 @@ import java.util.*
 
 object UserFactory {
 
-    fun common(id: UUID = UUID.randomUUID()): User {
+    fun custom(
+        id: UUID = UUID.randomUUID(),
+        email: String = "cabrerajjorge@gmail.com"
+    ): User {
         return User(
             id = id,
-            email = "cabrerajjorge@gmail.com",
+            email = email,
             firstName = "Jorge Javier",
             lastName = "Cabrera Vera"
         )

@@ -39,3 +39,5 @@ Before pushing your changes make sure that all test pass:
 ```bash
 make test
 ```
+If you are using IntelliJ then we highly recommend that use [Kotest plugin](https://plugins.jetbrains.com/plugin/14080-kotest).
+

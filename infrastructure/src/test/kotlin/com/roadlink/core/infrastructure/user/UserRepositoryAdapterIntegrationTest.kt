@@ -12,14 +12,17 @@ import java.util.*
 class UserRepositoryAdapterIntegrationTest : BehaviorSpec({
     val container = LocalStackHelper.containerWithDynamoDb()
     listener(container.perSpec())
+    afterEach {
+        LocalStackHelper.clearDynamoTableIn(container)
+    }
 
-    Given("a container with dynamo and the user table already created") {
-        val mapper = LocalStackHelper.dynamoMapper(container)
-        val repository = UserRepositoryAdapter(mapper)
-        LocalStackHelper.createUserTableIn(container)
+    Given("a container with dynamo and the table already created") {
+        val dynamoDbClient = LocalStackHelper.dynamoDbClient(container)
+        val repository = UserRepositoryAdapter(dynamoDbClient)
+        LocalStackHelper.createTableIn(container)
 
         When("try to save a new user entity") {
-            val user = UserFactory.common()
+            val user = UserFactory.custom()
             val response = shouldNotThrow<RuntimeException> {
                 repository.save(user)
             }
@@ -31,7 +34,7 @@ class UserRepositoryAdapterIntegrationTest : BehaviorSpec({
 
         When("save a new user and then find it by id") {
             val id = UUID.randomUUID()
-            val user = UserFactory.common(id = id)
+            val user = UserFactory.custom(id = id)
             repository.save(user)
 
             val response = repository.findOrFail(UserCriteria(id = id))
@@ -40,6 +43,21 @@ class UserRepositoryAdapterIntegrationTest : BehaviorSpec({
                 response.firstName shouldBe "Jorge Javier"
                 response.lastName shouldBe "Cabrera Vera"
                 response.email shouldBe "cabrerajjorge@gmail.com"
+            }
+        }
+
+        When("save a new user and then find it by email") {
+            val id = UUID.randomUUID()
+            val email = "jorgejcabrera@hotmail.com.ar"
+            val user = UserFactory.custom(id = id, email = email)
+            repository.save(user)
+
+            val response = repository.findOrFail(UserCriteria(email = user.email))
+            Then("the response should not be null") {
+                response.id shouldBe id
+                response.email shouldBe email
+                response.firstName shouldBe "Jorge Javier"
+                response.lastName shouldBe "Cabrera Vera"
             }
         }
     }
