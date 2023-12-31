@@ -9,7 +9,7 @@ class FeedbackDynamoDbEntityTest : BehaviorSpec({
 
 
     Given("a FeedbackDynamo entity") {
-        val entity = FeedbackDynamoDbEntity(id = UUID.randomUUID())
+        val entity = FeedbackDynamoDbEntity(id = UUID.randomUUID(), createdDate = Date())
         When("get the entityId") {
             val entityId = entity.entityId
             Then("it must be the expected") {

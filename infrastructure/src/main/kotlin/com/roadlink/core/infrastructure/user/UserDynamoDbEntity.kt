@@ -8,14 +8,12 @@ import java.util.*
 
 class UserDynamoDbEntity constructor(
     id: UUID,
-    var createdDate: Date? = Date(),
-    /*
-    * EmailLSI
-    * */
-    var email: String = "",
+    createdDate: Date,
     var firstName: String = "",
     var lastName: String = "",
-) : BaseDynamoDbEntity(id) {
+    /** EmailLSI */
+    var email: String = "",
+) : BaseDynamoDbEntity(id, createdDate) {
 
     fun toDomain(): User {
         check(this.id != null) { "User id could not be null." }
