@@ -8,13 +8,13 @@ import com.roadlink.core.infrastructure.user.error.UserInfrastructureError
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient
 import software.amazon.awssdk.services.dynamodb.model.PutItemRequest
 
+
 class FeedbackRepositoryAdapter(
     private val dynamoDbClient: DynamoDbClient,
     private val tableName: String = "RoadlinkCore"
 ) : FeedbackRepositoryPort {
     override fun save(feedback: Feedback): Feedback {
         val item = FeedbackDynamoDbEntity.toItem(feedback)
-
         val request = PutItemRequest.builder()
             .tableName(tableName)
             .item(item)
@@ -49,6 +49,7 @@ class FeedbackRepositoryAdapter(
 
         queryResponse.items().forEach { item ->
             feedbacks.add(FeedbackDynamoDbEntity.from(item))
+
         }
 
         return feedbacks.map { it.toDomain() }

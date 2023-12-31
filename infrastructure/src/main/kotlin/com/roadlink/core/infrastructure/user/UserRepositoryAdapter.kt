@@ -15,6 +15,7 @@ class UserRepositoryAdapter(
 
     override fun save(user: User): User {
         val item = UserDynamoDbEntity.toItem(user)
+
         val putItemRequest = PutItemRequest.builder()
             .tableName(tableName)
             .item(item)
@@ -40,6 +41,7 @@ class UserRepositoryAdapter(
 
         queryResponse.items().forEach { item ->
             users.add(UserDynamoDbEntity.from(item))
+
         }
 
         return users.first().toDomain()
