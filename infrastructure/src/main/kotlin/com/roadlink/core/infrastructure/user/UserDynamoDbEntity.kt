@@ -3,10 +3,9 @@ package com.roadlink.core.infrastructure.user
 import com.roadlink.core.domain.user.User
 import com.roadlink.core.infrastructure.dynamodb.DynamoDbDateFormatter
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue
-import java.text.SimpleDateFormat
 import java.util.*
 
-data class UserDynamoEntity @JvmOverloads constructor(
+data class UserDynamoDbEntity constructor(
 
     /**
      * Partition key: DynamoDB uses the partition key's value as input to an internal hash function.
@@ -46,8 +45,8 @@ data class UserDynamoEntity @JvmOverloads constructor(
 
     companion object {
 
-        fun from(item: Map<String, AttributeValue>): UserDynamoEntity {
-            return UserDynamoEntity(
+        fun from(item: Map<String, AttributeValue>): UserDynamoDbEntity {
+            return UserDynamoDbEntity(
                 entityId = item["EntityId"]!!.s(),
                 id = UUID.fromString(item["Id"]!!.s()),
                 createdDate = DynamoDbDateFormatter.instance().parse(item["CreatedDate"]!!.s()),

@@ -6,9 +6,7 @@ import com.roadlink.core.domain.user.UserRepositoryPort
 import com.roadlink.core.infrastructure.dynamodb.DynamoDbQuery
 import com.roadlink.core.infrastructure.user.error.UserInfrastructureError
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient
-import software.amazon.awssdk.services.dynamodb.model.AttributeValue
 import software.amazon.awssdk.services.dynamodb.model.PutItemRequest
-import software.amazon.awssdk.services.dynamodb.model.QueryRequest
 
 class UserRepositoryAdapter(
     private val dynamoDbClient: DynamoDbClient,
@@ -16,7 +14,7 @@ class UserRepositoryAdapter(
 ) : UserRepositoryPort {
 
     override fun save(user: User): User {
-        val item = UserDynamoEntity.toItem(user)
+        val item = UserDynamoDbEntity.toItem(user)
         val putItemRequest = PutItemRequest.builder()
             .tableName(tableName)
             .item(item)
@@ -38,10 +36,10 @@ class UserRepositoryAdapter(
             throw UserInfrastructureError.NotFound(userDynamoCriteria.keyConditionExpression())
         }
 
-        val users: MutableList<UserDynamoEntity> = ArrayList()
+        val users: MutableList<UserDynamoDbEntity> = ArrayList()
 
         queryResponse.items().forEach { item ->
-            users.add(UserDynamoEntity.from(item))
+            users.add(UserDynamoDbEntity.from(item))
         }
 
         return users.first().toDomain()

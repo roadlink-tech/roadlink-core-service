@@ -5,7 +5,7 @@ import software.amazon.awssdk.services.dynamodb.model.AttributeValue
 import java.util.*
 
 
-class FeedbackDynamoEntity @JvmOverloads constructor(
+class FeedbackDynamoDbEntity constructor(
     /**
      * Partition key: DynamoDB uses the partition key's value as input to an internal hash function.
      * The output from the hash function determines the partition (physical storage internal to DynamoDB) in which the item will be stored.
@@ -52,8 +52,8 @@ class FeedbackDynamoEntity @JvmOverloads constructor(
 
     companion object {
 
-        fun from(item: Map<String, AttributeValue>): FeedbackDynamoEntity {
-            return FeedbackDynamoEntity(
+        fun from(item: Map<String, AttributeValue>): FeedbackDynamoDbEntity {
+            return FeedbackDynamoDbEntity(
                 id = UUID.fromString(item["Id"]!!.s()),
                 rating = Integer.valueOf(item["Rating"]!!.n()),
                 receiverId = UUID.fromString(item["ReceiverId"]!!.s()),
