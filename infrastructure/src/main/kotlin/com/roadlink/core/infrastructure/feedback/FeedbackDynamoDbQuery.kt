@@ -1,17 +1,17 @@
 package com.roadlink.core.infrastructure.feedback
 
 import com.roadlink.core.domain.feedback.FeedbackCriteria
-import com.roadlink.core.infrastructure.dynamodb.BaseDynamoCriteria
+import com.roadlink.core.infrastructure.dynamodb.BaseDynamoDbQuery
 import com.roadlink.core.infrastructure.dynamodb.error.DynamoDbError
 import java.util.*
 
 
-class FeedbackDynamoCriteria(
+class FeedbackDynamoDbQuery(
     val id: UUID? = null,
     private val rating: Int = 0,
     private val receiverId: UUID? = null,
     private val reviewerId: UUID? = null,
-) : BaseDynamoCriteria() {
+) : BaseDynamoDbQuery() {
     override var entityId: String = "EntityId#Feedback"
 
     override fun fieldsInFilterExpression(): List<String> {
@@ -35,6 +35,22 @@ class FeedbackDynamoCriteria(
         return candidates
     }
 
+    override fun indexName(): String {
+        if (this.id != null) {
+            return ""
+        }
+        if (this.rating > 0) {
+            return "RatingGSI"
+        }
+        if (this.reviewerId != null) {
+            return "ReviewerIdLSI"
+        }
+        if (this.receiverId != null) {
+            return "ReceiverIdLSI"
+        }
+        throw DynamoDbError.InvalidQuery()
+    }
+
     override fun fieldsInKeyCondition(): List<String> {
         if (id != null) {
             return listOf("id", "entityId")
@@ -52,8 +68,8 @@ class FeedbackDynamoCriteria(
     }
 
     companion object {
-        fun from(criteria: FeedbackCriteria): FeedbackDynamoCriteria {
-            return FeedbackDynamoCriteria(
+        fun from(criteria: FeedbackCriteria): FeedbackDynamoDbQuery {
+            return FeedbackDynamoDbQuery(
                 id = criteria.id,
                 rating = criteria.rating,
                 reviewerId = criteria.reviewerId,

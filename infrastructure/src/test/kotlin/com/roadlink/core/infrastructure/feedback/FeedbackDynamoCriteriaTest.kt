@@ -12,7 +12,7 @@ class FeedbackDynamoCriteriaTest : BehaviorSpec({
 
         When("use the id as filter") {
             val expectedId = UUID.randomUUID()
-            val criteria = FeedbackDynamoCriteria(id = expectedId)
+            val criteria = FeedbackDynamoDbQuery(id = expectedId)
 
             Then("the key condition expression and attribute values must be ok") {
                 criteria.keyConditionExpression().shouldBe("Id = :id AND EntityId = :entityId")
@@ -27,7 +27,7 @@ class FeedbackDynamoCriteriaTest : BehaviorSpec({
 
         When("use the reviewer id as filter") {
             val expectedId = UUID.randomUUID()
-            val criteria = FeedbackDynamoCriteria(reviewerId = expectedId)
+            val criteria = FeedbackDynamoDbQuery(reviewerId = expectedId)
 
             Then("the key condition expression and attribute values must be ok") {
                 criteria.keyConditionExpression().shouldBe("ReviewerId = :reviewerId AND EntityId = :entityId")
@@ -42,7 +42,7 @@ class FeedbackDynamoCriteriaTest : BehaviorSpec({
 
         When("use the receiver id as filter") {
             val expectedId = UUID.randomUUID()
-            val criteria = FeedbackDynamoCriteria(receiverId = expectedId)
+            val criteria = FeedbackDynamoDbQuery(receiverId = expectedId)
 
             Then("the key condition expression and attribute values must be ok") {
                 criteria.keyConditionExpression().shouldBe("ReceiverId = :receiverId AND EntityId = :entityId")
@@ -57,7 +57,7 @@ class FeedbackDynamoCriteriaTest : BehaviorSpec({
 
         When("use the receiver id and reviewer id as filter") {
             val expectedId = UUID.randomUUID()
-            val criteria = FeedbackDynamoCriteria(receiverId = expectedId, reviewerId = expectedId)
+            val criteria = FeedbackDynamoDbQuery(receiverId = expectedId, reviewerId = expectedId)
 
             Then("the key condition expression and attribute values must be ok") {
                 criteria.keyConditionExpression().shouldBe("ReceiverId = :receiverId AND EntityId = :entityId")
@@ -72,7 +72,7 @@ class FeedbackDynamoCriteriaTest : BehaviorSpec({
 
         When("use the id and receiver id as filter") {
             val expectedId = UUID.randomUUID()
-            val criteria = FeedbackDynamoCriteria(id = expectedId)
+            val criteria = FeedbackDynamoDbQuery(id = expectedId)
 
             Then("the key condition expression and attribute values must be ok") {
                 criteria.keyConditionExpression().shouldBe("Id = :id AND EntityId = :entityId")
@@ -87,7 +87,7 @@ class FeedbackDynamoCriteriaTest : BehaviorSpec({
 
         When("use the rating as filter") {
             val expectedRating = 4
-            val criteria = FeedbackDynamoCriteria(rating = 4)
+            val criteria = FeedbackDynamoDbQuery(rating = 4)
 
             Then("the key condition expression and attribute values must be ok") {
                 criteria.keyConditionExpression().shouldBe("Rating = :rating")

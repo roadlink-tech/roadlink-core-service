@@ -1,17 +1,14 @@
 package com.roadlink.core.infrastructure.user
 
 import com.roadlink.core.domain.user.UserCriteria
-import com.roadlink.core.infrastructure.dynamodb.BaseDynamoCriteria
-import com.roadlink.core.infrastructure.dynamodb.DynamoCriteria
-import com.roadlink.core.infrastructure.dynamodb.isNumber
+import com.roadlink.core.infrastructure.dynamodb.BaseDynamoDbQuery
 import com.roadlink.core.infrastructure.user.error.UserInfrastructureError
-import software.amazon.awssdk.services.dynamodb.model.AttributeValue
 import java.util.*
 
-class UserDynamoCriteria(
+class UserDynamoDbQuery(
     val id: UUID? = null,
     private val email: String = ""
-) : BaseDynamoCriteria() {
+) : BaseDynamoDbQuery() {
 
     override var entityId: String = "EntityId#User"
 
@@ -32,9 +29,16 @@ class UserDynamoCriteria(
         return emptyList()
     }
 
+    override fun indexName(): String {
+        if (email != "") {
+            return "EmailLSI"
+        }
+        return ""
+    }
+
     companion object {
-        fun from(criteria: UserCriteria): UserDynamoCriteria {
-            return UserDynamoCriteria(
+        fun from(criteria: UserCriteria): UserDynamoDbQuery {
+            return UserDynamoDbQuery(
                 id = criteria.id,
                 email = criteria.email
             )
