@@ -1,6 +1,7 @@
 package com.roadlink.core.infrastructure.user
 
 import com.roadlink.core.domain.user.User
+import com.roadlink.core.infrastructure.dynamodb.BaseDynamoDbEntity
 import com.roadlink.core.infrastructure.dynamodb.DynamoDbDateFormatter
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue
 import java.util.*
@@ -30,7 +31,7 @@ data class UserDynamoDbEntity constructor(
     var firstName: String = "",
 
     var lastName: String = "",
-) {
+) : BaseDynamoDbEntity() {
 
     fun toDomain(): User {
         check(this.id != null) { "User id could not be null." }

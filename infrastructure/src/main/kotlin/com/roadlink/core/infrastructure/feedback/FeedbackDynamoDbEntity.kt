@@ -1,6 +1,7 @@
 package com.roadlink.core.infrastructure.feedback
 
 import com.roadlink.core.domain.feedback.Feedback
+import com.roadlink.core.infrastructure.dynamodb.BaseDynamoDbEntity
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue
 import java.util.*
 
@@ -37,7 +38,7 @@ class FeedbackDynamoDbEntity constructor(
     var reviewerId: UUID? = null,
 
     var comment: String = "",
-) {
+) : BaseDynamoDbEntity() {
 
     fun toDomain(): Feedback {
         check(this.id != null) { "User id could not be null." }
