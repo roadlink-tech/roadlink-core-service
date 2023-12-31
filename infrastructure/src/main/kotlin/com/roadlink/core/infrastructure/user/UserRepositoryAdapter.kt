@@ -4,7 +4,7 @@ import com.roadlink.core.domain.user.User
 import com.roadlink.core.domain.user.UserCriteria
 import com.roadlink.core.domain.user.UserRepositoryPort
 import com.roadlink.core.infrastructure.dynamodb.DynamoDbQuery
-import com.roadlink.core.infrastructure.user.error.UserInfrastructureError
+import com.roadlink.core.infrastructure.user.exception.UserInfrastructureError
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient
 import software.amazon.awssdk.services.dynamodb.model.PutItemRequest
 

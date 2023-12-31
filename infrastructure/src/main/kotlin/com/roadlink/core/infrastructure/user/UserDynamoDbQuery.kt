@@ -2,7 +2,7 @@ package com.roadlink.core.infrastructure.user
 
 import com.roadlink.core.domain.user.UserCriteria
 import com.roadlink.core.infrastructure.dynamodb.BaseDynamoDbQuery
-import com.roadlink.core.infrastructure.user.error.UserInfrastructureError
+import com.roadlink.core.infrastructure.user.exception.UserInfrastructureError
 import java.util.*
 
 class UserDynamoDbQuery(

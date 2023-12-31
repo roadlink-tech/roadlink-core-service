@@ -1,0 +1,28 @@
+package com.roadlink.core.domain.feedback.validation
+
+import com.roadlink.core.domain.feedback.Feedback
+import com.roadlink.core.domain.validation.BaseValidationService
+import com.roadlink.core.domain.validation.Validation
+
+class FeedbackValidationService(
+    override val validations: List<Validation<Feedback>> = listOf(
+        ReviewerAndReceiverMustBeDifferent(),
+        RatingValueMustBeBetweenOneAndFive()
+    )
+) : BaseValidationService<Feedback>()
+
+class ReviewerAndReceiverMustBeDifferent : Validation<Feedback> {
+    override fun execute(entity: Feedback) {
+        if (entity.receiverId == entity.reviewerId) {
+            throw RuntimeException("ReviewerId and ReceiverId must be different")
+        }
+    }
+}
+
+class RatingValueMustBeBetweenOneAndFive : Validation<Feedback> {
+    override fun execute(entity: Feedback) {
+        if (entity.rating !in 1..5) {
+            throw RuntimeException("Rating must be between 1 and 5")
+        }
+    }
+}

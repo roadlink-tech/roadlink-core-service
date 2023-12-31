@@ -1,6 +1,6 @@
 package com.roadlink.core.api.error
 
-import com.roadlink.core.infrastructure.user.error.UserInfrastructureError
+import com.roadlink.core.infrastructure.user.exception.UserInfrastructureError
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus

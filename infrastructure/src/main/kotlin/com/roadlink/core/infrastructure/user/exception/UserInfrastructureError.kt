@@ -1,4 +1,4 @@
-package com.roadlink.core.infrastructure.user.error
+package com.roadlink.core.infrastructure.user.exception
 
 import com.roadlink.core.infrastructure.InfrastructureException
 
