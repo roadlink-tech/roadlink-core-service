@@ -1,6 +1,5 @@
 package com.roadlink.core.infrastructure.dynamodb
 
-import com.roadlink.core.infrastructure.feedback.FeedbackDynamoCriteria
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue
 
 private const val ATTRIBUTE_NAMES = "attributeNames"
@@ -19,7 +18,7 @@ interface DynamoCriteria {
     fun filterExpression(): String
 }
 
-open abstract class BaseDynamoCriteria : DynamoCriteria {
+abstract class BaseDynamoCriteria : DynamoCriteria {
     val attributeNames = this::class.java.declaredFields
         .filter { it.name != COMPANION && it.name != ATTRIBUTE_NAMES }
         .map { field ->
@@ -39,7 +38,9 @@ open abstract class BaseDynamoCriteria : DynamoCriteria {
         val expressionAttributeValues = mutableMapOf<String, AttributeValue>()
         val fields = fieldsInKeyCondition() + fieldsInFilterExpression()
         fields.forEach { fieldName ->
-            val value = this.javaClass.getDeclaredField(fieldName).get(this)
+            val field = this.javaClass.getDeclaredField(fieldName)
+            field.trySetAccessible()
+            val value = field.get(this)
             if (value.isNumber()) {
                 expressionAttributeValues[":$fieldName"] =
                     AttributeValue.builder().n(value.toString()).build()

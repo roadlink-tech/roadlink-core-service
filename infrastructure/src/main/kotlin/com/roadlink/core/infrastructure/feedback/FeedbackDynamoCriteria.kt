@@ -3,8 +3,6 @@ package com.roadlink.core.infrastructure.feedback
 import com.roadlink.core.domain.feedback.FeedbackCriteria
 import com.roadlink.core.infrastructure.dynamodb.BaseDynamoCriteria
 import com.roadlink.core.infrastructure.dynamodb.error.DynamoDbError
-import com.roadlink.core.infrastructure.dynamodb.isNumber
-import software.amazon.awssdk.services.dynamodb.model.AttributeValue
 import java.util.*
 
 
@@ -51,22 +49,6 @@ class FeedbackDynamoCriteria(
             return listOf("reviewerId", "entityId")
         }
         throw DynamoDbError.InvalidKeyConditionExpression()
-    }
-
-    override fun expressionAttributeValues(): Map<String, AttributeValue> {
-        val expressionAttributeValues = mutableMapOf<String, AttributeValue>()
-        val fields = fieldsInKeyCondition() + fieldsInFilterExpression()
-        fields.forEach { fieldName ->
-            val value = this.javaClass.getDeclaredField(fieldName).get(this)
-            if (value.isNumber()) {
-                expressionAttributeValues[":$fieldName"] =
-                    AttributeValue.builder().n(value.toString()).build()
-            } else {
-                expressionAttributeValues[":$fieldName"] =
-                    AttributeValue.builder().s(value.toString()).build()
-            }
-        }
-        return expressionAttributeValues
     }
 
     companion object {

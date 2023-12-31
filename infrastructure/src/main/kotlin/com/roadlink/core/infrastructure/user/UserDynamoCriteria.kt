@@ -32,22 +32,6 @@ class UserDynamoCriteria(
         return emptyList()
     }
 
-    override fun expressionAttributeValues(): Map<String, AttributeValue> {
-        val expressionAttributeValues = mutableMapOf<String, AttributeValue>()
-        val fields = fieldsInKeyCondition() + fieldsInFilterExpression()
-        fields.forEach { fieldName ->
-            val value = this.javaClass.getDeclaredField(fieldName).get(this)
-            if (value.isNumber()) {
-                expressionAttributeValues[":$fieldName"] =
-                    AttributeValue.builder().n(value.toString()).build()
-            } else {
-                expressionAttributeValues[":$fieldName"] =
-                    AttributeValue.builder().s(value.toString()).build()
-            }
-        }
-        return expressionAttributeValues
-    }
-
     companion object {
         fun from(criteria: UserCriteria): UserDynamoCriteria {
             return UserDynamoCriteria(
