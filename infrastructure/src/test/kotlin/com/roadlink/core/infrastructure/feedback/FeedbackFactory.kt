@@ -9,7 +9,7 @@ object FeedbackFactory {
         id: UUID = UUID.randomUUID(),
         receiverId: UUID = UUID.randomUUID(),
         reviewerId: UUID = UUID.randomUUID(),
-        rating: Int = 5
+        rating: Int = 1
     ): Feedback {
         return Feedback(
             id = id,

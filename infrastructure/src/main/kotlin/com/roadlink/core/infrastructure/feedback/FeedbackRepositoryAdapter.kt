@@ -36,9 +36,18 @@ class FeedbackRepositoryAdapter(
 
     private fun buildQuery(
         keyConditionExpression: String,
+        filterExpression: String,
         expressionAttributeValues: Map<String, AttributeValue>
     ): QueryRequest {
         if (expressionAttributeValues[":id"] != null) {
+            if (filterExpression.isNotEmpty()) {
+                return QueryRequest.builder()
+                    .tableName(tableName)
+                    .keyConditionExpression(keyConditionExpression)
+                    .filterExpression(filterExpression)
+                    .expressionAttributeValues(expressionAttributeValues)
+                    .build()
+            }
             return QueryRequest.builder()
                 .tableName(tableName)
                 .keyConditionExpression(keyConditionExpression)
@@ -46,6 +55,15 @@ class FeedbackRepositoryAdapter(
                 .build()
         }
         if (expressionAttributeValues[":rating"] != null) {
+            if (filterExpression.isNotEmpty()) {
+                return QueryRequest.builder()
+                    .indexName("RatingGSI")
+                    .tableName(tableName)
+                    .keyConditionExpression(keyConditionExpression)
+                    .filterExpression(filterExpression)
+                    .expressionAttributeValues(expressionAttributeValues)
+                    .build()
+            }
             return QueryRequest.builder()
                 .indexName("RatingGSI")
                 .tableName(tableName)
@@ -54,6 +72,15 @@ class FeedbackRepositoryAdapter(
                 .build()
         }
         if (expressionAttributeValues[":reviewerId"] != null) {
+            if (filterExpression.isNotEmpty()) {
+                return QueryRequest.builder()
+                    .indexName("ReviewerIdLSI")
+                    .tableName(tableName)
+                    .keyConditionExpression(keyConditionExpression)
+                    .expressionAttributeValues(expressionAttributeValues)
+                    .filterExpression(filterExpression)
+                    .build()
+            }
             return QueryRequest.builder()
                 .indexName("ReviewerIdLSI")
                 .tableName(tableName)
@@ -62,6 +89,15 @@ class FeedbackRepositoryAdapter(
                 .build()
         }
         if (expressionAttributeValues[":receiverId"] != null) {
+            if (filterExpression.isNotEmpty()) {
+                return QueryRequest.builder()
+                    .indexName("ReceiverIdLSI")
+                    .tableName(tableName)
+                    .keyConditionExpression(keyConditionExpression)
+                    .expressionAttributeValues(expressionAttributeValues)
+                    .filterExpression(filterExpression)
+                    .build()
+            }
             return QueryRequest.builder()
                 .indexName("ReceiverIdLSI")
                 .tableName(tableName)
@@ -76,6 +112,7 @@ class FeedbackRepositoryAdapter(
         val feedbackDynamoCriteria = FeedbackDynamoCriteria.from(criteria)
         val query = buildQuery(
             feedbackDynamoCriteria.keyConditionExpression(),
+            feedbackDynamoCriteria.filterExpression(),
             feedbackDynamoCriteria.expressionAttributeValues()
         )
         val queryResponse = dynamoDbClient.query(query)

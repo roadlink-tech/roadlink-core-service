@@ -45,7 +45,6 @@ class FeedbackRepositoryAdapterIntegrationTest : BehaviorSpec({
             }
         }
 
-        // FIXME!
         When("save some new feedbacks and find some of them") {
             val receiverId = UUID.randomUUID()
             val reviewerId = UUID.randomUUID()
@@ -76,7 +75,6 @@ class FeedbackRepositoryAdapterIntegrationTest : BehaviorSpec({
                     reviewerId = reviewerId
                 )
             )
-
             Then("the response should not be null") {
                 feedbackFoundByReceiverId.shouldNotBeEmpty()
                 feedbackFoundByReceiverId.size.shouldBe(4)
@@ -91,13 +89,12 @@ class FeedbackRepositoryAdapterIntegrationTest : BehaviorSpec({
                 feedbackFoundById.filter { it.id != aFeedbackId }.shouldBeEmpty()
 
                 feedbacksFoundByRatingAndReceiverId.shouldNotBeEmpty()
-                feedbacksFoundByRatingAndReceiverId.size.shouldBe(3)
+                feedbacksFoundByRatingAndReceiverId.size.shouldBe(2)
                 feedbacksFoundByRatingAndReceiverId.filter { it.rating != 5 && it.receiverId != receiverId }
                     .shouldBeEmpty()
 
                 feedbacksFoundByIdAndReceiverId.shouldNotBeEmpty()
                 feedbacksFoundByIdAndReceiverId.size.shouldBe(1)
-
                 feedbacksFoundByRatingAndReceiverIdAndReviewer.shouldNotBeEmpty()
                 feedbacksFoundByRatingAndReceiverIdAndReviewer.size.shouldBe(1)
             }
