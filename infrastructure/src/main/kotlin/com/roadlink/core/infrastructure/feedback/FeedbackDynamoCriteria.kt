@@ -53,14 +53,6 @@ class FeedbackDynamoCriteria(
         throw DynamoDbError.InvalidKeyConditionExpression()
     }
 
-//    override fun keyConditionExpression(): String {
-//        return fieldsInKeyCondition().joinToString(" AND ") { field -> "${field.replaceFirstChar { it.uppercase() }} = :$field" }
-//    }
-//
-//    override fun filterExpression(): String {
-//        return fieldsInFilterExpression().joinToString(" AND ") { field -> "${field.replaceFirstChar { it.uppercase() }} = :$field" }
-//    }
-
     override fun expressionAttributeValues(): Map<String, AttributeValue> {
         val expressionAttributeValues = mutableMapOf<String, AttributeValue>()
         val fields = fieldsInKeyCondition() + fieldsInFilterExpression()
