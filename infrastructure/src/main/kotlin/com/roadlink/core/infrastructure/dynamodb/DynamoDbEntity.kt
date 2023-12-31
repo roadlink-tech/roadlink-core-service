@@ -1,16 +1,23 @@
 package com.roadlink.core.infrastructure.dynamodb
 
-private const val ATTRIBUTE_NAMES = "attributeNames"
-private const val COMPANION = "Companion"
+import java.util.*
 
 interface DynamoDbEntity {
+    /**
+     * Partition key: DynamoDB uses the partition key's value as input to an internal hash function.
+     * The output from the hash function determines the partition (physical storage internal to DynamoDB) in which the item will be stored.
+     */
+    var entityId: String
+
+    /**
+     *  Sorting key: The main purpose of a sorting key in Amazon DynamoDB is to allow for efficient querying and sorting of data within a DynamoDB table.
+     *  Sorting keys are a fundamental component of DynamoDB's data model, which uses a composite primary key consisting of a partition key
+     *  (also known as a hash key) and a sorting key (also known as a range key).
+     */
+    var id: UUID
 }
 
-abstract class BaseDynamoDbEntity : DynamoDbEntity {
-    val attributeNames = this::class.java.declaredFields
-        .filter { it.name != COMPANION && it.name != ATTRIBUTE_NAMES }
-        .map { field ->
-            val fieldName = field.name
-            fieldName
-        }
+abstract class BaseDynamoDbEntity(override var id: UUID) : DynamoDbEntity {
+    override var entityId: String = "EntityId#${Regex("^[A-Z]{1}[a-z]+").find(this::class.java.simpleName)?.value}"
+
 }
