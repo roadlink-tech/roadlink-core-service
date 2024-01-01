@@ -14,7 +14,10 @@ class FeedbackValidationService(
 class ReviewerAndReceiverMustBeDifferent : Validation<Feedback> {
     override fun execute(entity: Feedback) {
         if (entity.receiverId == entity.reviewerId) {
-            throw RuntimeException("ReviewerId and ReceiverId must be different")
+            throw FeedbackException.InvalidReviewerIdAndReceiverId(
+                entity.reviewerId,
+                entity.receiverId
+            )
         }
     }
 }
@@ -22,7 +25,7 @@ class ReviewerAndReceiverMustBeDifferent : Validation<Feedback> {
 class RatingValueMustBeBetweenOneAndFive : Validation<Feedback> {
     override fun execute(entity: Feedback) {
         if (entity.rating !in 1..5) {
-            throw RuntimeException("Rating must be between 1 and 5")
+            throw FeedbackException.InvalidRating(entity.rating)
         }
     }
 }

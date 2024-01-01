@@ -1,6 +1,8 @@
 package com.roadlink.core.api.error
 
-import com.roadlink.core.infrastructure.user.exception.UserInfrastructureError
+import com.roadlink.core.domain.DomainException
+import com.roadlink.core.domain.feedback.validation.FeedbackException
+import com.roadlink.core.infrastructure.user.exception.UserInfrastructureException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
@@ -51,8 +53,8 @@ class ExceptionHandlerController {
         return ResponseEntity(errorMessage, HttpStatus.METHOD_NOT_ALLOWED)
     }
 
-    @ExceptionHandler(UserInfrastructureError.NotFound::class)
-    fun handleInfrastructureException(ex: UserInfrastructureError.NotFound): ResponseEntity<ErrorResponse> {
+    @ExceptionHandler(UserInfrastructureException.NotFound::class)
+    fun handleInfrastructureException(ex: UserInfrastructureException.NotFound): ResponseEntity<ErrorResponse> {
         val errorMessage = ErrorResponse(
             HttpStatus.NOT_FOUND.toString(), message = ex.message
         )
@@ -60,13 +62,31 @@ class ExceptionHandlerController {
         return ResponseEntity(errorMessage, HttpStatus.NOT_FOUND)
     }
 
-    @ExceptionHandler(UserInfrastructureError.CriteriaEmpty::class)
-    fun handleInfrastructureException(ex: UserInfrastructureError.CriteriaEmpty): ResponseEntity<ErrorResponse> {
+    @ExceptionHandler(UserInfrastructureException.CriteriaEmpty::class)
+    fun handleInfrastructureException(ex: UserInfrastructureException.CriteriaEmpty): ResponseEntity<ErrorResponse> {
         val errorMessage = ErrorResponse(
             HttpStatus.BAD_REQUEST.toString(), message = ex.message
         )
 
         return ResponseEntity(errorMessage, HttpStatus.BAD_REQUEST)
+    }
+
+    @ExceptionHandler(FeedbackException.InvalidReviewerIdAndReceiverId::class)
+    fun handleInvalidReviewerIdAndReceiverIdException(ex: FeedbackException.InvalidReviewerIdAndReceiverId): ResponseEntity<ErrorResponse> {
+        val errorMessage = ErrorResponse(
+            HttpStatus.PRECONDITION_FAILED.toString(), message = ex.message
+        )
+
+        return ResponseEntity(errorMessage, HttpStatus.PRECONDITION_FAILED)
+    }
+
+    @ExceptionHandler(FeedbackException.InvalidRating::class)
+    fun handleInvalidRatingException(ex: FeedbackException.InvalidRating): ResponseEntity<ErrorResponse> {
+        val errorMessage = ErrorResponse(
+            HttpStatus.PRECONDITION_FAILED.toString(), message = ex.message
+        )
+
+        return ResponseEntity(errorMessage, HttpStatus.PRECONDITION_FAILED)
     }
 
     @ExceptionHandler

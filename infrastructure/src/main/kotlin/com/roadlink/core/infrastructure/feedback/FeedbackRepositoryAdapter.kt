@@ -4,7 +4,7 @@ import com.roadlink.core.domain.feedback.Feedback
 import com.roadlink.core.domain.feedback.FeedbackCriteria
 import com.roadlink.core.domain.feedback.FeedbackRepositoryPort
 import com.roadlink.core.infrastructure.dynamodb.DynamoDbQuery
-import com.roadlink.core.infrastructure.user.exception.UserInfrastructureError
+import com.roadlink.core.infrastructure.user.exception.UserInfrastructureException
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient
 import software.amazon.awssdk.services.dynamodb.model.PutItemRequest
 
@@ -26,7 +26,7 @@ class FeedbackRepositoryAdapter(
     override fun findOrFail(criteria: FeedbackCriteria): Feedback {
         val result = this.findAll(criteria)
         if (result.isEmpty()) {
-            throw UserInfrastructureError.NotFound(
+            throw UserInfrastructureException.NotFound(
                 FeedbackDynamoDbQuery.from(criteria).keyConditionExpression()
             )
         }
