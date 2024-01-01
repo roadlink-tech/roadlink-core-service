@@ -34,7 +34,7 @@ class UserRepositoryAdapter(
 
         val queryResponse = dynamoDbClient.query(query)
         if (queryResponse.items().isEmpty()) {
-            throw UserInfrastructureException.NotFound(userDynamoCriteria.keyConditionExpression())
+            throw UserInfrastructureException.NotFound(criteria.id)
         }
 
         val users: MutableList<UserDynamoDbEntity> = ArrayList()

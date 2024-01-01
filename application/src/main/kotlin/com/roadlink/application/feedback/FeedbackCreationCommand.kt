@@ -18,7 +18,8 @@ class FeedbackCreationCommandHandler(
 ) :
     CommandHandler<FeedbackCreationCommand, FeedbackCreationCommandResponse> {
     override fun handle(command: FeedbackCreationCommand): FeedbackCreationCommandResponse {
-        val user = userRepository.findOrFail(UserCriteria(id = command.feedback.reviewerId))
+        userRepository.findOrFail(UserCriteria(id = command.feedback.receiverId))
+        userRepository.findOrFail(UserCriteria(id = command.feedback.reviewerId))
         val feedback = feedbackRepository.save(command.feedback.toDomain())
         return FeedbackCreationCommandResponse(feedback = FeedbackDTO.from(feedback))
     }

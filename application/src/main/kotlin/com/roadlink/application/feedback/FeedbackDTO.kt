@@ -9,7 +9,7 @@ data class FeedbackDTO(
     val reviewerId: UUID,
     val receiverId: UUID,
     val rating: Int,
-    val comment: String
+    val comment: String = ""
 ) {
 
     fun toDomain(): Feedback {

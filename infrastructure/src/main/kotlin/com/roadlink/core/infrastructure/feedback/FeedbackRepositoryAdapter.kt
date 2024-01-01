@@ -26,9 +26,7 @@ class FeedbackRepositoryAdapter(
     override fun findOrFail(criteria: FeedbackCriteria): Feedback {
         val result = this.findAll(criteria)
         if (result.isEmpty()) {
-            throw UserInfrastructureException.NotFound(
-                FeedbackDynamoDbQuery.from(criteria).keyConditionExpression()
-            )
+            throw UserInfrastructureException.NotFound(criteria.id)
         }
 
         return result.first()
