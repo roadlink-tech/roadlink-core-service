@@ -7,7 +7,7 @@ import com.roadlink.application.feedback.FeedbackCreationCommandResponse
 import com.roadlink.application.feedback.FeedbackDTO
 import com.roadlink.application.feedback.RetrieveFeedbacksCommand
 import com.roadlink.application.feedback.RetrieveFeedbacksCommandResponse
-import org.springframework.http.HttpStatus
+import org.springframework.http.HttpStatus.*
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -24,7 +24,7 @@ class FeedbackController(private val commandBus: CommandBus) {
 
     @PostMapping
     @ResponseBody
-    @ResponseStatus(value = HttpStatus.CREATED)
+    @ResponseStatus(value = CREATED)
     fun createFeedback(
         @PathVariable receiverId: String,
         @RequestBody request: FeedbackCreationRequest
@@ -38,13 +38,12 @@ class FeedbackController(private val commandBus: CommandBus) {
 
     @GetMapping
     @ResponseBody
-    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseStatus(value = OK)
     fun retrieveUserFeedbacks(@PathVariable receiverId: String): List<FeedbackResponse> {
         val response =
             commandBus.publish<RetrieveFeedbacksCommand, RetrieveFeedbacksCommandResponse>(
                 RetrieveFeedbacksCommand(receiverId)
             )
-
         return response.feedbacks.map { FeedbackResponse.from(it) }
     }
 }

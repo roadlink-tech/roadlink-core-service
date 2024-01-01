@@ -1,9 +1,7 @@
 package com.roadlink.application.feedback
 
 import com.roadlink.application.DefaultIdGenerator
-import com.roadlink.application.user.UserDTO
 import com.roadlink.core.domain.feedback.Feedback
-import com.roadlink.core.domain.user.User
 import java.util.UUID
 
 data class FeedbackDTO(
@@ -11,7 +9,7 @@ data class FeedbackDTO(
     val reviewerId: UUID,
     val receiverId: UUID,
     val rating: Int,
-    val comment: String
+    val comment: String = ""
 ) {
 
     fun toDomain(): Feedback {

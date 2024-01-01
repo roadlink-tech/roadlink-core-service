@@ -1,6 +1,9 @@
 package com.roadlink.core.domain.feedback
 
-import java.util.UUID
+import com.roadlink.core.domain.DomainEntity
+import com.roadlink.core.domain.feedback.validation.FeedbackValidationService
+import java.util.*
+
 
 data class Feedback(
     val id: UUID,
@@ -8,4 +11,9 @@ data class Feedback(
     val receiverId: UUID,
     val rating: Int,
     val comment: String
-)
+) : DomainEntity {
+
+    init {
+        FeedbackValidationService().validate(this)
+    }
+}
