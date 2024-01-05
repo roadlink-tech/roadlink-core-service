@@ -6,5 +6,6 @@ data class User(
     val id: UUID,
     val email: String = "",
     val firstName: String = "",
-    val lastName: String = ""
+    val lastName: String = "",
+    val creationDate: Date = Date()
 )

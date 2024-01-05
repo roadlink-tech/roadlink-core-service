@@ -9,6 +9,7 @@ data class UserDTO(
     val email: String,
     val firstName: String,
     val lastName: String
+    // TODO ojo ver comoo manejar el registration date
 ) {
     fun toDomain(): User {
         return User(id = id, email = email, firstName = firstName, lastName = lastName)

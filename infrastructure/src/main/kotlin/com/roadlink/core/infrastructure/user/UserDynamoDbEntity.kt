@@ -21,7 +21,8 @@ class UserDynamoDbEntity constructor(
             id = this.id!!,
             email = this.email,
             firstName = this.firstName,
-            lastName = this.lastName
+            lastName = this.lastName,
+            creationDate = this.createdDate
         )
     }
 

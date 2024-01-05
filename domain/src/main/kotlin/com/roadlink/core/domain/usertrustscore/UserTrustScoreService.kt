@@ -1,0 +1,34 @@
+package com.roadlink.core.domain.usertrustscore
+
+import com.roadlink.core.domain.feedback.FeedbackCriteria
+import com.roadlink.core.domain.feedback.FeedbackRepositoryPort
+import com.roadlink.core.domain.user.UserCriteria
+import com.roadlink.core.domain.user.UserRepositoryPort
+import java.time.temporal.ChronoUnit
+import java.util.*
+
+interface UserTrustScoreService {
+    fun findById(userId: UUID): UserTrustScore
+}
+
+class DefaultUserTrustScoreService(
+    private val userRepositoryPort: UserRepositoryPort,
+    private val feedbackRepositoryPort: FeedbackRepositoryPort
+) : UserTrustScoreService {
+    override fun findById(userId: UUID): UserTrustScore {
+        val user = userRepositoryPort.findOrFail(UserCriteria(id = userId))
+        val feedbacksReceived =
+            feedbackRepositoryPort.findAll(FeedbackCriteria(receiverId = userId))
+        val feedbacksGiven = feedbackRepositoryPort.findAll(FeedbackCriteria(reviewerId = userId))
+        return UserTrustScore(
+            score = feedbacksReceived.sumOf { it.rating }.div(feedbacksReceived.size.toDouble()),
+            enrollmentAge = ChronoUnit.DAYS.between(
+                user.creationDate.toInstant(),
+                Date().toInstant()
+            ),
+            feedbacksGiven = feedbacksGiven.size,
+            feedbacksReceived = feedbacksReceived.size
+        )
+    }
+
+}

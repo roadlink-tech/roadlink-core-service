@@ -1,7 +1,7 @@
 package com.roadlink.application.user
 
 import com.roadlink.core.domain.user.User
-import java.util.UUID
+import java.util.*
 
 object UserFactory {
 
@@ -15,7 +15,8 @@ object UserFactory {
             id = id,
             firstName = firstName,
             lastName = lastName,
-            email = email
+            email = email,
+            creationDate = Date()
         )
     }
 }
