@@ -24,15 +24,31 @@ class RestUserTrustScoreController(private val commandBus: CommandBus) {
 
 }
 
+data class FeedbacksInfo(
+    @JsonProperty("given")
+    val given: Int,
+    @JsonProperty("received")
+    val received: Int
+)
+
 data class UserTrustScoreResponse(
     @JsonProperty("score")
-    val score: Double
+    val score: Double,
+    @JsonProperty("feedbacks")
+    val feedbacksInfo: FeedbacksInfo,
+    @JsonProperty("enrollment_days")
+    val enrollmentDays: Long
 ) {
 
     companion object {
         fun from(response: UserTrustScoreDTO): UserTrustScoreResponse {
             return UserTrustScoreResponse(
-                score = response.score
+                score = response.score,
+                feedbacksInfo = FeedbacksInfo(
+                    received = response.feedbacksReceived,
+                    given = response.feedbacksGiven
+                ),
+                enrollmentDays = response.enrollmentDays
             )
         }
     }

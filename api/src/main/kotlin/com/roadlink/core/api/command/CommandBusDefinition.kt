@@ -34,7 +34,7 @@ open class CommandBusDefinition {
             it.registerHandler(retrieveUserCommandHandler)
             it.registerHandler(searchUserCommandHandler)
             it.registerHandler(retrieveFeedbacksCommandHandler)
-            it.registerHandler(retrieveUserCommandHandler)
+            it.registerHandler(retrieveUserTrustScoreCommandHandler)
         }
     }
 }
