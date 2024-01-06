@@ -1,7 +1,8 @@
 package com.roadlink.application.user
 
+import com.roadlink.core.domain.RepositoryPort
 import com.roadlink.core.domain.user.User
-import com.roadlink.core.domain.user.UserRepositoryPort
+import com.roadlink.core.domain.user.UserCriteria
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
@@ -11,7 +12,7 @@ import java.util.*
 class UserCreationCommandHandlerTest : BehaviorSpec({
 
     Given("a UserCreationCommandHandler") {
-        val userRepository: UserRepositoryPort = mockk()
+        val userRepository: RepositoryPort<User, UserCriteria> = mockk()
         val handler = UserCreationCommandHandler(userRepository)
 
         When("receives a command and the user could be saved successfully") {
@@ -25,7 +26,7 @@ class UserCreationCommandHandlerTest : BehaviorSpec({
                     lastName = "cabrera"
                 )
             )
-            every { userRepository.save(user = match { it.id == userId }) } returns User(
+            every { userRepository.save(match { it.id == userId }) } returns User(
                 id = userId,
                 email = email,
                 firstName = "jorge",

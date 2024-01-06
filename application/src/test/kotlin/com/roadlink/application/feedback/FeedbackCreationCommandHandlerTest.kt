@@ -1,8 +1,11 @@
 package com.roadlink.application.feedback
 
 import com.roadlink.application.user.UserFactory
-import com.roadlink.core.domain.feedback.FeedbackRepositoryPort
-import com.roadlink.core.domain.user.UserRepositoryPort
+import com.roadlink.core.domain.RepositoryPort
+import com.roadlink.core.domain.feedback.Feedback
+import com.roadlink.core.domain.feedback.FeedbackCriteria
+import com.roadlink.core.domain.user.User
+import com.roadlink.core.domain.user.UserCriteria
 import com.roadlink.core.infrastructure.user.exception.UserInfrastructureException
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
@@ -15,8 +18,8 @@ import java.util.*
 
 class FeedbackCreationCommandHandlerTest : BehaviorSpec({
 
-    val feedbackRepository = mockk<FeedbackRepositoryPort>()
-    val userRepository = mockk<UserRepositoryPort>()
+    val feedbackRepository = mockk<RepositoryPort<Feedback, FeedbackCriteria>>()
+    val userRepository = mockk<RepositoryPort<User, UserCriteria>>()
     Given("a feedback creation command handler") {
         val commandHandler = FeedbackCreationCommandHandler(userRepository, feedbackRepository)
 

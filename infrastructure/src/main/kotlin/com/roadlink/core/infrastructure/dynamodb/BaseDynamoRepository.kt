@@ -1,6 +1,5 @@
 package com.roadlink.core.infrastructure.dynamodb
 
-import com.roadlink.core.infrastructure.user.UserDynamoDbQuery
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient
 import software.amazon.awssdk.services.dynamodb.model.*
 
@@ -31,11 +30,12 @@ abstract class BaseDynamoRepository(
         dynamoDbClient.batchWriteItem(batchWriteItemRequest)
     }
 
-    fun find(dynamoQuery: UserDynamoDbQuery): QueryResponse {
+    fun find(dynamoQuery: DynamoDbQuery): QueryResponse {
         val query = DynamoDbQuery.Builder()
             .withTableName(tableName)
             .withIndexName(dynamoQuery.indexName())
             .withKeyConditionExpression(dynamoQuery.keyConditionExpression())
+            .withFilterExpression(dynamoQuery.filterExpression())
             .withExpressionAttributeValues(dynamoQuery.expressionAttributeValues())
             .build()
 

@@ -1,9 +1,12 @@
 package com.roadlink.core.domain.usertrustscore
 
-import com.roadlink.core.domain.feedback.FeedbackRepositoryPort
+import com.roadlink.core.domain.RepositoryPort
+import com.roadlink.core.domain.feedback.Feedback
+import com.roadlink.core.domain.feedback.FeedbackCriteria
 import com.roadlink.core.domain.feedback.FeedbacksFactory
+import com.roadlink.core.domain.user.User
+import com.roadlink.core.domain.user.UserCriteria
 import com.roadlink.core.domain.user.UserFactory
-import com.roadlink.core.domain.user.UserRepositoryPort
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.longs.shouldBeGreaterThan
@@ -11,13 +14,12 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import java.lang.RuntimeException
 import java.util.*
 
 class UserTrustScoreTest : BehaviorSpec({
 
-    val userRepository = mockk<UserRepositoryPort>()
-    val feedbackRepository = mockk<FeedbackRepositoryPort>()
+    val userRepository = mockk<RepositoryPort<User, UserCriteria>>()
+    val feedbackRepository = mockk<RepositoryPort<Feedback, FeedbackCriteria>>()
 
     Given("a user trust score service") {
         When("look for a user trust score that is related to a user which does not exist") {

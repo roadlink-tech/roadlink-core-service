@@ -3,8 +3,11 @@ package com.roadlink.application.usertrustscore
 import com.roadlink.application.command.Command
 import com.roadlink.application.command.CommandHandler
 import com.roadlink.application.command.CommandResponse
-import com.roadlink.core.domain.feedback.FeedbackRepositoryPort
-import com.roadlink.core.domain.user.UserRepositoryPort
+import com.roadlink.core.domain.RepositoryPort
+import com.roadlink.core.domain.feedback.Feedback
+import com.roadlink.core.domain.feedback.FeedbackCriteria
+import com.roadlink.core.domain.user.User
+import com.roadlink.core.domain.user.UserCriteria
 import com.roadlink.core.domain.usertrustscore.UserTrustScore
 import java.util.*
 
@@ -13,8 +16,8 @@ class RetrieveUserTrustScoreCommandResponse(val userTrustScore: UserTrustScoreDT
 class RetrieveUserTrustScoreCommand(val userId: String) : Command
 
 class RetrieveUserTrustScoreCommandHandler(
-    private val userRepository: UserRepositoryPort,
-    private val feedbackRepository: FeedbackRepositoryPort
+    private val userRepository: RepositoryPort<User, UserCriteria>,
+    private val feedbackRepository: RepositoryPort<Feedback, FeedbackCriteria>
 ) :
     CommandHandler<RetrieveUserTrustScoreCommand, RetrieveUserTrustScoreCommandResponse> {
 

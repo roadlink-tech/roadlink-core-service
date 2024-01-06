@@ -1,8 +1,9 @@
 package com.roadlink.core.domain.friend
 
 
+import com.roadlink.core.domain.RepositoryPort
+import com.roadlink.core.domain.user.User
 import com.roadlink.core.domain.user.UserCriteria
-import com.roadlink.core.domain.user.UserRepositoryPort
 import java.util.*
 
 
@@ -12,7 +13,7 @@ data class FriendshipRequest(
     val creationDate: Date,
     var status: Status = Status.PENDING
 ) {
-    fun accept(userRepository: UserRepositoryPort) {
+    fun accept(userRepository: RepositoryPort<User, UserCriteria>) {
         val requester = userRepository.findOrFail(UserCriteria(requesterId))
         val addressed = userRepository.findOrFail(UserCriteria(addressedId))
         requester.beFriends(addressed)

@@ -1,5 +1,6 @@
 package com.roadlink.core.domain.user
 
+import com.roadlink.core.domain.DomainEntity
 import java.util.*
 
 /* TODO:
@@ -15,7 +16,7 @@ data class User(
     val lastName: String = "",
     val creationDate: Date = Date(),
     internal val friends: MutableSet<UUID> = mutableSetOf()
-) {
+) : DomainEntity {
 
     fun beFriends(user: User) {
         if (this.id != user.id && !this.friends.contains(user.id)) {

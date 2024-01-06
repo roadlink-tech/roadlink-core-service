@@ -10,6 +10,7 @@ dependencies {
     // DynamoDB
     implementation("software.amazon.awssdk:dynamodb:$awsJavaSdkDynamodbVersion")
     implementation("software.amazon.awssdk:sts:$awsJavaSdkDynamodbVersion")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:1.5.21")
 
     // Test
     testImplementation("io.kotest.extensions:kotest-extensions-testcontainers:$kotestExtensionsTestcontainersVersion")
