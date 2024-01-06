@@ -9,6 +9,8 @@ import com.roadlink.application.feedback.RetrieveFeedbacksCommand
 import com.roadlink.application.feedback.RetrieveFeedbacksCommandHandler
 import com.roadlink.application.feedback.RetrieveFeedbacksCommandResponse
 import com.roadlink.application.user.*
+import com.roadlink.application.usertrustscore.RetrieveUserTrustScoreCommand
+import com.roadlink.application.usertrustscore.RetrieveUserTrustScoreCommandResponse
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -22,7 +24,9 @@ open class CommandBusDefinition {
         @Qualifier("retrieve_user_command_handler") retrieveUserCommandHandler: CommandHandler<RetrieveUserCommand, RetrieveUserCommandResponse>,
         @Qualifier("search_user_command_handler") searchUserCommandHandler: CommandHandler<SearchUserCommand, SearchUserCommandResponse>,
         @Qualifier("feedback_creation_command_handler") feedbackCreationCommandHandler: CommandHandler<FeedbackCreationCommand, FeedbackCreationCommandResponse>,
-        @Qualifier("retrieve_feedbacks_command_handler") retrieveFeedbacksCommandHandler: CommandHandler<RetrieveFeedbacksCommand, RetrieveFeedbacksCommandResponse>
+        @Qualifier("retrieve_feedbacks_command_handler") retrieveFeedbacksCommandHandler: CommandHandler<RetrieveFeedbacksCommand, RetrieveFeedbacksCommandResponse>,
+        @Qualifier("user_trust_score_command_handler") retrieveUserTrustScoreCommandHandler: CommandHandler<RetrieveUserTrustScoreCommand, RetrieveUserTrustScoreCommandResponse>
+
     ): CommandBus {
         return SimpleCommandBus().also {
             it.registerHandler(userCreationCommandHandler)
@@ -30,6 +34,7 @@ open class CommandBusDefinition {
             it.registerHandler(retrieveUserCommandHandler)
             it.registerHandler(searchUserCommandHandler)
             it.registerHandler(retrieveFeedbacksCommandHandler)
+            it.registerHandler(retrieveUserCommandHandler)
         }
     }
 }

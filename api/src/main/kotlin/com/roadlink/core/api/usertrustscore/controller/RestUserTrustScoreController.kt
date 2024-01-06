@@ -2,16 +2,11 @@ package com.roadlink.core.api.usertrustscore.controller
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.roadlink.application.command.CommandBus
-import com.roadlink.application.user.RetrieveUserCommand
-import com.roadlink.application.user.RetrieveUserCommandResponse
-import com.roadlink.core.api.user.controller.UserResponse
+import com.roadlink.application.usertrustscore.RetrieveUserTrustScoreCommand
+import com.roadlink.application.usertrustscore.RetrieveUserTrustScoreCommandResponse
+import com.roadlink.application.usertrustscore.UserTrustScoreDTO
 import org.springframework.http.HttpStatus
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.ResponseBody
-import org.springframework.web.bind.annotation.ResponseStatus
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/users/{userId}/user_trust_score")
@@ -20,16 +15,25 @@ class RestUserTrustScoreController(private val commandBus: CommandBus) {
     @GetMapping
     @ResponseBody
     @ResponseStatus(value = HttpStatus.OK)
-    fun retrieve(@PathVariable("userId") userId: String): UserResponse {
-        val response = commandBus.publish<RetrieveUserCommand, RetrieveUserCommandResponse>(
-            RetrieveUserCommand(userId)
+    fun retrieve(@PathVariable("userId") userId: String): UserTrustScoreResponse {
+        val response = commandBus.publish<RetrieveUserTrustScoreCommand, RetrieveUserTrustScoreCommandResponse>(
+            RetrieveUserTrustScoreCommand(userId)
         )
-        return UserResponse.from(response.user)
+        return UserTrustScoreResponse.from(response.userTrustScore)
     }
 
 }
 
 data class UserTrustScoreResponse(
     @JsonProperty("score")
-    val score: Float
-)
+    val score: Double
+) {
+
+    companion object {
+        fun from(response: UserTrustScoreDTO): UserTrustScoreResponse {
+            return UserTrustScoreResponse(
+                score = response.score
+            )
+        }
+    }
+}

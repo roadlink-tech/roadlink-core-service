@@ -4,5 +4,5 @@ data class UserTrustScore(
     val score: Double,
     val feedbacksReceived: Int,
     val feedbacksGiven: Int,
-    val enrollmentAge: Long,
+    val enrollmentDays: Long,
 )

@@ -45,6 +45,19 @@ class FeedbackRepositoryAdapterIntegrationTest : BehaviorSpec({
             }
         }
 
+        When("there isn't any feedback that saved") {
+            val feedbacks = repository.findAll(
+                criteria = FeedbackCriteria(
+                    rating = 5,
+                    receiverId = UUID.randomUUID(),
+                    reviewerId = UUID.randomUUID()
+                )
+            )
+
+            Then("the response should be empty") {
+                feedbacks.shouldBeEmpty()
+            }
+        }
         When("save some new feedbacks and find some of them") {
             val receiverId = UUID.randomUUID()
             val reviewerId = UUID.randomUUID()
