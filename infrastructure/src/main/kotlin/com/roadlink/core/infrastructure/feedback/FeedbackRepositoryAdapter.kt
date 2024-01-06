@@ -3,24 +3,19 @@ package com.roadlink.core.infrastructure.feedback
 import com.roadlink.core.domain.feedback.Feedback
 import com.roadlink.core.domain.feedback.FeedbackCriteria
 import com.roadlink.core.domain.feedback.FeedbackRepositoryPort
+import com.roadlink.core.infrastructure.dynamodb.BaseDynamoRepository
 import com.roadlink.core.infrastructure.dynamodb.DynamoDbQuery
 import com.roadlink.core.infrastructure.user.exception.UserInfrastructureException
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient
-import software.amazon.awssdk.services.dynamodb.model.PutItemRequest
 
 
 class FeedbackRepositoryAdapter(
     private val dynamoDbClient: DynamoDbClient,
     private val tableName: String = "RoadlinkCore"
-) : FeedbackRepositoryPort {
+) : FeedbackRepositoryPort, BaseDynamoRepository(dynamoDbClient, tableName) {
     override fun save(feedback: Feedback): Feedback {
         val item = FeedbackDynamoDbEntity.toItem(feedback)
-        val request = PutItemRequest.builder()
-            .tableName(tableName)
-            .item(item)
-            .build()
-
-        dynamoDbClient.putItem(request).also { return feedback }
+        save(item).also { return feedback }
     }
 
     override fun findOrFail(criteria: FeedbackCriteria): Feedback {

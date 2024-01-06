@@ -46,6 +46,21 @@ class UserRepositoryAdapterIntegrationTest : BehaviorSpec({
             }
         }
 
+        When("save entities in batch") {
+            val response =
+                repository.saveAll(
+                    listOf(
+                        UserFactory.custom(),
+                        UserFactory.custom(),
+                        UserFactory.custom()
+                    )
+                )
+
+            Then("the response should not be null") {
+                response.size.shouldBe(3)
+            }
+        }
+
         When("save a new user and then find it by email") {
             val id = UUID.randomUUID()
             val email = "jorgejcabrera@hotmail.com.ar"

@@ -5,6 +5,10 @@ import com.roadlink.core.domain.feedback.validation.FeedbackValidationService
 import java.util.*
 
 
+/* TODO
+ - created date
+ - trip id
+*/
 data class Feedback(
     val id: UUID,
     val reviewerId: UUID,

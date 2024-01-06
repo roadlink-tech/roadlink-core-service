@@ -12,24 +12,20 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import java.lang.RuntimeException
-import java.util.UUID
+import java.util.*
 
-class UserTrustScoreServiceTest : BehaviorSpec({
+class UserTrustScoreTest : BehaviorSpec({
 
     val userRepository = mockk<UserRepositoryPort>()
     val feedbackRepository = mockk<FeedbackRepositoryPort>()
 
     Given("a user trust score service") {
-        val userTrustScoreService = DefaultUserTrustScoreService(
-            userRepository, feedbackRepository
-        )
-
         When("look for a user trust score that is related to a user which does not exist") {
             val userId = UUID.randomUUID()
             every { userRepository.findOrFail(any()) } throws RuntimeException("User does not exist")
 
             shouldThrow<RuntimeException> {
-                userTrustScoreService.findById(userId)
+                UserTrustScore.get(userId, userRepository, feedbackRepository)
             }
 
             Then("the feedback repository was not used") {
@@ -46,7 +42,8 @@ class UserTrustScoreServiceTest : BehaviorSpec({
             )
             every { feedbackRepository.findAll(any()) } returns listOf()
 
-            val response = userTrustScoreService.findById(userId)
+            val response = UserTrustScore.get(userId, userRepository, feedbackRepository)
+
 
             Then("the feedback repository was not used") {
                 response.feedbacksGiven.shouldBe(0)
@@ -73,7 +70,7 @@ class UserTrustScoreServiceTest : BehaviorSpec({
                 FeedbacksFactory.common(reviewerId = oldUserId)
             )
 
-            val response = userTrustScoreService.findById(oldUserId)
+            val response = UserTrustScore.get(oldUserId, userRepository, feedbackRepository)
             Then("the score and the feedbacks amount must be the expected") {
                 response.score.shouldBe(3.5)
                 response.feedbacksReceived.shouldBe(4)
