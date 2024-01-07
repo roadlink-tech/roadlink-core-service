@@ -1,5 +1,6 @@
 package com.roadlink.core.infrastructure.friend
 
+import com.roadlink.core.domain.friend.FriendshipSolicitude
 import com.roadlink.core.domain.friend.FriendshipSolicitudeCriteria
 import com.roadlink.core.infrastructure.dynamodb.BaseDynamoDbQuery
 import com.roadlink.core.infrastructure.dynamodb.DynamoDbQueryMapper
@@ -10,6 +11,7 @@ class FriendshipSolicitudeDynamoDbQuery(
     val id: UUID? = null,
     val requesterId: UUID? = null,
     val addressedId: UUID? = null,
+    val solicitudeStatus: FriendshipSolicitude.Status? = null,
 ) : BaseDynamoDbQuery() {
     override var entityId: String = "EntityId#FriendshipSolicitude"
 
@@ -21,6 +23,9 @@ class FriendshipSolicitudeDynamoDbQuery(
         }
         if (id == null) {
             candidates.remove("id")
+        }
+        if (solicitudeStatus == null) {
+            candidates.remove("solicitudeStatus")
         }
         if (requesterId == null) {
             candidates.remove("requesterId")
@@ -49,22 +54,12 @@ class FriendshipSolicitudeDynamoDbQuery(
             return listOf("id", "entityId")
         }
         if (requesterId != null) {
-            return listOf("receiverId", "entityId")
+            return listOf("requesterId")
         }
         if (addressedId != null) {
-            return listOf("addressedId", "entityId")
+            return listOf("addressedId")
         }
         throw DynamoDbError.InvalidKeyConditionExpression()
-    }
-
-    companion object {
-        fun from(criteria: FriendshipSolicitudeCriteria): FriendshipSolicitudeDynamoDbQuery {
-            return FriendshipSolicitudeDynamoDbQuery(
-                id = criteria.id,
-                requesterId = criteria.requesterId,
-                addressedId = criteria.addressedId
-            )
-        }
     }
 }
 
@@ -74,7 +69,8 @@ class FriendshipSolicitudeDynamoDbQueryMapper :
         return FriendshipSolicitudeDynamoDbQuery(
             id = criteria.id,
             requesterId = criteria.requesterId,
-            addressedId = criteria.addressedId
+            addressedId = criteria.addressedId,
+            solicitudeStatus = criteria.solicitudeStatus
         )
     }
 }

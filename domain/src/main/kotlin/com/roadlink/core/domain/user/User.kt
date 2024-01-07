@@ -1,9 +1,17 @@
 package com.roadlink.core.domain.user
 
 import com.roadlink.core.domain.DomainEntity
+import com.roadlink.core.domain.DomainException
 import com.roadlink.core.domain.RepositoryPort
 import java.util.*
 import kotlin.collections.List
+
+sealed class UserException(override val message: String, cause: Throwable? = null) :
+    DomainException(message, cause) {
+
+    class UserAlreadyAreFriends(requesterId: UUID, addressedId: UUID) :
+        UserException("Users $requesterId and $addressedId already are friends")
+}
 
 /* TODO:
     1- photo url
@@ -28,6 +36,12 @@ data class User(
         if (this.id != user.id && !this.friends.contains(user.id)) {
             this.friends.add(user.id)
             user.beFriends(this)
+        }
+    }
+
+    fun checkIfAlreadyAreFriends(user: User) {
+        if (this.friends.contains(user.id)) {
+            throw UserException.UserAlreadyAreFriends(this.id, user.id)
         }
     }
 

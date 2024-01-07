@@ -25,14 +25,17 @@ class FeedbackCreationCommandHandlerTest : BehaviorSpec({
 
         When("handle a command with a receiverId that not exist") {
             val receiverId = UUID.randomUUID()
+            val reviewerId = UUID.randomUUID()
             val command = FeedbackCreationCommand(
                 feedback = FeedbackDTO(
                     id = UUID.randomUUID(),
                     receiverId = receiverId,
-                    reviewerId = UUID.randomUUID(),
+                    reviewerId = reviewerId,
                     rating = 2
                 )
             )
+
+            every { userRepository.findOrFail(match { it.id == reviewerId }) } returns UserFactory.common(id = reviewerId)
 
             every { userRepository.findOrFail(match { it.id == receiverId }) }.throws(
                 UserInfrastructureException.NotFound(receiverId)

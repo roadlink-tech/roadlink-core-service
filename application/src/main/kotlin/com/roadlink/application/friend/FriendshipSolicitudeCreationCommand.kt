@@ -15,21 +15,21 @@ class FriendshipSolicitudeCreationCommandResponse(val friendshipSolicitude: Frie
 class FriendshipSolicitudeCreationCommand(val friendshipSolicitude: FriendshipSolicitudeDTO) : Command
 
 
+// TODO test me!
 class FriendshipSolicitudeCreationCommandHandler(
     private val userRepository: RepositoryPort<User, UserCriteria>,
     private val friendshipSolicitudeRepository: RepositoryPort<FriendshipSolicitude, FriendshipSolicitudeCriteria>
 ) :
     CommandHandler<FriendshipSolicitudeCreationCommand, FriendshipSolicitudeCreationCommandResponse> {
     override fun handle(command: FriendshipSolicitudeCreationCommand): FriendshipSolicitudeCreationCommandResponse {
-        User.checkIfEntitiesExist(
-            userRepository,
-            listOf(
-                UserCriteria(id = command.friendshipSolicitude.addressedId),
-                UserCriteria(id = command.friendshipSolicitude.requesterId),
-            )
-        )
+        val requester = userRepository.findOrFail(UserCriteria(id = command.friendshipSolicitude.requesterId))
+        val addressed = userRepository.findOrFail(UserCriteria(id = command.friendshipSolicitude.addressedId))
+        requester.checkIfAlreadyAreFriends(addressed)
 
-        command.friendshipSolicitude.toDomain().save(friendshipSolicitudeRepository).also { friendshipSolicitude ->
+        val solicitude = command.friendshipSolicitude.toDomain()
+        solicitude.checkIfExistsAPendingSolicitude(friendshipSolicitudeRepository)
+
+        solicitude.save(friendshipSolicitudeRepository).also { friendshipSolicitude ->
             return FriendshipSolicitudeCreationCommandResponse(
                 friendshipSolicitude = FriendshipSolicitudeDTO.from(
                     friendshipSolicitude

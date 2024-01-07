@@ -14,7 +14,7 @@ class FriendshipSolicitudeDynamoDbEntity constructor(
     createdDate: Date = Date(),
     val requesterId: UUID,
     val addressedId: UUID,
-    val status: FriendshipSolicitude.Status
+    val solicitudeStatus: FriendshipSolicitude.Status
 ) : BaseDynamoDbEntity(id, createdDate) {
 
     override fun toDomain(): DomainEntity {
@@ -23,7 +23,7 @@ class FriendshipSolicitudeDynamoDbEntity constructor(
             createdDate = this.createdDate,
             requesterId = this.requesterId,
             addressedId = this.addressedId,
-            status = this.status
+            solicitudeStatus = this.solicitudeStatus
         )
     }
 
@@ -34,14 +34,15 @@ class FriendshipSolicitudeDynamoDbEntity constructor(
                 id = UUID.fromString(item["Id"]!!.s()),
                 requesterId = UUID.fromString(item["RequesterId"]!!.s()),
                 addressedId = UUID.fromString(item["AddressedId"]!!.s()),
-                status = FriendshipSolicitude.Status.valueOf(item["Status"]!!.s()),
+                solicitudeStatus = FriendshipSolicitude.Status.valueOf(item["SolicitudeStatus"]!!.s()),
                 createdDate = DynamoDbDateFormatter.instance().parse(item["CreatedDate"]!!.s()),
             )
         }
     }
 }
 
-class FriendshipSolicitudeDynamoDbEntityMapper : BaseDynamoDbEntityMapper<FriendshipSolicitude, FriendshipSolicitudeDynamoDbEntity>() {
+class FriendshipSolicitudeDynamoDbEntityMapper :
+    BaseDynamoDbEntityMapper<FriendshipSolicitude, FriendshipSolicitudeDynamoDbEntity>() {
 
     override fun from(item: Map<String, AttributeValue>): FriendshipSolicitudeDynamoDbEntity {
         return FriendshipSolicitudeDynamoDbEntity.from(item)
@@ -54,7 +55,7 @@ class FriendshipSolicitudeDynamoDbEntityMapper : BaseDynamoDbEntityMapper<Friend
             "CreatedDate" to AttributeValue.builder().s(DynamoDbDateFormatter.instance().format(Date())).build(),
             "AddressedId" to AttributeValue.builder().s(entity.addressedId.toString()).build(),
             "RequesterId" to AttributeValue.builder().s(entity.requesterId.toString()).build(),
-            "Status" to AttributeValue.builder().s(entity.status.toString()).build()
+            "SolicitudeStatus" to AttributeValue.builder().s(entity.solicitudeStatus.toString()).build()
         )
     }
 }

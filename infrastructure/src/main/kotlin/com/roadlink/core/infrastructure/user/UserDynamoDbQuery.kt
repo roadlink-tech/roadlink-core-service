@@ -43,15 +43,6 @@ class UserDynamoDbQuery(
             email = criteria.email
         )
     }
-
-    companion object {
-        fun from(criteria: UserCriteria): UserDynamoDbQuery {
-            return UserDynamoDbQuery(
-                id = criteria.id,
-                email = criteria.email
-            )
-        }
-    }
 }
 
 class UserDynamoDbQueryMapper : DynamoDbQueryMapper<UserCriteria, UserDynamoDbQuery> {

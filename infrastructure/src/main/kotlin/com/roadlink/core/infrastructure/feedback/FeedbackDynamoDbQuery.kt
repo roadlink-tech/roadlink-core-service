@@ -67,17 +67,6 @@ class FeedbackDynamoDbQuery(
         }
         throw DynamoDbError.InvalidKeyConditionExpression()
     }
-
-    companion object {
-        fun from(criteria: FeedbackCriteria): FeedbackDynamoDbQuery {
-            return FeedbackDynamoDbQuery(
-                id = criteria.id,
-                rating = criteria.rating,
-                reviewerId = criteria.reviewerId,
-                receiverId = criteria.receiverId
-            )
-        }
-    }
 }
 
 class FeedbackDynamoDbQueryMapper : DynamoDbQueryMapper<FeedbackCriteria, FeedbackDynamoDbQuery> {

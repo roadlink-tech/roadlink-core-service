@@ -15,7 +15,7 @@ data class FriendshipSolicitudeDTO(
             id = id,
             requesterId = requesterId,
             addressedId = addressedId,
-            status = status
+            solicitudeStatus = status
         )
     }
 
@@ -25,7 +25,7 @@ data class FriendshipSolicitudeDTO(
                 id = solicitude.id,
                 addressedId = solicitude.addressedId,
                 requesterId = solicitude.requesterId,
-                status = solicitude.status
+                status = solicitude.solicitudeStatus
             )
         }
     }
