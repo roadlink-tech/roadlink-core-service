@@ -6,3 +6,5 @@ interface RepositoryPort<T : DomainEntity, C : DomainCriteria> {
     fun findOrFail(criteria: C): T
     fun findAll(criteria: C): List<T>
 }
+
+interface DomainCriteria
