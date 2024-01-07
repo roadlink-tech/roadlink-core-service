@@ -3,8 +3,10 @@ package com.roadlink.core.infrastructure.user
 import com.roadlink.core.domain.DomainEntity
 import com.roadlink.core.domain.user.User
 import com.roadlink.core.infrastructure.dynamodb.BaseDynamoDbEntity
+import com.roadlink.core.infrastructure.dynamodb.BaseDynamoDbEntityMapper
 import com.roadlink.core.infrastructure.dynamodb.DynamoDbDateFormatter
 import com.roadlink.core.infrastructure.dynamodb.DynamoDbEntityMapper
+import com.roadlink.core.infrastructure.feedback.FeedbackDynamoDbEntity
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue
 import software.amazon.awssdk.services.dynamodb.model.QueryResponse
 import java.util.*
@@ -44,18 +46,10 @@ class UserDynamoDbEntity constructor(
     }
 }
 
-class UserDynamoDbEntityMapper : DynamoDbEntityMapper<User, UserDynamoDbEntity> {
+class UserDynamoDbEntityMapper : BaseDynamoDbEntityMapper<User, UserDynamoDbEntity>() {
+
     override fun from(item: Map<String, AttributeValue>): UserDynamoDbEntity {
         return UserDynamoDbEntity.from(item)
-    }
-
-    override fun mapAll(response: QueryResponse): List<User> {
-        val entities: MutableList<UserDynamoDbEntity> = ArrayList()
-        response.items().forEach { item ->
-            entities.add(UserDynamoDbEntity.from(item))
-        }
-
-        return entities.map { it.toDomain() as User }
     }
 
     override fun toItem(entity: User): Map<String, AttributeValue> {

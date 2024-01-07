@@ -3,6 +3,7 @@ package com.roadlink.core.infrastructure.feedback
 import com.roadlink.core.domain.DomainEntity
 import com.roadlink.core.domain.feedback.Feedback
 import com.roadlink.core.infrastructure.dynamodb.BaseDynamoDbEntity
+import com.roadlink.core.infrastructure.dynamodb.BaseDynamoDbEntityMapper
 import com.roadlink.core.infrastructure.dynamodb.DynamoDbDateFormatter
 import com.roadlink.core.infrastructure.dynamodb.DynamoDbEntityMapper
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue
@@ -53,18 +54,10 @@ class FeedbackDynamoDbEntity constructor(
     }
 }
 
-class FeedbackDynamoDbEntityMapper : DynamoDbEntityMapper<Feedback, FeedbackDynamoDbEntity> {
+class FeedbackDynamoDbEntityMapper : BaseDynamoDbEntityMapper<Feedback, FeedbackDynamoDbEntity>() {
 
     override fun from(item: Map<String, AttributeValue>): FeedbackDynamoDbEntity {
         return FeedbackDynamoDbEntity.from(item)
-    }
-
-    override fun mapAll(response: QueryResponse): List<Feedback> {
-        val entities: MutableList<FeedbackDynamoDbEntity> = ArrayList()
-        response.items().forEach { item ->
-            entities.add(FeedbackDynamoDbEntity.from(item))
-        }
-        return entities.map { it.toDomain() as Feedback }
     }
 
     override fun toItem(entity: Feedback): Map<String, AttributeValue> {

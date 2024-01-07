@@ -1,5 +1,6 @@
 package com.roadlink.core.infrastructure.dynamodb
 
+import com.roadlink.core.domain.DomainCriteria
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue
 import software.amazon.awssdk.services.dynamodb.model.QueryRequest
 
@@ -118,3 +119,6 @@ abstract class BaseDynamoDbQuery : DynamoDbQuery {
     }
 }
 
+interface DynamoDbQueryMapper<C : DomainCriteria, Q : BaseDynamoDbQuery> {
+    fun from(criteria: C): Q
+}
