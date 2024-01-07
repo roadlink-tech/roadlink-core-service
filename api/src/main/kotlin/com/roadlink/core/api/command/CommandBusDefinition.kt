@@ -31,6 +31,7 @@ open class CommandBusDefinition {
         @Qualifier("user_trust_score_command_handler") retrieveUserTrustScoreCommandHandler: CommandHandler<RetrieveUserTrustScoreCommand, RetrieveUserTrustScoreCommandResponse>,
         @Qualifier("friendship_solicitude_creation_command_handler") friendshipSolicitudeCreationCommandHandler: CommandHandler<FriendshipSolicitudeCreationCommand, FriendshipSolicitudeCreationCommandResponse>,
         @Qualifier("friendship_solicitude_acceptance_command_handler") friendshipSolicitudeAcceptanceCommandHandler: CommandHandler<FriendshipSolicitudeAcceptanceCommand, FriendshipSolicitudeAcceptanceCommandResponse>,
+
     ): CommandBus {
         return SimpleCommandBus().also {
             it.registerHandler(userCreationCommandHandler)
@@ -41,6 +42,7 @@ open class CommandBusDefinition {
             it.registerHandler(retrieveUserTrustScoreCommandHandler)
             it.registerHandler(friendshipSolicitudeCreationCommandHandler)
             it.registerHandler(friendshipSolicitudeAcceptanceCommandHandler)
+
         }
     }
 }

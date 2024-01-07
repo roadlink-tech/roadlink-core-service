@@ -6,7 +6,6 @@ import java.util.*
 
 
 object UserFactory {
-
     fun common(
         id: UUID = UUID.randomUUID(),
         email: String = "cabrerajjorge@gmail.com",

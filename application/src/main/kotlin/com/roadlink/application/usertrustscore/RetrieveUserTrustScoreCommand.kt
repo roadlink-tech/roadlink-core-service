@@ -9,6 +9,7 @@ import com.roadlink.core.domain.feedback.FeedbackCriteria
 import com.roadlink.core.domain.user.User
 import com.roadlink.core.domain.user.UserCriteria
 import com.roadlink.core.domain.usertrustscore.UserTrustScore
+
 import java.util.*
 
 class RetrieveUserTrustScoreCommandResponse(val userTrustScore: UserTrustScoreDTO) : CommandResponse
