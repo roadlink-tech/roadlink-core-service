@@ -1,5 +1,6 @@
 package com.roadlink.core.infrastructure.feedback
 
+import com.roadlink.core.domain.DomainEntity
 import com.roadlink.core.domain.feedback.Feedback
 import com.roadlink.core.infrastructure.dynamodb.BaseDynamoDbEntity
 import com.roadlink.core.infrastructure.dynamodb.DynamoDbDateFormatter
@@ -24,7 +25,7 @@ class FeedbackDynamoDbEntity constructor(
     var comment: String = "",
 ) : BaseDynamoDbEntity(id, createdDate) {
 
-    fun toDomain(): Feedback {
+    override fun toDomain(): DomainEntity {
         check(this.id != null) { "User id could not be null." }
         return Feedback(
             id = this.id!!,
@@ -45,18 +46,6 @@ class FeedbackDynamoDbEntity constructor(
                 reviewerId = UUID.fromString(item["ReviewerId"]!!.s()),
                 comment = item["Comment"]!!.s(),
                 createdDate = DynamoDbDateFormatter.instance().parse(item["CreatedDate"]!!.s()),
-            )
-        }
-
-        fun toItem(feedback: Feedback): Map<String, AttributeValue> {
-            return mapOf(
-                "EntityId" to AttributeValue.builder().s("EntityId#Feedback").build(),
-                "Id" to AttributeValue.builder().s(feedback.id.toString()).build(),
-                "CreatedDate" to AttributeValue.builder().s(DynamoDbDateFormatter.instance().format(Date())).build(),
-                "Rating" to AttributeValue.builder().n(feedback.rating.toString()).build(),
-                "ReceiverId" to AttributeValue.builder().s(feedback.receiverId.toString()).build(),
-                "ReviewerId" to AttributeValue.builder().s(feedback.reviewerId.toString()).build(),
-                "Comment" to AttributeValue.builder().s(feedback.comment).build()
             )
         }
     }

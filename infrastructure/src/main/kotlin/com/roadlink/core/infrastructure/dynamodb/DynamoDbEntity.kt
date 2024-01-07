@@ -1,5 +1,6 @@
 package com.roadlink.core.infrastructure.dynamodb
 
+import com.roadlink.core.domain.DomainEntity
 import java.util.*
 
 interface DynamoDbEntity {
@@ -16,6 +17,8 @@ interface DynamoDbEntity {
      */
     var id: UUID
     var createdDate: Date
+
+    fun toDomain(): DomainEntity
 
 }
 

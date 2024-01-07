@@ -7,7 +7,7 @@ import java.util.*
 
 class UserDynamoDbQuery(
     val id: UUID? = null,
-    private val email: String = ""
+    private val email: String = "",
 ) : BaseDynamoDbQuery() {
 
     override var entityId: String = "EntityId#User"
@@ -34,6 +34,13 @@ class UserDynamoDbQuery(
             return "EmailLSI"
         }
         return ""
+    }
+
+    fun from(criteria: UserCriteria): UserDynamoDbQuery {
+        return UserDynamoDbQuery(
+            id = criteria.id,
+            email = criteria.email
+        )
     }
 
     companion object {

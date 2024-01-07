@@ -5,7 +5,9 @@ import com.roadlink.application.user.*
 import com.roadlink.core.domain.RepositoryPort
 import com.roadlink.core.domain.user.User
 import com.roadlink.core.domain.user.UserCriteria
-import com.roadlink.core.infrastructure.user.UserRepositoryAdapter
+import com.roadlink.core.infrastructure.dynamodb.RepositoryAdapter
+import com.roadlink.core.infrastructure.user.UserDynamoDbEntityMapper
+import com.roadlink.core.infrastructure.user.UserDynamoDbQueryMapper
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient
@@ -15,7 +17,14 @@ open class UserDefinition {
 
     @Bean
     open fun userRepository(dynamoDbClient: DynamoDbClient): RepositoryPort<User, UserCriteria> {
-        return UserRepositoryAdapter(dynamoDbClient)
+        val dynamoEntityMapper = UserDynamoDbEntityMapper()
+        val dynamoQueryMapper = UserDynamoDbQueryMapper()
+        return RepositoryAdapter(
+            dynamoDbClient,
+            "RoadlinkCore",
+            dynamoEntityMapper,
+            dynamoQueryMapper
+        )
     }
 
     @Bean("user_creation_command_handler")
