@@ -25,7 +25,7 @@ data class User(
     val firstName: String = "",
     val lastName: String = "",
     val creationDate: Date = Date(),
-    internal val friends: MutableSet<UUID> = mutableSetOf()
+    val friends: MutableSet<UUID> = mutableSetOf()
 ) : DomainEntity {
 
     fun save(userRepository: RepositoryPort<User, UserCriteria>): User {

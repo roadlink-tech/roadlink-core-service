@@ -18,6 +18,7 @@ class UserDynamoDbEntity constructor(
     var lastName: String = "",
     /** EmailLSI */
     var email: String = "",
+    var friends: Set<UUID> = emptySet()
 ) : BaseDynamoDbEntity(id, createdDate) {
 
     override fun toDomain(): DomainEntity {
@@ -27,7 +28,8 @@ class UserDynamoDbEntity constructor(
             email = this.email,
             firstName = this.firstName,
             lastName = this.lastName,
-            creationDate = this.createdDate
+            creationDate = this.createdDate,
+            friends = this.friends.toMutableSet()
         )
     }
 
@@ -40,7 +42,8 @@ class UserDynamoDbEntity constructor(
                 createdDate = DynamoDbDateFormatter.instance().parse(item["CreatedDate"]!!.s()),
                 email = item["Email"]!!.s(),
                 firstName = item["FirstName"]!!.s(),
-                lastName = item["LastName"]!!.s()
+                lastName = item["LastName"]!!.s(),
+                friends = item["Friends"]?.ss()?.map { UUID.fromString(it) }?.toSet() ?: emptySet()
             )
         }
     }
@@ -53,13 +56,22 @@ class UserDynamoDbEntityMapper : BaseDynamoDbEntityMapper<User, UserDynamoDbEnti
     }
 
     override fun toItem(entity: User): Map<String, AttributeValue> {
+        val friendsSet = entity.friends.map { it.toString() }.toSet()
+
+        val friendsAttributeValue = if (friendsSet.isNotEmpty()) {
+            AttributeValue.builder().ss(friendsSet).build()
+        } else {
+            AttributeValue.builder().nul(true).build()
+        }
+
         return mapOf(
             "EntityId" to AttributeValue.builder().s("EntityId#User").build(),
             "Id" to AttributeValue.builder().s(entity.id.toString()).build(),
             "CreatedDate" to AttributeValue.builder().s(DynamoDbDateFormatter.instance().format(Date())).build(),
             "Email" to AttributeValue.builder().s(entity.email).build(),
             "FirstName" to AttributeValue.builder().s(entity.firstName).build(),
-            "LastName" to AttributeValue.builder().s(entity.lastName).build()
+            "LastName" to AttributeValue.builder().s(entity.lastName).build(),
+            "Friends" to friendsAttributeValue,
         )
     }
 }

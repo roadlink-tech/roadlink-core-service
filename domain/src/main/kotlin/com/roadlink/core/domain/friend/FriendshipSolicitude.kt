@@ -26,6 +26,19 @@ data class FriendshipSolicitude(
         return this.apply { this.solicitudeStatus = Status.REJECTED }
     }
 
+    fun checkIfItHasBeenAccepted(friendshipRepository: RepositoryPort<FriendshipSolicitude, FriendshipSolicitudeCriteria>) {
+        val solicitudes =
+            friendshipRepository.findAll(
+                FriendshipSolicitudeCriteria(
+                    id = this.requesterId,
+                    solicitudeStatus = Status.ACCEPTED
+                )
+            )
+        if (solicitudes.isNotEmpty()) {
+            throw FriendshipSolicitudeException.FriendshipSolicitudeAlreadyAccepted(this.id)
+        }
+    }
+
     fun checkIfExistsAPendingSolicitude(friendshipRepository: RepositoryPort<FriendshipSolicitude, FriendshipSolicitudeCriteria>) {
         val pendingSolicitudes =
             friendshipRepository.findAll(

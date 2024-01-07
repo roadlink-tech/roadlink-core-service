@@ -3,20 +3,20 @@ package com.roadlink.core.api.friend.controller
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.roadlink.application.command.CommandBus
 import com.roadlink.application.feedback.*
-import com.roadlink.application.friend.FriendshipSolicitudeCreationCommand
-import com.roadlink.application.friend.FriendshipSolicitudeCreationCommandResponse
-import com.roadlink.application.friend.FriendshipSolicitudeDTO
-import org.springframework.http.HttpStatus
+import com.roadlink.application.friend.*
+import com.roadlink.core.domain.friend.FriendshipSolicitude
+import com.roadlink.core.domain.friend.FriendshipSolicitude.*
+import org.springframework.http.HttpStatus.*
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @RestController
-@RequestMapping("/users/{userId}")
+@RequestMapping("/users/{userId}/friendship_solicitude")
 class RestFriendController(private val commandBus: CommandBus) {
 
-    @PostMapping("/friendship_solicitude")
+    @PostMapping
     @ResponseBody
-    @ResponseStatus(value = HttpStatus.CREATED)
+    @ResponseStatus(value = CREATED)
     fun createFriendshipSolicitud(
         @PathVariable("userId") addressedId: String,
         @RequestBody request: FriendshipSolicitudeCreationRequest
@@ -28,16 +28,25 @@ class RestFriendController(private val commandBus: CommandBus) {
         return FriendshipSolicitudeResponse.from(response.friendshipSolicitude)
     }
 
-//    @GetMapping
-//    @ResponseBody
-//    @ResponseStatus(value = HttpStatus.OK)
-//    fun retrieveUserFeedbacks(@PathVariable receiverId: String): List<FeedbackResponse> {
-//        val response =
-//            commandBus.publish<RetrieveFeedbacksCommand, RetrieveFeedbacksCommandResponse>(
-//                RetrieveFeedbacksCommand(receiverId)
-//            )
-//        return response.feedbacks.map { FeedbackResponse.from(it) }
-//    }
+    @PutMapping("/{friendshipSolicitudeId}/accept")
+    @ResponseBody
+    @ResponseStatus(value = OK)
+    fun retrieveUserFeedbacks(
+        @PathVariable("userId") addressedId: String,
+        @PathVariable("friendshipSolicitudeId") friendshipSolicitudeId: String,
+    ): FriendshipSolicitudeResponse {
+        val response =
+            commandBus.publish<FriendshipSolicitudeAcceptanceCommand, FriendshipSolicitudeAcceptanceCommandResponse>(
+                FriendshipSolicitudeAcceptanceCommand(
+                    FriendshipSolicitudeDecisionDTO(
+                        id = UUID.fromString(friendshipSolicitudeId),
+                        addressedId = UUID.fromString(addressedId),
+                        status = Status.ACCEPTED
+                    )
+                )
+            )
+        return FriendshipSolicitudeResponse.from(response.friendshipSolicitude)
+    }
 }
 
 data class FriendshipSolicitudeResponse(

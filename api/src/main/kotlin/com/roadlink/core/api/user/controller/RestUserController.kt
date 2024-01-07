@@ -58,7 +58,9 @@ data class UserResponse(
     @JsonProperty("first_name")
     val firstName: String,
     @JsonProperty("last_name")
-    val lastName: String
+    val lastName: String,
+    @JsonProperty("friends")
+    val friends: Set<UUID>
 ) {
     companion object {
         fun from(user: UserDTO): UserResponse {
@@ -66,7 +68,8 @@ data class UserResponse(
                 id = user.id,
                 email = user.email,
                 firstName = user.firstName,
-                lastName = user.lastName
+                lastName = user.lastName,
+                friends = user.friends
             )
         }
     }

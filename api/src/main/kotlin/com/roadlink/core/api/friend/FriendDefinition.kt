@@ -1,9 +1,7 @@
 package com.roadlink.core.api.friend
 
 import com.roadlink.application.command.CommandHandler
-import com.roadlink.application.friend.FriendshipSolicitudeCreationCommand
-import com.roadlink.application.friend.FriendshipSolicitudeCreationCommandHandler
-import com.roadlink.application.friend.FriendshipSolicitudeCreationCommandResponse
+import com.roadlink.application.friend.*
 import com.roadlink.core.domain.RepositoryPort
 import com.roadlink.core.domain.friend.FriendshipSolicitude
 import com.roadlink.core.domain.friend.FriendshipSolicitudeCriteria
@@ -33,5 +31,13 @@ open class FriendDefinition {
         friendshipSolicitudeRepository: RepositoryPort<FriendshipSolicitude, FriendshipSolicitudeCriteria>
     ): CommandHandler<FriendshipSolicitudeCreationCommand, FriendshipSolicitudeCreationCommandResponse> {
         return FriendshipSolicitudeCreationCommandHandler(userRepository, friendshipSolicitudeRepository)
+    }
+
+    @Bean("friendship_solicitude_acceptance_command_handler")
+    open fun friendshipSolicitudeAcceptanceCommandHandler(
+        userRepository: RepositoryPort<User, UserCriteria>,
+        friendshipSolicitudeRepository: RepositoryPort<FriendshipSolicitude, FriendshipSolicitudeCriteria>
+    ): CommandHandler<FriendshipSolicitudeAcceptanceCommand, FriendshipSolicitudeAcceptanceCommandResponse> {
+        return FriendshipSolicitudeAcceptanceCommandHandler(userRepository, friendshipSolicitudeRepository)
     }
 }

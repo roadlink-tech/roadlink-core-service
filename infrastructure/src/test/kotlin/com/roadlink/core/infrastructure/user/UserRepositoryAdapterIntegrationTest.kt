@@ -53,6 +53,22 @@ class UserRepositoryAdapterIntegrationTest : BehaviorSpec({
             }
         }
 
+        When("save a new user with friends and then find it by id") {
+            val id = UUID.randomUUID()
+            val friends = setOf(UUID.randomUUID(), UUID.randomUUID())
+            val user = UserFactory.custom(id = id, friends = friends)
+            repository.save(user)
+
+            val response = repository.findOrFail(UserCriteria(id = id))
+            Then("the response should not be null") {
+                response.id shouldBe id
+                response.firstName shouldBe "Jorge Javier"
+                response.lastName shouldBe "Cabrera Vera"
+                response.email shouldBe "cabrerajjorge@gmail.com"
+                response.friends shouldBe friends.toMutableSet()
+            }
+        }
+
         When("save entities in batch") {
             val response =
                 repository.saveAll(
