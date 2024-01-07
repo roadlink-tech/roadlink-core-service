@@ -1,8 +1,11 @@
 package com.roadlink.application.feedback
 
 import com.roadlink.application.user.UserFactory
-import com.roadlink.core.domain.feedback.FeedbackRepositoryPort
-import com.roadlink.core.domain.user.UserRepositoryPort
+import com.roadlink.core.domain.RepositoryPort
+import com.roadlink.core.domain.feedback.Feedback
+import com.roadlink.core.domain.feedback.FeedbackCriteria
+import com.roadlink.core.domain.user.User
+import com.roadlink.core.domain.user.UserCriteria
 import com.roadlink.core.infrastructure.user.exception.UserInfrastructureException
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
@@ -15,21 +18,24 @@ import java.util.*
 
 class FeedbackCreationCommandHandlerTest : BehaviorSpec({
 
-    val feedbackRepository = mockk<FeedbackRepositoryPort>()
-    val userRepository = mockk<UserRepositoryPort>()
+    val feedbackRepository = mockk<RepositoryPort<Feedback, FeedbackCriteria>>()
+    val userRepository = mockk<RepositoryPort<User, UserCriteria>>()
     Given("a feedback creation command handler") {
         val commandHandler = FeedbackCreationCommandHandler(userRepository, feedbackRepository)
 
         When("handle a command with a receiverId that not exist") {
             val receiverId = UUID.randomUUID()
+            val reviewerId = UUID.randomUUID()
             val command = FeedbackCreationCommand(
                 feedback = FeedbackDTO(
                     id = UUID.randomUUID(),
                     receiverId = receiverId,
-                    reviewerId = UUID.randomUUID(),
+                    reviewerId = reviewerId,
                     rating = 2
                 )
             )
+
+            every { userRepository.findOrFail(match { it.id == reviewerId }) } returns UserFactory.common(id = reviewerId)
 
             every { userRepository.findOrFail(match { it.id == receiverId }) }.throws(
                 UserInfrastructureException.NotFound(receiverId)

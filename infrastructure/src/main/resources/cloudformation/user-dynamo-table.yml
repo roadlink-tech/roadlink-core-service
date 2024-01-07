@@ -19,6 +19,10 @@ Resources:
           AttributeType: S
         - AttributeName: Email
           AttributeType: S
+        - AttributeName: AddressedId
+          AttributeType: S
+        - AttributeName: RequesterId
+          AttributeType: S
       KeySchema:
         - AttributeName: EntityId
           KeyType: HASH
@@ -31,6 +35,24 @@ Resources:
         - IndexName: RatingGSI
           KeySchema:
             - AttributeName: Rating
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: 5
+            WriteCapacityUnits: 5
+        - IndexName: RequesterIdGSI
+          KeySchema:
+            - AttributeName: RequesterId
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: 5
+            WriteCapacityUnits: 5
+        - IndexName: AddressedIdGSI
+          KeySchema:
+            - AttributeName: AddressedId
               KeyType: HASH
           Projection:
             ProjectionType: ALL

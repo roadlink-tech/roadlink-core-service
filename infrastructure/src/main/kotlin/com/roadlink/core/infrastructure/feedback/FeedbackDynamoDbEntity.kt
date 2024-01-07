@@ -1,9 +1,13 @@
 package com.roadlink.core.infrastructure.feedback
 
+import com.roadlink.core.domain.DomainEntity
 import com.roadlink.core.domain.feedback.Feedback
 import com.roadlink.core.infrastructure.dynamodb.BaseDynamoDbEntity
+import com.roadlink.core.infrastructure.dynamodb.BaseDynamoDbEntityMapper
 import com.roadlink.core.infrastructure.dynamodb.DynamoDbDateFormatter
+import com.roadlink.core.infrastructure.dynamodb.DynamoDbEntityMapper
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue
+import software.amazon.awssdk.services.dynamodb.model.QueryResponse
 import java.util.*
 
 class FeedbackDynamoDbEntity constructor(
@@ -24,7 +28,7 @@ class FeedbackDynamoDbEntity constructor(
     var comment: String = "",
 ) : BaseDynamoDbEntity(id, createdDate) {
 
-    fun toDomain(): Feedback {
+    override fun toDomain(): DomainEntity {
         check(this.id != null) { "User id could not be null." }
         return Feedback(
             id = this.id!!,
@@ -47,17 +51,24 @@ class FeedbackDynamoDbEntity constructor(
                 createdDate = DynamoDbDateFormatter.instance().parse(item["CreatedDate"]!!.s()),
             )
         }
+    }
+}
 
-        fun toItem(feedback: Feedback): Map<String, AttributeValue> {
-            return mapOf(
-                "EntityId" to AttributeValue.builder().s("EntityId#Feedback").build(),
-                "Id" to AttributeValue.builder().s(feedback.id.toString()).build(),
-                "CreatedDate" to AttributeValue.builder().s(DynamoDbDateFormatter.instance().format(Date())).build(),
-                "Rating" to AttributeValue.builder().n(feedback.rating.toString()).build(),
-                "ReceiverId" to AttributeValue.builder().s(feedback.receiverId.toString()).build(),
-                "ReviewerId" to AttributeValue.builder().s(feedback.reviewerId.toString()).build(),
-                "Comment" to AttributeValue.builder().s(feedback.comment).build()
-            )
-        }
+class FeedbackDynamoDbEntityMapper : BaseDynamoDbEntityMapper<Feedback, FeedbackDynamoDbEntity>() {
+
+    override fun from(item: Map<String, AttributeValue>): FeedbackDynamoDbEntity {
+        return FeedbackDynamoDbEntity.from(item)
+    }
+
+    override fun toItem(entity: Feedback): Map<String, AttributeValue> {
+        return mapOf(
+            "EntityId" to AttributeValue.builder().s("EntityId#Feedback").build(),
+            "Id" to AttributeValue.builder().s(entity.id.toString()).build(),
+            "CreatedDate" to AttributeValue.builder().s(DynamoDbDateFormatter.instance().format(Date())).build(),
+            "Rating" to AttributeValue.builder().n(entity.rating.toString()).build(),
+            "ReceiverId" to AttributeValue.builder().s(entity.receiverId.toString()).build(),
+            "ReviewerId" to AttributeValue.builder().s(entity.reviewerId.toString()).build(),
+            "Comment" to AttributeValue.builder().s(entity.comment).build()
+        )
     }
 }

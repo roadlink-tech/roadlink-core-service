@@ -2,12 +2,13 @@ package com.roadlink.core.infrastructure.user
 
 import com.roadlink.core.domain.user.UserCriteria
 import com.roadlink.core.infrastructure.dynamodb.BaseDynamoDbQuery
+import com.roadlink.core.infrastructure.dynamodb.DynamoDbQueryMapper
 import com.roadlink.core.infrastructure.user.exception.UserInfrastructureException
 import java.util.*
 
 class UserDynamoDbQuery(
     val id: UUID? = null,
-    private val email: String = ""
+    private val email: String = "",
 ) : BaseDynamoDbQuery() {
 
     override var entityId: String = "EntityId#User"
@@ -36,12 +37,19 @@ class UserDynamoDbQuery(
         return ""
     }
 
-    companion object {
-        fun from(criteria: UserCriteria): UserDynamoDbQuery {
-            return UserDynamoDbQuery(
-                id = criteria.id,
-                email = criteria.email
-            )
-        }
+    fun from(criteria: UserCriteria): UserDynamoDbQuery {
+        return UserDynamoDbQuery(
+            id = criteria.id,
+            email = criteria.email
+        )
+    }
+}
+
+class UserDynamoDbQueryMapper : DynamoDbQueryMapper<UserCriteria, UserDynamoDbQuery> {
+    override fun from(criteria: UserCriteria): UserDynamoDbQuery {
+        return UserDynamoDbQuery(
+            id = criteria.id,
+            email = criteria.email
+        )
     }
 }

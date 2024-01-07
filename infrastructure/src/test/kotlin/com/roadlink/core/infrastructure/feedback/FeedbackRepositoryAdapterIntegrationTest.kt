@@ -1,6 +1,10 @@
 package com.roadlink.core.infrastructure.feedback
 
+import com.roadlink.core.domain.feedback.Feedback
 import com.roadlink.core.domain.feedback.FeedbackCriteria
+import com.roadlink.core.infrastructure.dynamodb.DynamoDbEntityMapper
+import com.roadlink.core.infrastructure.dynamodb.DynamoDbQueryMapper
+import com.roadlink.core.infrastructure.dynamodb.RepositoryAdapter
 import com.roadlink.core.infrastructure.utils.LocalStackHelper
 import io.kotest.assertions.throwables.shouldNotThrow
 import io.kotest.core.spec.style.BehaviorSpec
@@ -9,7 +13,7 @@ import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldNotBeEmpty
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
-import java.util.UUID
+import java.util.*
 
 class FeedbackRepositoryAdapterIntegrationTest : BehaviorSpec({
     val container = LocalStackHelper.containerWithDynamoDb()
@@ -20,7 +24,12 @@ class FeedbackRepositoryAdapterIntegrationTest : BehaviorSpec({
 
     Given("a container with dynamodb and the table already created") {
         val dynamoDbClient = LocalStackHelper.dynamoDbClient(container)
-        val repository = FeedbackRepositoryAdapter(dynamoDbClient)
+
+        val dynamoEntityMapper: DynamoDbEntityMapper<Feedback, FeedbackDynamoDbEntity> = FeedbackDynamoDbEntityMapper()
+        val dynamoQueryMapper: DynamoDbQueryMapper<FeedbackCriteria, FeedbackDynamoDbQuery> =
+            FeedbackDynamoDbQueryMapper()
+        val repository = RepositoryAdapter(dynamoDbClient, "RoadlinkCore", dynamoEntityMapper, dynamoQueryMapper)
+        //val repository = RepositoryAdapter(dynamoDbClient)
         LocalStackHelper.createTableIn(container)
 
         When("save a new user entity") {

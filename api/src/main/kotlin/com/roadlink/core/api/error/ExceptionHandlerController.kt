@@ -1,8 +1,9 @@
 package com.roadlink.core.api.error
 
-import com.roadlink.core.domain.DomainException
 import com.roadlink.core.domain.feedback.validation.FeedbackException
+import com.roadlink.core.domain.friend.FriendshipSolicitudeException
 import com.roadlink.core.infrastructure.user.exception.UserInfrastructureException
+import jdk.jshell.spi.ExecutionControl
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
@@ -88,6 +89,25 @@ class ExceptionHandlerController {
 
         return ResponseEntity(errorMessage, HttpStatus.PRECONDITION_FAILED)
     }
+
+    @ExceptionHandler(FriendshipSolicitudeException.FriendshipSolicitudeAlreadySent::class)
+    fun handleInvalidRatingException(ex: FriendshipSolicitudeException.FriendshipSolicitudeAlreadySent): ResponseEntity<ErrorResponse> {
+        val errorMessage = ErrorResponse(
+            HttpStatus.PRECONDITION_FAILED.toString(), message = ex.message
+        )
+
+        return ResponseEntity(errorMessage, HttpStatus.PRECONDITION_FAILED)
+    }
+
+    @ExceptionHandler(com.roadlink.core.domain.user.UserException.UserAlreadyAreFriends::class)
+    fun handleInvalidRatingException(ex: com.roadlink.core.domain.user.UserException.UserAlreadyAreFriends): ResponseEntity<ErrorResponse> {
+        val errorMessage = ErrorResponse(
+            HttpStatus.PRECONDITION_FAILED.toString(), message = ex.message
+        )
+
+        return ResponseEntity(errorMessage, HttpStatus.PRECONDITION_FAILED)
+    }
+
 
     @ExceptionHandler
     fun handleAllUncaughtException(ex: Throwable): ResponseEntity<ErrorResponse> {

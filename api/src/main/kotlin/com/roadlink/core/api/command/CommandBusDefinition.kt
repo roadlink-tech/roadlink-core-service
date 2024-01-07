@@ -6,8 +6,11 @@ import com.roadlink.application.command.SimpleCommandBus
 import com.roadlink.application.feedback.FeedbackCreationCommand
 import com.roadlink.application.feedback.FeedbackCreationCommandResponse
 import com.roadlink.application.feedback.RetrieveFeedbacksCommand
-import com.roadlink.application.feedback.RetrieveFeedbacksCommandHandler
 import com.roadlink.application.feedback.RetrieveFeedbacksCommandResponse
+import com.roadlink.application.friend.FriendshipSolicitudeAcceptanceCommand
+import com.roadlink.application.friend.FriendshipSolicitudeAcceptanceCommandResponse
+import com.roadlink.application.friend.FriendshipSolicitudeCreationCommand
+import com.roadlink.application.friend.FriendshipSolicitudeCreationCommandResponse
 import com.roadlink.application.user.*
 import com.roadlink.application.usertrustscore.RetrieveUserTrustScoreCommand
 import com.roadlink.application.usertrustscore.RetrieveUserTrustScoreCommandResponse
@@ -25,7 +28,9 @@ open class CommandBusDefinition {
         @Qualifier("search_user_command_handler") searchUserCommandHandler: CommandHandler<SearchUserCommand, SearchUserCommandResponse>,
         @Qualifier("feedback_creation_command_handler") feedbackCreationCommandHandler: CommandHandler<FeedbackCreationCommand, FeedbackCreationCommandResponse>,
         @Qualifier("retrieve_feedbacks_command_handler") retrieveFeedbacksCommandHandler: CommandHandler<RetrieveFeedbacksCommand, RetrieveFeedbacksCommandResponse>,
-        @Qualifier("user_trust_score_command_handler") retrieveUserTrustScoreCommandHandler: CommandHandler<RetrieveUserTrustScoreCommand, RetrieveUserTrustScoreCommandResponse>
+        @Qualifier("user_trust_score_command_handler") retrieveUserTrustScoreCommandHandler: CommandHandler<RetrieveUserTrustScoreCommand, RetrieveUserTrustScoreCommandResponse>,
+        @Qualifier("friendship_solicitude_creation_command_handler") friendshipSolicitudeCreationCommandHandler: CommandHandler<FriendshipSolicitudeCreationCommand, FriendshipSolicitudeCreationCommandResponse>,
+        @Qualifier("friendship_solicitude_acceptance_command_handler") friendshipSolicitudeAcceptanceCommandHandler: CommandHandler<FriendshipSolicitudeAcceptanceCommand, FriendshipSolicitudeAcceptanceCommandResponse>,
 
     ): CommandBus {
         return SimpleCommandBus().also {
@@ -35,6 +40,9 @@ open class CommandBusDefinition {
             it.registerHandler(searchUserCommandHandler)
             it.registerHandler(retrieveFeedbacksCommandHandler)
             it.registerHandler(retrieveUserTrustScoreCommandHandler)
+            it.registerHandler(friendshipSolicitudeCreationCommandHandler)
+            it.registerHandler(friendshipSolicitudeAcceptanceCommandHandler)
+
         }
     }
 }

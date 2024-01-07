@@ -1,6 +1,10 @@
 package com.roadlink.core.infrastructure.user
 
+import com.roadlink.core.domain.user.User
 import com.roadlink.core.domain.user.UserCriteria
+import com.roadlink.core.infrastructure.dynamodb.DynamoDbEntityMapper
+import com.roadlink.core.infrastructure.dynamodb.DynamoDbQueryMapper
+import com.roadlink.core.infrastructure.dynamodb.RepositoryAdapter
 import com.roadlink.core.infrastructure.utils.LocalStackHelper
 import io.kotest.assertions.throwables.shouldNotThrow
 import io.kotest.core.spec.style.BehaviorSpec
@@ -18,7 +22,10 @@ class UserRepositoryAdapterIntegrationTest : BehaviorSpec({
 
     Given("a container with dynamo and the table already created") {
         val dynamoDbClient = LocalStackHelper.dynamoDbClient(container)
-        val repository = UserRepositoryAdapter(dynamoDbClient)
+        val dynamoEntityMapper: DynamoDbEntityMapper<User, UserDynamoDbEntity> = UserDynamoDbEntityMapper()
+        val dynamoQueryMapper: DynamoDbQueryMapper<UserCriteria, UserDynamoDbQuery> = UserDynamoDbQueryMapper()
+
+        val repository = RepositoryAdapter(dynamoDbClient, "RoadlinkCore", dynamoEntityMapper, dynamoQueryMapper)
         LocalStackHelper.createTableIn(container)
 
         When("try to save a new user entity") {
@@ -43,6 +50,37 @@ class UserRepositoryAdapterIntegrationTest : BehaviorSpec({
                 response.firstName shouldBe "Jorge Javier"
                 response.lastName shouldBe "Cabrera Vera"
                 response.email shouldBe "cabrerajjorge@gmail.com"
+            }
+        }
+
+        When("save a new user with friends and then find it by id") {
+            val id = UUID.randomUUID()
+            val friends = setOf(UUID.randomUUID(), UUID.randomUUID())
+            val user = UserFactory.custom(id = id, friends = friends)
+            repository.save(user)
+
+            val response = repository.findOrFail(UserCriteria(id = id))
+            Then("the response should not be null") {
+                response.id shouldBe id
+                response.firstName shouldBe "Jorge Javier"
+                response.lastName shouldBe "Cabrera Vera"
+                response.email shouldBe "cabrerajjorge@gmail.com"
+                response.friends shouldBe friends.toMutableSet()
+            }
+        }
+
+        When("save entities in batch") {
+            val response =
+                repository.saveAll(
+                    listOf(
+                        UserFactory.custom(),
+                        UserFactory.custom(),
+                        UserFactory.custom()
+                    )
+                )
+
+            Then("the response should not be null") {
+                response.size.shouldBe(3)
             }
         }
 

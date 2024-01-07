@@ -66,19 +66,6 @@ data class FeedbackCreationRequest(
     }
 }
 
-data class FeedbackCreationResponse(
-    @JsonProperty("id")
-    val id: UUID,
-) {
-    companion object {
-        fun from(feedback: FeedbackDTO): FeedbackCreationResponse {
-            return FeedbackCreationResponse(
-                id = feedback.id
-            )
-        }
-    }
-}
-
 data class FeedbackResponse(
     @JsonProperty("id")
     val id: UUID,

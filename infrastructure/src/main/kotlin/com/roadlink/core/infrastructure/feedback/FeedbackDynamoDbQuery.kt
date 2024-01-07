@@ -2,6 +2,7 @@ package com.roadlink.core.infrastructure.feedback
 
 import com.roadlink.core.domain.feedback.FeedbackCriteria
 import com.roadlink.core.infrastructure.dynamodb.BaseDynamoDbQuery
+import com.roadlink.core.infrastructure.dynamodb.DynamoDbQueryMapper
 import com.roadlink.core.infrastructure.dynamodb.error.DynamoDbError
 import java.util.*
 
@@ -66,15 +67,15 @@ class FeedbackDynamoDbQuery(
         }
         throw DynamoDbError.InvalidKeyConditionExpression()
     }
+}
 
-    companion object {
-        fun from(criteria: FeedbackCriteria): FeedbackDynamoDbQuery {
-            return FeedbackDynamoDbQuery(
-                id = criteria.id,
-                rating = criteria.rating,
-                reviewerId = criteria.reviewerId,
-                receiverId = criteria.receiverId
-            )
-        }
+class FeedbackDynamoDbQueryMapper : DynamoDbQueryMapper<FeedbackCriteria, FeedbackDynamoDbQuery> {
+    override fun from(criteria: FeedbackCriteria): FeedbackDynamoDbQuery {
+        return FeedbackDynamoDbQuery(
+            id = criteria.id,
+            rating = criteria.rating,
+            reviewerId = criteria.reviewerId,
+            receiverId = criteria.receiverId
+        )
     }
 }
