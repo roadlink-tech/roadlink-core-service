@@ -15,7 +15,7 @@ class UserCreationCommandHandler(private val userRepository: RepositoryPort<User
     CommandHandler<UserCreationCommand, UserCreationCommandResponse> {
 
     override fun handle(command: UserCreationCommand): UserCreationCommandResponse {
-        val user = userRepository.save(command.user.toDomain())
+        val user = command.user.toDomain().save(userRepository)
         return UserCreationCommandResponse(user = UserDTO.from(user))
     }
 }

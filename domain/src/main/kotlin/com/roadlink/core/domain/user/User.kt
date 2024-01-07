@@ -1,7 +1,9 @@
 package com.roadlink.core.domain.user
 
 import com.roadlink.core.domain.DomainEntity
+import com.roadlink.core.domain.RepositoryPort
 import java.util.*
+import kotlin.collections.List
 
 /* TODO:
     1- photo url
@@ -18,10 +20,23 @@ data class User(
     internal val friends: MutableSet<UUID> = mutableSetOf()
 ) : DomainEntity {
 
+    fun save(userRepository: RepositoryPort<User, UserCriteria>): User {
+        return userRepository.save(this)
+    }
+
     fun beFriends(user: User) {
         if (this.id != user.id && !this.friends.contains(user.id)) {
             this.friends.add(user.id)
             user.beFriends(this)
+        }
+    }
+
+    companion object {
+
+        fun checkIfEntitiesExist(userRepository: RepositoryPort<User, UserCriteria>, criteria: List<UserCriteria>) {
+            criteria.forEach {
+                userRepository.findOrFail(it)
+            }
         }
     }
 }
