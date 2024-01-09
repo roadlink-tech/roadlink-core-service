@@ -22,9 +22,8 @@ class UserDynamoDbEntity constructor(
 ) : BaseDynamoDbEntity(id, createdDate) {
 
     override fun toDomain(): DomainEntity {
-        check(this.id != null) { "User id could not be null." }
         return User(
-            id = this.id!!,
+            id = this.id,
             email = this.email,
             firstName = this.firstName,
             lastName = this.lastName,
