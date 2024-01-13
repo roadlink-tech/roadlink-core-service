@@ -40,4 +40,20 @@ open class FriendDefinition {
     ): CommandHandler<FriendshipSolicitudeAcceptanceCommand, FriendshipSolicitudeAcceptanceCommandResponse> {
         return FriendshipSolicitudeAcceptanceCommandHandler(userRepository, friendshipSolicitudeRepository)
     }
+
+    @Bean("friendship_solicitude_rejection_command_handler")
+    open fun friendshipSolicitudeRejectionCommandHandler(
+        userRepository: RepositoryPort<User, UserCriteria>,
+        friendshipSolicitudeRepository: RepositoryPort<FriendshipSolicitude, FriendshipSolicitudeCriteria>
+    ): CommandHandler<FriendshipSolicitudeRejectionCommand, FriendshipSolicitudeRejectionCommandResponse> {
+        return FriendshipSolicitudeRejectionCommandHandler(userRepository, friendshipSolicitudeRepository)
+    }
+
+    @Bean("friendship_solicitude_list_command_handler")
+    open fun friendshipSolicitudeListCommandHandler(
+        userRepository: RepositoryPort<User, UserCriteria>,
+        friendshipSolicitudeRepository: RepositoryPort<FriendshipSolicitude, FriendshipSolicitudeCriteria>
+    ): CommandHandler<FriendshipSolicitudeListCommand, FriendshipSolicitudeListCommandResponse> {
+        return FriendshipSolicitudeListCommandHandler(userRepository, friendshipSolicitudeRepository)
+    }
 }

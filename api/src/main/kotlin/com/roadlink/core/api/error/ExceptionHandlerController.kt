@@ -108,6 +108,14 @@ class ExceptionHandlerController {
         return ResponseEntity(errorMessage, HttpStatus.PRECONDITION_FAILED)
     }
 
+    @ExceptionHandler(FriendshipSolicitudeException.InvalidFriendshipSolicitudeStatusTransition::class)
+    fun handleInvalidRatingException(ex: FriendshipSolicitudeException.InvalidFriendshipSolicitudeStatusTransition): ResponseEntity<ErrorResponse> {
+        val errorMessage = ErrorResponse(
+            HttpStatus.PRECONDITION_FAILED.toString(), message = ex.message
+        )
+
+        return ResponseEntity(errorMessage, HttpStatus.PRECONDITION_FAILED)
+    }
 
     @ExceptionHandler
     fun handleAllUncaughtException(ex: Throwable): ResponseEntity<ErrorResponse> {

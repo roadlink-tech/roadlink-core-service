@@ -7,10 +7,7 @@ import com.roadlink.application.feedback.FeedbackCreationCommand
 import com.roadlink.application.feedback.FeedbackCreationCommandResponse
 import com.roadlink.application.feedback.RetrieveFeedbacksCommand
 import com.roadlink.application.feedback.RetrieveFeedbacksCommandResponse
-import com.roadlink.application.friend.FriendshipSolicitudeAcceptanceCommand
-import com.roadlink.application.friend.FriendshipSolicitudeAcceptanceCommandResponse
-import com.roadlink.application.friend.FriendshipSolicitudeCreationCommand
-import com.roadlink.application.friend.FriendshipSolicitudeCreationCommandResponse
+import com.roadlink.application.friend.*
 import com.roadlink.application.user.*
 import com.roadlink.application.usertrustscore.RetrieveUserTrustScoreCommand
 import com.roadlink.application.usertrustscore.RetrieveUserTrustScoreCommandResponse
@@ -31,7 +28,8 @@ open class CommandBusDefinition {
         @Qualifier("user_trust_score_command_handler") retrieveUserTrustScoreCommandHandler: CommandHandler<RetrieveUserTrustScoreCommand, RetrieveUserTrustScoreCommandResponse>,
         @Qualifier("friendship_solicitude_creation_command_handler") friendshipSolicitudeCreationCommandHandler: CommandHandler<FriendshipSolicitudeCreationCommand, FriendshipSolicitudeCreationCommandResponse>,
         @Qualifier("friendship_solicitude_acceptance_command_handler") friendshipSolicitudeAcceptanceCommandHandler: CommandHandler<FriendshipSolicitudeAcceptanceCommand, FriendshipSolicitudeAcceptanceCommandResponse>,
-
+        @Qualifier("friendship_solicitude_list_command_handler") friendshipSolicitudeListCommandHandler: CommandHandler<FriendshipSolicitudeListCommand, FriendshipSolicitudeListCommandResponse>,
+        @Qualifier("friendship_solicitude_rejection_command_handler") friendshipSolicitudeRejectionCommandHandler: CommandHandler<FriendshipSolicitudeRejectionCommand, FriendshipSolicitudeRejectionCommandResponse>
     ): CommandBus {
         return SimpleCommandBus().also {
             it.registerHandler(userCreationCommandHandler)
@@ -42,7 +40,8 @@ open class CommandBusDefinition {
             it.registerHandler(retrieveUserTrustScoreCommandHandler)
             it.registerHandler(friendshipSolicitudeCreationCommandHandler)
             it.registerHandler(friendshipSolicitudeAcceptanceCommandHandler)
-
+            it.registerHandler(friendshipSolicitudeListCommandHandler)
+            it.registerHandler(friendshipSolicitudeRejectionCommandHandler)
         }
     }
 }
