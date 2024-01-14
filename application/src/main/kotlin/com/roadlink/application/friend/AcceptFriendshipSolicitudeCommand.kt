@@ -10,27 +10,30 @@ import com.roadlink.core.domain.user.User
 import com.roadlink.core.domain.user.UserCriteria
 
 
-class FriendshipSolicitudeAcceptanceCommandResponse(val friendshipSolicitude: FriendshipSolicitudeDTO) : CommandResponse
+class AcceptFriendshipSolicitudeCommandResponse(val friendshipSolicitude: FriendshipSolicitudeDTO) :
+    CommandResponse
 
-class FriendshipSolicitudeAcceptanceCommand(val friendshipSolicitude: FriendshipSolicitudeDecisionDTO) : Command
+class AcceptFriendshipSolicitudeCommand(val friendshipSolicitude: FriendshipSolicitudeDecisionDTO) :
+    Command
 
 // TODO test me!
-class FriendshipSolicitudeAcceptanceCommandHandler(
+class AcceptFriendshipSolicitudeCommandHandler(
     private val userRepository: RepositoryPort<User, UserCriteria>,
     private val friendshipSolicitudeRepository: RepositoryPort<FriendshipSolicitude, FriendshipSolicitudeCriteria>
 ) :
-    CommandHandler<FriendshipSolicitudeAcceptanceCommand, FriendshipSolicitudeAcceptanceCommandResponse> {
-    override fun handle(command: FriendshipSolicitudeAcceptanceCommand): FriendshipSolicitudeAcceptanceCommandResponse {
+    CommandHandler<AcceptFriendshipSolicitudeCommand, AcceptFriendshipSolicitudeCommandResponse> {
+    override fun handle(command: AcceptFriendshipSolicitudeCommand): AcceptFriendshipSolicitudeCommandResponse {
         val solicitude =
             friendshipSolicitudeRepository.findOrFail(FriendshipSolicitudeCriteria(id = command.friendshipSolicitude.id))
         solicitude.checkIfItHasBeenAccepted(friendshipSolicitudeRepository)
 
-        val addressed = userRepository.findOrFail(UserCriteria(id = command.friendshipSolicitude.addressedId))
+        val addressed =
+            userRepository.findOrFail(UserCriteria(id = command.friendshipSolicitude.addressedId))
         val requester = userRepository.findOrFail(UserCriteria(id = solicitude.requesterId))
         addressed.checkIfAlreadyAreFriends(requester)
 
         solicitude.accept(userRepository).save(friendshipSolicitudeRepository).also {
-            return FriendshipSolicitudeAcceptanceCommandResponse(FriendshipSolicitudeDTO.from(it))
+            return AcceptFriendshipSolicitudeCommandResponse(FriendshipSolicitudeDTO.from(it))
         }
     }
 }

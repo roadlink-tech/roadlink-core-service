@@ -9,25 +9,25 @@ import com.roadlink.core.domain.friend.FriendshipSolicitudeCriteria
 import com.roadlink.core.domain.user.User
 import com.roadlink.core.domain.user.UserCriteria
 
-class FriendshipSolicitudeRejectionCommandResponse(val friendshipSolicitude: FriendshipSolicitudeDTO) :
+class RejectFriendshipSolicitudeCommandResponse(val friendshipSolicitude: FriendshipSolicitudeDTO) :
     CommandResponse
 
-class FriendshipSolicitudeRejectionCommand(val friendshipSolicitude: FriendshipSolicitudeDecisionDTO) : Command
+class RejectFriendshipSolicitudeCommand(val friendshipSolicitude: FriendshipSolicitudeDecisionDTO) : Command
 
 // TODO test me!
-class FriendshipSolicitudeRejectionCommandHandler(
+class RejectFriendshipSolicitudeCommandHandler(
     private val userRepository: RepositoryPort<User, UserCriteria>,
     private val friendshipSolicitudeRepository: RepositoryPort<FriendshipSolicitude, FriendshipSolicitudeCriteria>
 ) :
-    CommandHandler<FriendshipSolicitudeRejectionCommand, FriendshipSolicitudeRejectionCommandResponse> {
-    override fun handle(command: FriendshipSolicitudeRejectionCommand): FriendshipSolicitudeRejectionCommandResponse {
+    CommandHandler<RejectFriendshipSolicitudeCommand, RejectFriendshipSolicitudeCommandResponse> {
+    override fun handle(command: RejectFriendshipSolicitudeCommand): RejectFriendshipSolicitudeCommandResponse {
         User.checkIfEntitiesExist(userRepository, listOf(UserCriteria(id = command.friendshipSolicitude.addressedId)))
         val solicitude =
             friendshipSolicitudeRepository.findOrFail(FriendshipSolicitudeCriteria(id = command.friendshipSolicitude.id))
         solicitude.checkStatusTransition(command.friendshipSolicitude.status)
 
         solicitude.reject().save(friendshipSolicitudeRepository).also {
-            return FriendshipSolicitudeRejectionCommandResponse(FriendshipSolicitudeDTO.from(it))
+            return RejectFriendshipSolicitudeCommandResponse(FriendshipSolicitudeDTO.from(it))
         }
     }
 }

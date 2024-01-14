@@ -22,8 +22,8 @@ class RestFriendshipSolicitudesController(private val commandBus: CommandBus) {
         @RequestBody request: FriendshipSolicitudeCreationRequest
     ): FriendshipSolicitudeResponse {
         val response =
-            commandBus.publish<FriendshipSolicitudeCreationCommand, FriendshipSolicitudeCreationCommandResponse>(
-                FriendshipSolicitudeCreationCommand(request.toDto(addressedId))
+            commandBus.publish<CreateFriendshipSolicitudeCommand, CreateFriendshipSolicitudeCommandResponse>(
+                CreateFriendshipSolicitudeCommand(request.toDto(addressedId))
             )
         return FriendshipSolicitudeResponse.from(response.friendshipSolicitude)
     }
@@ -36,8 +36,8 @@ class RestFriendshipSolicitudesController(private val commandBus: CommandBus) {
         @PathVariable("friendshipSolicitudeId") friendshipSolicitudeId: String,
     ): FriendshipSolicitudeResponse {
         val response =
-            commandBus.publish<FriendshipSolicitudeAcceptanceCommand, FriendshipSolicitudeAcceptanceCommandResponse>(
-                FriendshipSolicitudeAcceptanceCommand(
+            commandBus.publish<AcceptFriendshipSolicitudeCommand, AcceptFriendshipSolicitudeCommandResponse>(
+                AcceptFriendshipSolicitudeCommand(
                     FriendshipSolicitudeDecisionDTO(
                         id = UUID.fromString(friendshipSolicitudeId),
                         addressedId = UUID.fromString(addressedId),
@@ -56,8 +56,8 @@ class RestFriendshipSolicitudesController(private val commandBus: CommandBus) {
         @PathVariable("friendshipSolicitudeId") friendshipSolicitudeId: String,
     ): FriendshipSolicitudeResponse {
         val response =
-            commandBus.publish<FriendshipSolicitudeRejectionCommand, FriendshipSolicitudeRejectionCommandResponse>(
-                FriendshipSolicitudeRejectionCommand(
+            commandBus.publish<RejectFriendshipSolicitudeCommand, RejectFriendshipSolicitudeCommandResponse>(
+                RejectFriendshipSolicitudeCommand(
                     FriendshipSolicitudeDecisionDTO(
                         id = UUID.fromString(friendshipSolicitudeId),
                         addressedId = UUID.fromString(addressedId),
@@ -76,8 +76,8 @@ class RestFriendshipSolicitudesController(private val commandBus: CommandBus) {
         @PathParam("status") status: String? = null,
     ): List<FriendshipSolicitudeResponse> {
         val response =
-            commandBus.publish<FriendshipSolicitudeListCommand, FriendshipSolicitudeListCommandResponse>(
-                FriendshipSolicitudeListCommand(
+            commandBus.publish<ListFriendshipSolicitudesCommand, ListFriendshipSolicitudesCommandResponse>(
+                ListFriendshipSolicitudesCommand(
                     FriendshipSolicitudeListFilter(
                         addressedId = UUID.fromString(addressedId),
                         status = status

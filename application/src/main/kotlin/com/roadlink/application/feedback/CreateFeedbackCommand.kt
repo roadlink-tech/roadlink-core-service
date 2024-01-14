@@ -9,23 +9,26 @@ import com.roadlink.core.domain.feedback.FeedbackCriteria
 import com.roadlink.core.domain.user.User
 import com.roadlink.core.domain.user.UserCriteria
 
-class FeedbackCreationCommandResponse(val feedback: FeedbackDTO) : CommandResponse
+class CreateFeedbackCommandResponse(val feedback: FeedbackDTO) : CommandResponse
 
-class FeedbackCreationCommand(val feedback: FeedbackDTO) : Command
+class CreateFeedbackCommand(val feedback: FeedbackDTO) : Command
 
 
-class FeedbackCreationCommandHandler(
+class CreateFeedbackCommandHandler(
     private val userRepository: RepositoryPort<User, UserCriteria>,
     private val feedbackRepository: RepositoryPort<Feedback, FeedbackCriteria>
 ) :
-    CommandHandler<FeedbackCreationCommand, FeedbackCreationCommandResponse> {
-    override fun handle(command: FeedbackCreationCommand): FeedbackCreationCommandResponse {
+    CommandHandler<CreateFeedbackCommand, CreateFeedbackCommandResponse> {
+    override fun handle(command: CreateFeedbackCommand): CreateFeedbackCommandResponse {
         User.checkIfEntitiesExist(
             userRepository,
-            listOf(UserCriteria(id = command.feedback.reviewerId), UserCriteria(id = command.feedback.receiverId))
+            listOf(
+                UserCriteria(id = command.feedback.reviewerId),
+                UserCriteria(id = command.feedback.receiverId)
+            )
         )
         command.feedback.toDomain().save(feedbackRepository).also { feedback ->
-            return FeedbackCreationCommandResponse(feedback = FeedbackDTO.from(feedback))
+            return CreateFeedbackCommandResponse(feedback = FeedbackDTO.from(feedback))
         }
     }
 }

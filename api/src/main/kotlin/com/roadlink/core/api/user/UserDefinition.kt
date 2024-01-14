@@ -27,7 +27,7 @@ open class UserDefinition {
         )
     }
 
-    @Bean("user_creation_command_handler")
+    @Bean("create_user_command_handler")
     open fun userCreationCommandHandler(userRepositoryPort: RepositoryPort<User, UserCriteria>): CommandHandler<UserCreationCommand, UserCreationCommandResponse> {
         return UserCreationCommandHandler(userRepositoryPort)
     }

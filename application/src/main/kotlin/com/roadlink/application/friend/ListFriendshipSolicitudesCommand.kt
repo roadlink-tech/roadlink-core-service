@@ -10,25 +10,31 @@ import com.roadlink.core.domain.user.User
 import com.roadlink.core.domain.user.UserCriteria
 import java.util.UUID
 
-class FriendshipSolicitudeListCommandResponse(val friendshipSolicitudes: List<FriendshipSolicitudeDTO>) :
+class ListFriendshipSolicitudesCommandResponse(val friendshipSolicitudes: List<FriendshipSolicitudeDTO>) :
     CommandResponse
 
-class FriendshipSolicitudeListCommand(val friendshipSolicitudeListFilter: FriendshipSolicitudeListFilter) : Command
+class ListFriendshipSolicitudesCommand(val friendshipSolicitudeListFilter: FriendshipSolicitudeListFilter) :
+    Command
 
 // TODO test me!
-class FriendshipSolicitudeListCommandHandler(
+class ListFriendshipSolicitudesCommandHandler(
     private val userRepository: RepositoryPort<User, UserCriteria>,
     private val friendshipSolicitudeRepository: RepositoryPort<FriendshipSolicitude, FriendshipSolicitudeCriteria>
 ) :
-    CommandHandler<FriendshipSolicitudeListCommand, FriendshipSolicitudeListCommandResponse> {
-    override fun handle(command: FriendshipSolicitudeListCommand): FriendshipSolicitudeListCommandResponse {
+    CommandHandler<ListFriendshipSolicitudesCommand, ListFriendshipSolicitudesCommandResponse> {
+    override fun handle(command: ListFriendshipSolicitudesCommand): ListFriendshipSolicitudesCommandResponse {
         User.checkIfEntitiesExist(
             userRepository,
             listOf(UserCriteria(id = command.friendshipSolicitudeListFilter.addressedId))
         )
-        val solicitudes = friendshipSolicitudeRepository.findAll(command.friendshipSolicitudeListFilter.toCriteria())
+        val solicitudes =
+            friendshipSolicitudeRepository.findAll(command.friendshipSolicitudeListFilter.toCriteria())
 
-        return FriendshipSolicitudeListCommandResponse(solicitudes.map { FriendshipSolicitudeDTO.from(it) })
+        return ListFriendshipSolicitudesCommandResponse(solicitudes.map {
+            FriendshipSolicitudeDTO.from(
+                it
+            )
+        })
     }
 }
 
