@@ -29,7 +29,8 @@ open class CommandBusDefinition {
         @Qualifier("friendship_solicitude_creation_command_handler") friendshipSolicitudeCreationCommandHandler: CommandHandler<FriendshipSolicitudeCreationCommand, FriendshipSolicitudeCreationCommandResponse>,
         @Qualifier("friendship_solicitude_acceptance_command_handler") friendshipSolicitudeAcceptanceCommandHandler: CommandHandler<FriendshipSolicitudeAcceptanceCommand, FriendshipSolicitudeAcceptanceCommandResponse>,
         @Qualifier("friendship_solicitude_list_command_handler") friendshipSolicitudeListCommandHandler: CommandHandler<FriendshipSolicitudeListCommand, FriendshipSolicitudeListCommandResponse>,
-        @Qualifier("friendship_solicitude_rejection_command_handler") friendshipSolicitudeRejectionCommandHandler: CommandHandler<FriendshipSolicitudeRejectionCommand, FriendshipSolicitudeRejectionCommandResponse>
+        @Qualifier("friendship_solicitude_rejection_command_handler") friendshipSolicitudeRejectionCommandHandler: CommandHandler<FriendshipSolicitudeRejectionCommand, FriendshipSolicitudeRejectionCommandResponse>,
+        @Qualifier("list_friends_command_handler") listFriendsCommandHandler: CommandHandler<ListFriendsCommand, ListFriendsCommandResponse>
     ): CommandBus {
         return SimpleCommandBus().also {
             it.registerHandler(userCreationCommandHandler)
@@ -42,6 +43,7 @@ open class CommandBusDefinition {
             it.registerHandler(friendshipSolicitudeAcceptanceCommandHandler)
             it.registerHandler(friendshipSolicitudeListCommandHandler)
             it.registerHandler(friendshipSolicitudeRejectionCommandHandler)
+            it.registerHandler(listFriendsCommandHandler)
         }
     }
 }

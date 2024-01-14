@@ -12,12 +12,12 @@ import java.util.*
 
 @RestController
 @RequestMapping("/users/{userId}/friendship_solicitudes")
-class RestFriendController(private val commandBus: CommandBus) {
+class RestFriendshipSolicitudesController(private val commandBus: CommandBus) {
 
     @PostMapping
     @ResponseBody
     @ResponseStatus(value = CREATED)
-    fun createFriendshipSolicitud(
+    fun create(
         @PathVariable("userId") addressedId: String,
         @RequestBody request: FriendshipSolicitudeCreationRequest
     ): FriendshipSolicitudeResponse {
@@ -31,7 +31,7 @@ class RestFriendController(private val commandBus: CommandBus) {
     @PutMapping("/{friendshipSolicitudeId}/accept")
     @ResponseBody
     @ResponseStatus(value = OK)
-    fun acceptFriendshipSolicitude(
+    fun accept(
         @PathVariable("userId") addressedId: String,
         @PathVariable("friendshipSolicitudeId") friendshipSolicitudeId: String,
     ): FriendshipSolicitudeResponse {
@@ -51,7 +51,7 @@ class RestFriendController(private val commandBus: CommandBus) {
     @PutMapping("/{friendshipSolicitudeId}/reject")
     @ResponseBody
     @ResponseStatus(value = OK)
-    fun rejectFriendshipSolicitude(
+    fun reject(
         @PathVariable("userId") addressedId: String,
         @PathVariable("friendshipSolicitudeId") friendshipSolicitudeId: String,
     ): FriendshipSolicitudeResponse {
@@ -71,7 +71,7 @@ class RestFriendController(private val commandBus: CommandBus) {
     @GetMapping
     @ResponseBody
     @ResponseStatus(value = OK)
-    fun listFriendshipSolicitudes(
+    fun list(
         @PathVariable("userId") addressedId: String,
         @PathParam("status") status: String? = null,
     ): List<FriendshipSolicitudeResponse> {
