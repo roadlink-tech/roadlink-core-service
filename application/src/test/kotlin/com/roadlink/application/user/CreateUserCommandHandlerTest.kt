@@ -9,7 +9,7 @@ import io.mockk.every
 import io.mockk.mockk
 import java.util.*
 
-class UserCreationCommandHandlerTest : BehaviorSpec({
+class CreateUserCommandHandlerTest : BehaviorSpec({
 
     Given("a UserCreationCommandHandler") {
         val userRepository: RepositoryPort<User, UserCriteria> = mockk()

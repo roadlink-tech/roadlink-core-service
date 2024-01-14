@@ -26,6 +26,15 @@ data class FriendshipSolicitude(
         return this.apply { this.solicitudeStatus = Status.REJECTED }
     }
 
+    fun checkStatusTransition(nextStatus: Status) {
+        if (!STATUS_TRANSITION[this.solicitudeStatus]!!.contains(nextStatus)) {
+            throw FriendshipSolicitudeException.InvalidFriendshipSolicitudeStatusTransition(
+                this.solicitudeStatus,
+                nextStatus
+            )
+        }
+    }
+
     fun checkIfItHasBeenAccepted(friendshipRepository: RepositoryPort<FriendshipSolicitude, FriendshipSolicitudeCriteria>) {
         val solicitudes =
             friendshipRepository.findAll(
@@ -60,5 +69,13 @@ data class FriendshipSolicitude(
         PENDING,
         ACCEPTED,
         REJECTED
+    }
+
+    companion object {
+        private val STATUS_TRANSITION = mapOf(
+            Status.ACCEPTED to emptyList(),
+            Status.REJECTED to emptyList(),
+            Status.PENDING to listOf(Status.ACCEPTED, Status.REJECTED)
+        )
     }
 }

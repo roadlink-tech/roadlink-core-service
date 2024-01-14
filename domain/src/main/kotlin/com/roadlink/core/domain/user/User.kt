@@ -39,6 +39,13 @@ data class User(
         }
     }
 
+    fun removeFriend(user: User) {
+        if (this.id != user.id && this.friends.contains(user.id)) {
+            this.friends.remove(user.id)
+            user.removeFriend(this)
+        }
+    }
+
     fun checkIfAlreadyAreFriends(user: User) {
         if (this.friends.contains(user.id)) {
             throw UserException.UserAlreadyAreFriends(this.id, user.id)
@@ -47,7 +54,10 @@ data class User(
 
     companion object {
 
-        fun checkIfEntitiesExist(userRepository: RepositoryPort<User, UserCriteria>, criteria: List<UserCriteria>) {
+        fun checkIfEntitiesExist(
+            userRepository: RepositoryPort<User, UserCriteria>,
+            criteria: List<UserCriteria>
+        ) {
             criteria.forEach {
                 userRepository.findOrFail(it)
             }

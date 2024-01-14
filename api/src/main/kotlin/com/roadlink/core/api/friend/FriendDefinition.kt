@@ -7,7 +7,6 @@ import com.roadlink.core.domain.friend.FriendshipSolicitude
 import com.roadlink.core.domain.friend.FriendshipSolicitudeCriteria
 import com.roadlink.core.domain.user.User
 import com.roadlink.core.domain.user.UserCriteria
-import com.roadlink.core.infrastructure.dynamodb.BaseDynamoRepository
 import com.roadlink.core.infrastructure.dynamodb.RepositoryAdapter
 import com.roadlink.core.infrastructure.friend.FriendshipSolicitudeDynamoDbEntityMapper
 import com.roadlink.core.infrastructure.friend.FriendshipSolicitudeDynamoDbQueryMapper
@@ -22,22 +21,65 @@ open class FriendDefinition {
     open fun friendshipSolicitudeRepository(dynamoDbClient: DynamoDbClient): RepositoryPort<FriendshipSolicitude, FriendshipSolicitudeCriteria> {
         val dynamoEntityMapper = FriendshipSolicitudeDynamoDbEntityMapper()
         val dynamoQueryMapper = FriendshipSolicitudeDynamoDbQueryMapper()
-        return RepositoryAdapter(dynamoDbClient, "RoadlinkCore", dynamoEntityMapper, dynamoQueryMapper)
+        return RepositoryAdapter(
+            dynamoDbClient,
+            "RoadlinkCore",
+            dynamoEntityMapper,
+            dynamoQueryMapper
+        )
     }
 
-    @Bean("friendship_solicitude_creation_command_handler")
-    open fun friendshipSolicitudeCreationCommandHandler(
+    @Bean("create_friendship_solicitude_command_handler")
+    open fun createFriendshipSolicitudeCommandHandler(
         userRepository: RepositoryPort<User, UserCriteria>,
         friendshipSolicitudeRepository: RepositoryPort<FriendshipSolicitude, FriendshipSolicitudeCriteria>
-    ): CommandHandler<FriendshipSolicitudeCreationCommand, FriendshipSolicitudeCreationCommandResponse> {
-        return FriendshipSolicitudeCreationCommandHandler(userRepository, friendshipSolicitudeRepository)
+    ): CommandHandler<CreateFriendshipSolicitudeCommand, CreateFriendshipSolicitudeCommandResponse> {
+        return CreateFriendshipSolicitudeCommandHandler(
+            userRepository,
+            friendshipSolicitudeRepository
+        )
     }
 
-    @Bean("friendship_solicitude_acceptance_command_handler")
-    open fun friendshipSolicitudeAcceptanceCommandHandler(
+    @Bean("accept_friendship_solicitude_command_handler")
+    open fun acceptFriendshipSolicitudeCommandHandler(
         userRepository: RepositoryPort<User, UserCriteria>,
         friendshipSolicitudeRepository: RepositoryPort<FriendshipSolicitude, FriendshipSolicitudeCriteria>
-    ): CommandHandler<FriendshipSolicitudeAcceptanceCommand, FriendshipSolicitudeAcceptanceCommandResponse> {
-        return FriendshipSolicitudeAcceptanceCommandHandler(userRepository, friendshipSolicitudeRepository)
+    ): CommandHandler<AcceptFriendshipSolicitudeCommand, AcceptFriendshipSolicitudeCommandResponse> {
+        return AcceptFriendshipSolicitudeCommandHandler(
+            userRepository,
+            friendshipSolicitudeRepository
+        )
+    }
+
+    @Bean("reject_friendship_solicitude_command_handler")
+    open fun rejectFriendshipSolicitudeCommandHandler(
+        userRepository: RepositoryPort<User, UserCriteria>,
+        friendshipSolicitudeRepository: RepositoryPort<FriendshipSolicitude, FriendshipSolicitudeCriteria>
+    ): CommandHandler<RejectFriendshipSolicitudeCommand, RejectFriendshipSolicitudeCommandResponse> {
+        return RejectFriendshipSolicitudeCommandHandler(
+            userRepository,
+            friendshipSolicitudeRepository
+        )
+    }
+
+    @Bean("list_friendship_solicitudes_command_handler")
+    open fun listFriendshipSolicitudeCommandHandler(
+        userRepository: RepositoryPort<User, UserCriteria>,
+        friendshipSolicitudeRepository: RepositoryPort<FriendshipSolicitude, FriendshipSolicitudeCriteria>
+    ): CommandHandler<ListFriendshipSolicitudesCommand, ListFriendshipSolicitudesCommandResponse> {
+        return ListFriendshipSolicitudesCommandHandler(
+            userRepository,
+            friendshipSolicitudeRepository
+        )
+    }
+
+    @Bean("list_friends_command_handler")
+    open fun listFriendsCommandHandler(userRepository: RepositoryPort<User, UserCriteria>): CommandHandler<ListFriendsCommand, ListFriendsCommandResponse> {
+        return ListFriendsCommandHandler(userRepository)
+    }
+
+    @Bean("delete_friend_command_handler")
+    open fun deleteFriendsCommandHandler(userRepository: RepositoryPort<User, UserCriteria>): CommandHandler<DeleteFriendCommand, DeleteFriendCommandResponse> {
+        return DeleteFriendCommandHandler(userRepository)
     }
 }

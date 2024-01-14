@@ -4,26 +4,26 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.roadlink.application.command.CommandBus
 import com.roadlink.application.feedback.*
 import com.roadlink.application.friend.*
-import com.roadlink.core.domain.friend.FriendshipSolicitude
 import com.roadlink.core.domain.friend.FriendshipSolicitude.*
+import jakarta.websocket.server.PathParam
 import org.springframework.http.HttpStatus.*
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @RestController
-@RequestMapping("/users/{userId}/friendship_solicitude")
-class RestFriendController(private val commandBus: CommandBus) {
+@RequestMapping("/users/{userId}/friendship_solicitudes")
+class RestFriendshipSolicitudesController(private val commandBus: CommandBus) {
 
     @PostMapping
     @ResponseBody
     @ResponseStatus(value = CREATED)
-    fun createFriendshipSolicitud(
+    fun create(
         @PathVariable("userId") addressedId: String,
         @RequestBody request: FriendshipSolicitudeCreationRequest
     ): FriendshipSolicitudeResponse {
         val response =
-            commandBus.publish<FriendshipSolicitudeCreationCommand, FriendshipSolicitudeCreationCommandResponse>(
-                FriendshipSolicitudeCreationCommand(request.toDto(addressedId))
+            commandBus.publish<CreateFriendshipSolicitudeCommand, CreateFriendshipSolicitudeCommandResponse>(
+                CreateFriendshipSolicitudeCommand(request.toDto(addressedId))
             )
         return FriendshipSolicitudeResponse.from(response.friendshipSolicitude)
     }
@@ -31,13 +31,13 @@ class RestFriendController(private val commandBus: CommandBus) {
     @PutMapping("/{friendshipSolicitudeId}/accept")
     @ResponseBody
     @ResponseStatus(value = OK)
-    fun retrieveUserFeedbacks(
+    fun accept(
         @PathVariable("userId") addressedId: String,
         @PathVariable("friendshipSolicitudeId") friendshipSolicitudeId: String,
     ): FriendshipSolicitudeResponse {
         val response =
-            commandBus.publish<FriendshipSolicitudeAcceptanceCommand, FriendshipSolicitudeAcceptanceCommandResponse>(
-                FriendshipSolicitudeAcceptanceCommand(
+            commandBus.publish<AcceptFriendshipSolicitudeCommand, AcceptFriendshipSolicitudeCommandResponse>(
+                AcceptFriendshipSolicitudeCommand(
                     FriendshipSolicitudeDecisionDTO(
                         id = UUID.fromString(friendshipSolicitudeId),
                         addressedId = UUID.fromString(addressedId),
@@ -46,6 +46,46 @@ class RestFriendController(private val commandBus: CommandBus) {
                 )
             )
         return FriendshipSolicitudeResponse.from(response.friendshipSolicitude)
+    }
+
+    @PutMapping("/{friendshipSolicitudeId}/reject")
+    @ResponseBody
+    @ResponseStatus(value = OK)
+    fun reject(
+        @PathVariable("userId") addressedId: String,
+        @PathVariable("friendshipSolicitudeId") friendshipSolicitudeId: String,
+    ): FriendshipSolicitudeResponse {
+        val response =
+            commandBus.publish<RejectFriendshipSolicitudeCommand, RejectFriendshipSolicitudeCommandResponse>(
+                RejectFriendshipSolicitudeCommand(
+                    FriendshipSolicitudeDecisionDTO(
+                        id = UUID.fromString(friendshipSolicitudeId),
+                        addressedId = UUID.fromString(addressedId),
+                        status = Status.REJECTED
+                    )
+                )
+            )
+        return FriendshipSolicitudeResponse.from(response.friendshipSolicitude)
+    }
+
+    @GetMapping
+    @ResponseBody
+    @ResponseStatus(value = OK)
+    fun list(
+        @PathVariable("userId") addressedId: String,
+        @PathParam("status") status: String? = null,
+    ): List<FriendshipSolicitudeResponse> {
+        val response =
+            commandBus.publish<ListFriendshipSolicitudesCommand, ListFriendshipSolicitudesCommandResponse>(
+                ListFriendshipSolicitudesCommand(
+                    FriendshipSolicitudeListFilter(
+                        addressedId = UUID.fromString(addressedId),
+                        status = status
+                    )
+                )
+            )
+
+        return response.friendshipSolicitudes.map { FriendshipSolicitudeResponse.from(it) }
     }
 }
 

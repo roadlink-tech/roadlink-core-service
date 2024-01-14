@@ -16,17 +16,17 @@ import io.mockk.mockk
 import io.mockk.verify
 import java.util.*
 
-class FeedbackCreationCommandHandlerTest : BehaviorSpec({
+class CreateFeedbackCommandHandlerTest : BehaviorSpec({
 
     val feedbackRepository = mockk<RepositoryPort<Feedback, FeedbackCriteria>>()
     val userRepository = mockk<RepositoryPort<User, UserCriteria>>()
     Given("a feedback creation command handler") {
-        val commandHandler = FeedbackCreationCommandHandler(userRepository, feedbackRepository)
+        val commandHandler = CreateFeedbackCommandHandler(userRepository, feedbackRepository)
 
         When("handle a command with a receiverId that not exist") {
             val receiverId = UUID.randomUUID()
             val reviewerId = UUID.randomUUID()
-            val command = FeedbackCreationCommand(
+            val command = CreateFeedbackCommand(
                 feedback = FeedbackDTO(
                     id = UUID.randomUUID(),
                     receiverId = receiverId,
@@ -55,7 +55,7 @@ class FeedbackCreationCommandHandlerTest : BehaviorSpec({
         When("handle a command with a reviewer that not exist") {
             val receiverId = UUID.randomUUID()
             val reviewerId = UUID.randomUUID()
-            val command = FeedbackCreationCommand(
+            val command = CreateFeedbackCommand(
                 feedback = FeedbackDTO(
                     id = UUID.randomUUID(),
                     receiverId = receiverId,
@@ -89,7 +89,7 @@ class FeedbackCreationCommandHandlerTest : BehaviorSpec({
             val id = UUID.randomUUID()
             val receiverId = UUID.randomUUID()
             val reviewerId = UUID.randomUUID()
-            val command = FeedbackCreationCommand(
+            val command = CreateFeedbackCommand(
                 feedback = FeedbackDTO(
                     id = id,
                     receiverId = receiverId,

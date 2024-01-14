@@ -2,8 +2,8 @@ package com.roadlink.core.api.feedback.controller
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.roadlink.application.command.CommandBus
-import com.roadlink.application.feedback.FeedbackCreationCommand
-import com.roadlink.application.feedback.FeedbackCreationCommandResponse
+import com.roadlink.application.feedback.CreateFeedbackCommand
+import com.roadlink.application.feedback.CreateFeedbackCommandResponse
 import com.roadlink.application.feedback.FeedbackDTO
 import com.roadlink.application.feedback.RetrieveFeedbacksCommand
 import com.roadlink.application.feedback.RetrieveFeedbacksCommandResponse
@@ -30,8 +30,8 @@ class FeedbackController(private val commandBus: CommandBus) {
         @RequestBody request: FeedbackCreationRequest
     ): FeedbackResponse {
         val response =
-            commandBus.publish<FeedbackCreationCommand, FeedbackCreationCommandResponse>(
-                FeedbackCreationCommand(request.toDto(receiverId))
+            commandBus.publish<CreateFeedbackCommand, CreateFeedbackCommandResponse>(
+                CreateFeedbackCommand(request.toDto(receiverId))
             )
         return FeedbackResponse.from(response.feedback)
     }
