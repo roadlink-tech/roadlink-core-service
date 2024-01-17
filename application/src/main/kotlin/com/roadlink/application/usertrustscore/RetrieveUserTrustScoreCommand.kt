@@ -14,17 +14,20 @@ import java.util.*
 
 class RetrieveUserTrustScoreCommandResponse(val userTrustScore: UserTrustScoreDTO) : CommandResponse
 
-class RetrieveUserTrustScoreCommand(val userId: String) : Command
+class RetrieveUserTrustScoreCommand(val userId: UUID) : Command
 
 class RetrieveUserTrustScoreCommandHandler(
     private val userRepository: RepositoryPort<User, UserCriteria>,
     private val feedbackRepository: RepositoryPort<Feedback, FeedbackCriteria>
-) :
-    CommandHandler<RetrieveUserTrustScoreCommand, RetrieveUserTrustScoreCommandResponse> {
+) : CommandHandler<RetrieveUserTrustScoreCommand, RetrieveUserTrustScoreCommandResponse> {
 
     override fun handle(command: RetrieveUserTrustScoreCommand): RetrieveUserTrustScoreCommandResponse {
         val userTrustScore =
-            UserTrustScore.get(UUID.fromString(command.userId), userRepository, feedbackRepository)
-        return RetrieveUserTrustScoreCommandResponse(userTrustScore = UserTrustScoreDTO.from(userTrustScore))
+            UserTrustScore.get(command.userId, userRepository, feedbackRepository)
+        return RetrieveUserTrustScoreCommandResponse(
+            userTrustScore = UserTrustScoreDTO.from(
+                userTrustScore
+            )
+        )
     }
 }
