@@ -3,7 +3,7 @@ package com.roadlink.core.infrastructure.feedback
 import com.roadlink.core.domain.feedback.FeedbackCriteria
 import com.roadlink.core.infrastructure.dynamodb.BaseDynamoDbQuery
 import com.roadlink.core.infrastructure.dynamodb.DynamoDbQueryMapper
-import com.roadlink.core.infrastructure.dynamodb.error.DynamoDbError
+import com.roadlink.core.infrastructure.dynamodb.error.DynamoDbException
 import java.util.*
 
 
@@ -49,7 +49,7 @@ class FeedbackDynamoDbQuery(
         if (this.receiverId != null) {
             return "ReceiverIdLSI"
         }
-        throw DynamoDbError.InvalidQuery()
+        throw DynamoDbException.InvalidQuery()
     }
 
     override fun fieldsInKeyCondition(): List<String> {
@@ -65,7 +65,7 @@ class FeedbackDynamoDbQuery(
         if (reviewerId != null) {
             return listOf("reviewerId", "entityId")
         }
-        throw DynamoDbError.InvalidKeyConditionExpression()
+        throw DynamoDbException.InvalidKeyConditionExpression()
     }
 }
 

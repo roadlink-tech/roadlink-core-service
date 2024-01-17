@@ -3,7 +3,7 @@ package com.roadlink.core.infrastructure.dynamodb
 import com.roadlink.core.domain.DomainCriteria
 import com.roadlink.core.domain.DomainEntity
 import com.roadlink.core.domain.RepositoryPort
-import com.roadlink.core.infrastructure.user.exception.UserInfrastructureException
+import com.roadlink.core.infrastructure.dynamodb.error.DynamoDbException
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient
 import software.amazon.awssdk.services.dynamodb.model.*
 
@@ -32,7 +32,7 @@ class RepositoryAdapter<T : DomainEntity, E : BaseDynamoDbEntity, C : DomainCrit
     override fun findOrFail(criteria: C): T {
         val result = this.findAll(criteria)
         if (result.isEmpty()) {
-            throw UserInfrastructureException.NotFound()
+            throw DynamoDbException.EntityDoesNotExist(criteria.toString())
         }
         return result.first()
     }

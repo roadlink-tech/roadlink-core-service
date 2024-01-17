@@ -3,7 +3,7 @@ package com.roadlink.core.infrastructure.user
 import com.roadlink.core.domain.user.UserCriteria
 import com.roadlink.core.infrastructure.dynamodb.BaseDynamoDbQuery
 import com.roadlink.core.infrastructure.dynamodb.DynamoDbQueryMapper
-import com.roadlink.core.infrastructure.user.exception.UserInfrastructureException
+import com.roadlink.core.infrastructure.dynamodb.error.DynamoDbException
 import java.util.*
 
 class UserDynamoDbQuery(
@@ -15,7 +15,7 @@ class UserDynamoDbQuery(
 
     init {
         if (id == null && email == "") {
-            throw UserInfrastructureException.CriteriaEmpty()
+            throw DynamoDbException.InvalidQuery()
         }
     }
 

@@ -24,7 +24,11 @@ class UserCreationController(private val commandBus: CommandBus) {
     @ResponseBody
     @ResponseStatus(value = OK)
     fun retrieve(@PathVariable("userId") userId: String): UserResponse {
-        val response = commandBus.publish<RetrieveUserCommand, RetrieveUserCommandResponse>(RetrieveUserCommand(userId))
+        val response = commandBus.publish<RetrieveUserCommand, RetrieveUserCommandResponse>(
+            RetrieveUserCommand(
+                UUID.fromString(userId)
+            )
+        )
         return UserResponse.from(response.user)
     }
 

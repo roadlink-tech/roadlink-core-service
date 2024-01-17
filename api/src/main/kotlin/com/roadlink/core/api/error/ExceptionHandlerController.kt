@@ -2,8 +2,7 @@ package com.roadlink.core.api.error
 
 import com.roadlink.core.domain.feedback.validation.FeedbackException
 import com.roadlink.core.domain.friend.FriendshipSolicitudeException
-import com.roadlink.core.infrastructure.user.exception.UserInfrastructureException
-import jdk.jshell.spi.ExecutionControl
+import com.roadlink.core.infrastructure.dynamodb.error.DynamoDbException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
@@ -54,8 +53,8 @@ class ExceptionHandlerController {
         return ResponseEntity(errorMessage, HttpStatus.METHOD_NOT_ALLOWED)
     }
 
-    @ExceptionHandler(UserInfrastructureException.NotFound::class)
-    fun handleInfrastructureException(ex: UserInfrastructureException.NotFound): ResponseEntity<ErrorResponse> {
+    @ExceptionHandler(DynamoDbException.EntityDoesNotExist::class)
+    fun handleInfrastructureException(ex: DynamoDbException.EntityDoesNotExist): ResponseEntity<ErrorResponse> {
         val errorMessage = ErrorResponse(
             HttpStatus.NOT_FOUND.toString(), message = ex.message
         )
@@ -63,8 +62,8 @@ class ExceptionHandlerController {
         return ResponseEntity(errorMessage, HttpStatus.NOT_FOUND)
     }
 
-    @ExceptionHandler(UserInfrastructureException.CriteriaEmpty::class)
-    fun handleInfrastructureException(ex: UserInfrastructureException.CriteriaEmpty): ResponseEntity<ErrorResponse> {
+    @ExceptionHandler(DynamoDbException.InvalidQuery::class)
+    fun handleInfrastructureException(ex: DynamoDbException.InvalidQuery): ResponseEntity<ErrorResponse> {
         val errorMessage = ErrorResponse(
             HttpStatus.BAD_REQUEST.toString(), message = ex.message
         )

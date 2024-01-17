@@ -6,7 +6,7 @@ import com.roadlink.core.domain.feedback.Feedback
 import com.roadlink.core.domain.feedback.FeedbackCriteria
 import com.roadlink.core.domain.user.User
 import com.roadlink.core.domain.user.UserCriteria
-import com.roadlink.core.infrastructure.user.exception.UserInfrastructureException
+import com.roadlink.core.infrastructure.dynamodb.error.DynamoDbException
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.nulls.shouldNotBeNull
@@ -38,16 +38,16 @@ class CreateFeedbackCommandHandlerTest : BehaviorSpec({
             every { userRepository.findOrFail(match { it.id == reviewerId }) } returns UserFactory.common(id = reviewerId)
 
             every { userRepository.findOrFail(match { it.id == receiverId }) }.throws(
-                UserInfrastructureException.NotFound(receiverId)
+                DynamoDbException.EntityDoesNotExist(receiverId.toString())
             )
 
-            val ex = shouldThrow<UserInfrastructureException.NotFound> {
+            val ex = shouldThrow<DynamoDbException.EntityDoesNotExist> {
                 commandHandler.handle(command)
             }
 
             Then("an exception must be raised") {
                 ex.shouldNotBeNull()
-                ex.message.shouldBe("User $receiverId not found")
+                ex.message.shouldBe("Entity $receiverId does not exist")
                 verify(exactly = 0) { feedbackRepository.save(any()) }
             }
         }
@@ -71,16 +71,16 @@ class CreateFeedbackCommandHandlerTest : BehaviorSpec({
             )
 
             every { userRepository.findOrFail(match { it.id == reviewerId }) }.throws(
-                UserInfrastructureException.NotFound(reviewerId)
+                DynamoDbException.EntityDoesNotExist(reviewerId.toString())
             )
 
-            val ex = shouldThrow<UserInfrastructureException.NotFound> {
+            val ex = shouldThrow<DynamoDbException.EntityDoesNotExist> {
                 commandHandler.handle(command)
             }
 
             Then("an exception must be raised") {
                 ex.shouldNotBeNull()
-                ex.message.shouldBe("User $reviewerId not found")
+                ex.message.shouldBe("Entity $reviewerId does not exist")
                 verify(exactly = 0) { feedbackRepository.save(any()) }
             }
         }
