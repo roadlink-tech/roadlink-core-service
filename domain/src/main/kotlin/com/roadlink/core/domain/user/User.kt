@@ -4,13 +4,14 @@ import com.roadlink.core.domain.DomainEntity
 import com.roadlink.core.domain.DomainException
 import com.roadlink.core.domain.RepositoryPort
 import java.util.*
-import kotlin.collections.List
 
 sealed class UserException(override val message: String, cause: Throwable? = null) :
     DomainException(message, cause) {
 
     class UserAlreadyAreFriends(requesterId: UUID, addressedId: UUID) :
         UserException("Users $requesterId and $addressedId already are friends")
+
+    class UserEmailAlreadyRegistered(email: String) : UserException("User $email is already registered")
 }
 
 /* TODO:
@@ -53,6 +54,17 @@ data class User(
     }
 
     companion object {
+
+        fun checkIfUserCanBeCreated(
+            userRepository: RepositoryPort<User, UserCriteria>,
+            user: User
+        ) {
+            userRepository.findAll(UserCriteria(email = user.email)).also { users ->
+                if (users.isNotEmpty()) {
+                    throw UserException.UserEmailAlreadyRegistered(user.email)
+                }
+            }
+        }
 
         fun checkIfEntitiesExist(
             userRepository: RepositoryPort<User, UserCriteria>,

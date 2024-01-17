@@ -16,7 +16,7 @@ class UserCreationController(private val commandBus: CommandBus) {
     @ResponseStatus(value = CREATED)
     fun create(@RequestBody user: UserCreationRequest): UserResponse {
         val response =
-            commandBus.publish<UserCreationCommand, UserCreationCommandResponse>(UserCreationCommand(user.toDto()))
+            commandBus.publish<CreateUserCommand, CreateUserCommandResponse>(CreateUserCommand(user.toDto()))
         return UserResponse.from(response.user)
     }
 

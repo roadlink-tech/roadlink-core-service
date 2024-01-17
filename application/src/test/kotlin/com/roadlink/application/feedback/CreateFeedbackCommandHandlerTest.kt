@@ -11,6 +11,7 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
+import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -18,10 +19,13 @@ import java.util.*
 
 class CreateFeedbackCommandHandlerTest : BehaviorSpec({
 
-    val feedbackRepository = mockk<RepositoryPort<Feedback, FeedbackCriteria>>()
-    val userRepository = mockk<RepositoryPort<User, UserCriteria>>()
     Given("a feedback creation command handler") {
-        val commandHandler = CreateFeedbackCommandHandler(userRepository, feedbackRepository)
+        val feedbackRepository: RepositoryPort<Feedback, FeedbackCriteria> = mockk()
+        val userRepository: RepositoryPort<User, UserCriteria> = mockk()
+        val handler = CreateFeedbackCommandHandler(userRepository, feedbackRepository)
+        afterEach {
+            clearMocks(userRepository)
+        }
 
         When("handle a command with a receiverId that not exist") {
             val receiverId = UUID.randomUUID()
@@ -42,7 +46,7 @@ class CreateFeedbackCommandHandlerTest : BehaviorSpec({
             )
 
             val ex = shouldThrow<DynamoDbException.EntityDoesNotExist> {
-                commandHandler.handle(command)
+                handler.handle(command)
             }
 
             Then("an exception must be raised") {
@@ -75,7 +79,7 @@ class CreateFeedbackCommandHandlerTest : BehaviorSpec({
             )
 
             val ex = shouldThrow<DynamoDbException.EntityDoesNotExist> {
-                commandHandler.handle(command)
+                handler.handle(command)
             }
 
             Then("an exception must be raised") {
@@ -121,7 +125,7 @@ class CreateFeedbackCommandHandlerTest : BehaviorSpec({
                 )
             )
 
-            val response = commandHandler.handle(command)
+            val response = handler.handle(command)
 
 
             Then("an exception must be raised") {

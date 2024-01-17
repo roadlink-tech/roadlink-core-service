@@ -90,7 +90,7 @@ class ExceptionHandlerController {
     }
 
     @ExceptionHandler(FriendshipSolicitudeException.FriendshipSolicitudeAlreadySent::class)
-    fun handleInvalidRatingException(ex: FriendshipSolicitudeException.FriendshipSolicitudeAlreadySent): ResponseEntity<ErrorResponse> {
+    fun handleFriendshipSolicitudeAlreadySentException(ex: FriendshipSolicitudeException.FriendshipSolicitudeAlreadySent): ResponseEntity<ErrorResponse> {
         val errorMessage = ErrorResponse(
             HttpStatus.PRECONDITION_FAILED.toString(), message = ex.message
         )
@@ -99,7 +99,7 @@ class ExceptionHandlerController {
     }
 
     @ExceptionHandler(com.roadlink.core.domain.user.UserException.UserAlreadyAreFriends::class)
-    fun handleInvalidRatingException(ex: com.roadlink.core.domain.user.UserException.UserAlreadyAreFriends): ResponseEntity<ErrorResponse> {
+    fun handleUserAlreadyAreFriends(ex: com.roadlink.core.domain.user.UserException.UserAlreadyAreFriends): ResponseEntity<ErrorResponse> {
         val errorMessage = ErrorResponse(
             HttpStatus.PRECONDITION_FAILED.toString(), message = ex.message
         )
@@ -107,8 +107,17 @@ class ExceptionHandlerController {
         return ResponseEntity(errorMessage, HttpStatus.PRECONDITION_FAILED)
     }
 
+    @ExceptionHandler(com.roadlink.core.domain.user.UserException.UserEmailAlreadyRegistered::class)
+    fun handleUserEmailAlreadyRegistered(ex: com.roadlink.core.domain.user.UserException.UserAlreadyAreFriends): ResponseEntity<ErrorResponse> {
+        val errorMessage = ErrorResponse(
+            HttpStatus.CONFLICT.toString(), message = ex.message
+        )
+
+        return ResponseEntity(errorMessage, HttpStatus.CONFLICT)
+    }
+
     @ExceptionHandler(FriendshipSolicitudeException.InvalidFriendshipSolicitudeStatusTransition::class)
-    fun handleInvalidRatingException(ex: FriendshipSolicitudeException.InvalidFriendshipSolicitudeStatusTransition): ResponseEntity<ErrorResponse> {
+    fun handleInvalidFriendshipSolicitudeStatusTransitionException(ex: FriendshipSolicitudeException.InvalidFriendshipSolicitudeStatusTransition): ResponseEntity<ErrorResponse> {
         val errorMessage = ErrorResponse(
             HttpStatus.PRECONDITION_FAILED.toString(), message = ex.message
         )

@@ -20,7 +20,7 @@ open class CommandBusDefinition {
 
     @Bean
     internal open fun commandBus(
-        @Qualifier("create_user_command_handler") userCreationCommandHandler: CommandHandler<UserCreationCommand, UserCreationCommandResponse>,
+        @Qualifier("create_user_command_handler") createUserCommandHandler: CommandHandler<CreateUserCommand, CreateUserCommandResponse>,
         @Qualifier("retrieve_user_command_handler") retrieveUserCommandHandler: CommandHandler<RetrieveUserCommand, RetrieveUserCommandResponse>,
         @Qualifier("search_user_command_handler") searchUserCommandHandler: CommandHandler<SearchUserCommand, SearchUserCommandResponse>,
         @Qualifier("feedback_creation_command_handler") createFeedbackCommandHandler: CommandHandler<CreateFeedbackCommand, CreateFeedbackCommandResponse>,
@@ -34,7 +34,7 @@ open class CommandBusDefinition {
         @Qualifier("delete_friend_command_handler") deleteFriendsCommandHandler: CommandHandler<DeleteFriendCommand, DeleteFriendCommandResponse>
     ): CommandBus {
         return SimpleCommandBus().also {
-            it.registerHandler(userCreationCommandHandler)
+            it.registerHandler(createUserCommandHandler)
             it.registerHandler(createFeedbackCommandHandler)
             it.registerHandler(retrieveUserCommandHandler)
             it.registerHandler(searchUserCommandHandler)
