@@ -25,17 +25,18 @@ class FeedbackDynamoDbEntity constructor(
     * LSI ReviewerIdLSI
     * */
     var reviewerId: UUID? = null,
+    var tripId: UUID? = null,
     var comment: String = "",
 ) : BaseDynamoDbEntity(id, createdDate) {
 
     override fun toDomain(): DomainEntity {
-        check(this.id != null) { "User id could not be null." }
         return Feedback(
-            id = this.id!!,
+            id = this.id,
             rating = this.rating!!,
             receiverId = this.receiverId!!,
             reviewerId = this.reviewerId!!,
-            comment = this.comment
+            comment = this.comment,
+            tripId = this.tripId!!
         )
     }
 
@@ -47,6 +48,7 @@ class FeedbackDynamoDbEntity constructor(
                 rating = Integer.valueOf(item["Rating"]!!.n()),
                 receiverId = UUID.fromString(item["ReceiverId"]!!.s()),
                 reviewerId = UUID.fromString(item["ReviewerId"]!!.s()),
+                tripId = UUID.fromString(item["TripId"]!!.s()),
                 comment = item["Comment"]!!.s(),
                 createdDate = DynamoDbDateFormatter.instance().parse(item["CreatedDate"]!!.s()),
             )
@@ -66,6 +68,7 @@ class FeedbackDynamoDbEntityMapper : BaseDynamoDbEntityMapper<Feedback, Feedback
             "Id" to AttributeValue.builder().s(entity.id.toString()).build(),
             "CreatedDate" to AttributeValue.builder().s(DynamoDbDateFormatter.instance().format(Date())).build(),
             "Rating" to AttributeValue.builder().n(entity.rating.toString()).build(),
+            "TripId" to AttributeValue.builder().s(entity.tripId.toString()).build(),
             "ReceiverId" to AttributeValue.builder().s(entity.receiverId.toString()).build(),
             "ReviewerId" to AttributeValue.builder().s(entity.reviewerId.toString()).build(),
             "Comment" to AttributeValue.builder().s(entity.comment).build()
