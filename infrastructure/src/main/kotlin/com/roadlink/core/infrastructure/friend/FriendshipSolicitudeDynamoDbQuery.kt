@@ -4,7 +4,7 @@ import com.roadlink.core.domain.friend.FriendshipSolicitude
 import com.roadlink.core.domain.friend.FriendshipSolicitudeCriteria
 import com.roadlink.core.infrastructure.dynamodb.BaseDynamoDbQuery
 import com.roadlink.core.infrastructure.dynamodb.DynamoDbQueryMapper
-import com.roadlink.core.infrastructure.dynamodb.error.DynamoDbError
+import com.roadlink.core.infrastructure.dynamodb.error.DynamoDbException
 import java.util.*
 
 class FriendshipSolicitudeDynamoDbQuery(
@@ -46,7 +46,7 @@ class FriendshipSolicitudeDynamoDbQuery(
         if (this.addressedId != null) {
             return "AddressedIdGSI"
         }
-        throw DynamoDbError.InvalidQuery()
+        throw DynamoDbException.InvalidQuery()
     }
 
     override fun fieldsInKeyCondition(): List<String> {
@@ -59,7 +59,7 @@ class FriendshipSolicitudeDynamoDbQuery(
         if (addressedId != null) {
             return listOf("addressedId")
         }
-        throw DynamoDbError.InvalidKeyConditionExpression()
+        throw DynamoDbException.InvalidKeyConditionExpression()
     }
 }
 

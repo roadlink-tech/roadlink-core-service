@@ -54,14 +54,17 @@ data class FeedbackCreationRequest(
     @JsonProperty("rating")
     val rating: Int,
     @JsonProperty("comment")
-    val comment: String
+    val comment: String,
+    @JsonProperty("trip_id")
+    val tripId: String
 ) {
     fun toDto(receiverId: String): FeedbackDTO {
         return FeedbackDTO(
             reviewerId = reviewerId,
             comment = comment,
             rating = rating,
-            receiverId = UUID.fromString(receiverId)
+            receiverId = UUID.fromString(receiverId),
+            tripId = UUID.fromString(tripId)
         )
     }
 }
@@ -73,6 +76,8 @@ data class FeedbackResponse(
     val reviewerId: UUID,
     @JsonProperty("receiver_id")
     val receiverId: UUID,
+    @JsonProperty("trip_id")
+    val tripId: UUID,
     @JsonProperty("comment")
     val comment: String,
     @JsonProperty("rating")
@@ -85,7 +90,8 @@ data class FeedbackResponse(
                 reviewerId = feedback.reviewerId,
                 comment = feedback.comment,
                 rating = feedback.rating,
-                receiverId = feedback.receiverId
+                receiverId = feedback.receiverId,
+                tripId = feedback.tripId
             )
         }
     }

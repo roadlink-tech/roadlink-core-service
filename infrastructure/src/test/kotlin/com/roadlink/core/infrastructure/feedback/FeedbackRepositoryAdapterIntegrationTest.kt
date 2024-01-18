@@ -29,7 +29,7 @@ class FeedbackRepositoryAdapterIntegrationTest : BehaviorSpec({
         val dynamoQueryMapper: DynamoDbQueryMapper<FeedbackCriteria, FeedbackDynamoDbQuery> =
             FeedbackDynamoDbQueryMapper()
         val repository = RepositoryAdapter(dynamoDbClient, "RoadlinkCore", dynamoEntityMapper, dynamoQueryMapper)
-        //val repository = RepositoryAdapter(dynamoDbClient)
+
         LocalStackHelper.createTableIn(container)
 
         When("save a new user entity") {
@@ -43,14 +43,20 @@ class FeedbackRepositoryAdapterIntegrationTest : BehaviorSpec({
             }
         }
 
-        When("save a new feedbacks and find it by rating") {
-            val feedback = FeedbackFactory.custom(rating = 2)
+        When("save a new feedback and find it by rating and tripId") {
+            repeat(10) {
+                repository.save(FeedbackFactory.custom(rating = 2))
+            }
+
+            val expectedTripId = UUID.randomUUID()
+            val feedback = FeedbackFactory.custom(rating = 2, tripId = expectedTripId)
             repository.save(feedback)
 
-            val feedbackFound = repository.findOrFail(criteria = FeedbackCriteria(rating = 2))
+            val feedbackFound = repository.findOrFail(criteria = FeedbackCriteria(rating = 2, tripId = expectedTripId))
             Then("the response should not be null") {
                 feedbackFound.shouldNotBeNull()
                 feedbackFound.rating.shouldBe(2)
+                feedback.tripId.shouldBe(expectedTripId)
             }
         }
 

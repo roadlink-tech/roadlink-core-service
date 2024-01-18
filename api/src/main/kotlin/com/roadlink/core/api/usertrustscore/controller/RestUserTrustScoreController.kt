@@ -7,6 +7,7 @@ import com.roadlink.application.usertrustscore.RetrieveUserTrustScoreCommandResp
 import com.roadlink.application.usertrustscore.UserTrustScoreDTO
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
+import java.util.*
 
 @RestController
 @RequestMapping("/users/{userId}/user_trust_score")
@@ -16,9 +17,10 @@ class RestUserTrustScoreController(private val commandBus: CommandBus) {
     @ResponseBody
     @ResponseStatus(value = HttpStatus.OK)
     fun retrieve(@PathVariable("userId") userId: String): UserTrustScoreResponse {
-        val response = commandBus.publish<RetrieveUserTrustScoreCommand, RetrieveUserTrustScoreCommandResponse>(
-            RetrieveUserTrustScoreCommand(userId)
-        )
+        val response =
+            commandBus.publish<RetrieveUserTrustScoreCommand, RetrieveUserTrustScoreCommandResponse>(
+                RetrieveUserTrustScoreCommand(UUID.fromString(userId))
+            )
         return UserTrustScoreResponse.from(response.userTrustScore)
     }
 

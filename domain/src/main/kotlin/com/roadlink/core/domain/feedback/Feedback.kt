@@ -8,12 +8,12 @@ import java.util.*
 
 /* TODO
  - created date
- - trip id
 */
 data class Feedback(
     val id: UUID,
     val reviewerId: UUID,
     val receiverId: UUID,
+    val tripId: UUID,
     val rating: Int,
     val comment: String
 ) : DomainEntity {

@@ -16,7 +16,6 @@ class ListFriendshipSolicitudesCommandResponse(val friendshipSolicitudes: List<F
 class ListFriendshipSolicitudesCommand(val friendshipSolicitudeListFilter: FriendshipSolicitudeListFilter) :
     Command
 
-// TODO test me!
 class ListFriendshipSolicitudesCommandHandler(
     private val userRepository: RepositoryPort<User, UserCriteria>,
     private val friendshipSolicitudeRepository: RepositoryPort<FriendshipSolicitude, FriendshipSolicitudeCriteria>
