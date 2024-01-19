@@ -37,6 +37,7 @@ class UserDynamoDbQuery(
         return ""
     }
 
+    // TODO it should be static method
     fun from(criteria: UserCriteria): UserDynamoDbQuery {
         return UserDynamoDbQuery(
             id = criteria.id,
