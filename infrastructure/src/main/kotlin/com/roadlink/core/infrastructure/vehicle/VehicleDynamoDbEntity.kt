@@ -14,7 +14,7 @@ class VehicleDynamoDbEntity constructor(
     var brand: String = "",
     var model: String = "",
     var licencePlate: String = "",
-    //TODO driverId gsi
+    /** DriverIdGSI */
     var driverId: String = "",
     var iconUrl: String = ""
 ) : BaseDynamoDbEntity(id, createdDate) {

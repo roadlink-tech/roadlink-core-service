@@ -1,6 +1,5 @@
 package com.roadlink.core.infrastructure.vehicle
 
-import com.roadlink.core.domain.user.UserCriteria
 import com.roadlink.core.domain.vehicle.VehicleCriteria
 import com.roadlink.core.infrastructure.dynamodb.BaseDynamoDbQuery
 import com.roadlink.core.infrastructure.dynamodb.DynamoDbQueryMapper
@@ -20,8 +19,10 @@ class VehicleDynamoDbQuery(
         }
     }
 
-    // TODO agregar índice por driverId
     override fun fieldsInKeyCondition(): List<String> {
+        if (driverId != "") {
+            return listOf("driverId")
+        }
         return listOf("id", "entityId")
     }
 
@@ -30,11 +31,17 @@ class VehicleDynamoDbQuery(
         if (id == null) {
             candidates.remove("id")
         }
+        if (driverId == "") {
+            candidates.remove("driverId")
+        }
+
         return candidates
     }
 
-    // TODO cambiar esto cuando se agrege el indice por driverId
     override fun indexName(): String {
+        if (driverId != "") {
+            return "VehicleDriverIdGSI"
+        }
         return ""
     }
 
@@ -54,3 +61,5 @@ class VehicleDynamoDbQueryMapper : DynamoDbQueryMapper<VehicleCriteria, VehicleD
         return VehicleDynamoDbQuery.from(criteria)
     }
 }
+
+

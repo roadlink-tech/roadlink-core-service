@@ -2,9 +2,7 @@ package com.roadlink.core.domain.vehicle
 
 import com.roadlink.core.domain.DomainEntity
 import com.roadlink.core.domain.RepositoryPort
-import com.roadlink.core.domain.user.User
-import com.roadlink.core.domain.user.UserCriteria
-import java.util.UUID
+import java.util.*
 
 data class Vehicle(
     val id: UUID,
