@@ -1,6 +1,8 @@
 package com.roadlink.application.friend
 
 import com.roadlink.core.domain.friend.FriendshipSolicitude
+import com.roadlink.core.domain.friend.FriendshipSolicitude.Status
+import com.roadlink.core.domain.friend.FriendshipSolicitude.Status.PENDING
 import java.util.*
 
 object FriendshipSolicitudeFactory {
@@ -10,7 +12,7 @@ object FriendshipSolicitudeFactory {
         requesterId: UUID = UUID.randomUUID(),
         addressedId: UUID = UUID.randomUUID(),
         createdDate: Date = Date(),
-        solicitudeStatus: FriendshipSolicitude.Status = FriendshipSolicitude.Status.PENDING
+        solicitudeStatus: Status = PENDING
     ): FriendshipSolicitude {
         return FriendshipSolicitude(
             id = id,

@@ -60,7 +60,7 @@ class CreateFriendshipSolicitudeCommandHandlerTest : BehaviorSpec({
             }
         }
 
-        When("there are pending solicitudes ") {
+        When("there are pending solicitudes") {
             val jorge = UserFactory.common()
             val martin = UserFactory.common()
 
@@ -84,7 +84,83 @@ class CreateFriendshipSolicitudeCommandHandlerTest : BehaviorSpec({
 
             Then("the solicitude must be created successfully") {
                 verify(exactly = 2) { userRepository.findOrFail(any()) }
-                verify(exactly = 1) { friendshipSolicitudeRepository.findAll(any()) }
+                verify(exactly = 2) { friendshipSolicitudeRepository.findAll(any()) }
+                verify(exactly = 0) { friendshipSolicitudeRepository.save(any()) }
+            }
+        }
+
+        When("there are pending solicitudes, but with a different user ") {
+            val jorge = UserFactory.common()
+            val martin = UserFactory.common()
+            val felix = UserFactory.common()
+
+            every { userRepository.findOrFail(match { it.id == jorge.id }) } returns jorge
+            every { userRepository.findOrFail(match { it.id == martin.id }) } returns martin
+
+            every { friendshipSolicitudeRepository.findAll(match { it.addressedId == felix.id && it.requesterId == jorge.id }) } returns listOf(
+                FriendshipSolicitudeFactory.common(requesterId = jorge.id, addressedId = felix.id)
+            )
+            every { friendshipSolicitudeRepository.findAll(match { it.addressedId == martin.id && it.requesterId == jorge.id }) } returns emptyList()
+            every { friendshipSolicitudeRepository.findAll(match { it.addressedId == jorge.id && it.requesterId == martin.id }) } returns emptyList()
+
+            every { friendshipSolicitudeRepository.save(any()) } returns FriendshipSolicitude(
+                id = UUID.randomUUID(),
+                requesterId = jorge.id,
+                addressedId = martin.id
+            )
+
+            val response = handler.handle(
+                CreateFriendshipSolicitudeCommand(
+                    friendshipSolicitude = FriendshipSolicitudeDTO(
+                        requesterId = jorge.id,
+                        addressedId = martin.id
+                    )
+                )
+            )
+
+            Then("the solicitude must be created successfully") {
+                verify(exactly = 2) { userRepository.findOrFail(any()) }
+                verify(exactly = 2) { friendshipSolicitudeRepository.findAll(any()) }
+                verify(exactly = 1) { friendshipSolicitudeRepository.save(any()) }
+                response.friendshipSolicitude.addressedId.shouldBe(martin.id)
+                response.friendshipSolicitude.requesterId.shouldBe(jorge.id)
+                response.friendshipSolicitude.status.shouldBe(PENDING)
+            }
+        }
+
+        When("felix sent a friendship solicitude to jorge, but jorge try to send another one to felix") {
+            val jorge = UserFactory.common()
+            val felix = UserFactory.common()
+
+            every { userRepository.findOrFail(match { it.id == jorge.id }) } returns jorge
+            every { userRepository.findOrFail(match { it.id == felix.id }) } returns felix
+
+            every { friendshipSolicitudeRepository.findAll(match { it.addressedId == jorge.id && it.requesterId == felix.id }) } returns listOf(
+                FriendshipSolicitudeFactory.common(requesterId = felix.id, addressedId = jorge.id)
+            )
+
+            every { friendshipSolicitudeRepository.findAll(match { it.addressedId == felix.id && it.requesterId == jorge.id }) } returns listOf()
+
+            every { friendshipSolicitudeRepository.save(any()) } returns FriendshipSolicitude(
+                id = UUID.randomUUID(),
+                requesterId = felix.id,
+                addressedId = jorge.id
+            )
+
+            shouldThrow<FriendshipSolicitudeException.FriendshipSolicitudeAlreadySent> {
+                handler.handle(
+                    CreateFriendshipSolicitudeCommand(
+                        friendshipSolicitude = FriendshipSolicitudeDTO(
+                            requesterId = jorge.id,
+                            addressedId = felix.id
+                        )
+                    )
+                )
+            }
+
+            Then("the solicitude must be created successfully") {
+                verify(exactly = 2) { userRepository.findOrFail(any()) }
+                verify(exactly = 2) { friendshipSolicitudeRepository.findAll(any()) }
                 verify(exactly = 0) { friendshipSolicitudeRepository.save(any()) }
             }
         }
@@ -114,7 +190,7 @@ class CreateFriendshipSolicitudeCommandHandlerTest : BehaviorSpec({
 
             Then("the solicitude must be created successfully") {
                 verify(exactly = 2) { userRepository.findOrFail(any()) }
-                verify(exactly = 1) { friendshipSolicitudeRepository.findAll(any()) }
+                verify(exactly = 2) { friendshipSolicitudeRepository.findAll(any()) }
                 verify(exactly = 1) { friendshipSolicitudeRepository.save(any()) }
                 response.friendshipSolicitude.addressedId.shouldBe(martin.id)
                 response.friendshipSolicitude.requesterId.shouldBe(jorge.id)
