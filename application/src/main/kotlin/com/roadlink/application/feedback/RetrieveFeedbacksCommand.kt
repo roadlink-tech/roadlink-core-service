@@ -10,14 +10,14 @@ import java.util.UUID
 
 class RetrieveFeedbacksCommandResponse(val feedbacks: List<FeedbackDTO>) : CommandResponse
 
-class RetrieveFeedbacksCommand(val receiverId: String) : Command
+class RetrieveFeedbacksCommand(val receiverId: UUID) : Command
 
 class RetrieveFeedbacksCommandHandler(private val repository: RepositoryPort<Feedback, FeedbackCriteria>) :
     CommandHandler<RetrieveFeedbacksCommand, RetrieveFeedbacksCommandResponse> {
 
     override fun handle(command: RetrieveFeedbacksCommand): RetrieveFeedbacksCommandResponse {
         val response =
-            repository.findAll(FeedbackCriteria(receiverId = UUID.fromString(command.receiverId)))
+            repository.findAll(FeedbackCriteria(receiverId = command.receiverId))
         return RetrieveFeedbacksCommandResponse(feedbacks = response.map { FeedbackDTO.from(it) })
     }
 }

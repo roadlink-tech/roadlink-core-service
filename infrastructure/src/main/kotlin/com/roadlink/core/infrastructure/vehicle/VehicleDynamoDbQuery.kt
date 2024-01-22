@@ -8,19 +8,19 @@ import java.util.*
 
 class VehicleDynamoDbQuery(
     val id: UUID? = null,
-    private val driverId: String = "",
+    private val driverId: UUID? = null,
 ) : BaseDynamoDbQuery() {
 
     override var entityId: String = "EntityId#Vehicle"
 
     init {
-        if (id == null && driverId == "") {
+        if (id == null && driverId == null) {
             throw DynamoDbException.InvalidQuery()
         }
     }
 
     override fun fieldsInKeyCondition(): List<String> {
-        if (driverId != "") {
+        if (driverId != null) {
             return listOf("driverId")
         }
         return listOf("id", "entityId")
@@ -31,7 +31,7 @@ class VehicleDynamoDbQuery(
         if (id == null) {
             candidates.remove("id")
         }
-        if (driverId == "") {
+        if (driverId == null) {
             candidates.remove("driverId")
         }
 
@@ -39,7 +39,7 @@ class VehicleDynamoDbQuery(
     }
 
     override fun indexName(): String {
-        if (driverId != "") {
+        if (driverId != null) {
             return "VehicleDriverIdGSI"
         }
         return ""
@@ -50,7 +50,7 @@ class VehicleDynamoDbQuery(
         fun from(criteria: VehicleCriteria): VehicleDynamoDbQuery {
             return VehicleDynamoDbQuery(
                 id = criteria.id,
-                driverId = criteria.driverId.toString()
+                driverId = criteria.driverId
             )
         }
     }

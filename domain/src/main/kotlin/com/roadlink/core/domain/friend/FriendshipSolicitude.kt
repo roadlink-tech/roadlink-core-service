@@ -17,7 +17,7 @@ data class FriendshipSolicitude(
     fun accept(userRepository: RepositoryPort<User, UserCriteria>): FriendshipSolicitude {
         val requester = userRepository.findOrFail(UserCriteria(requesterId))
         val addressed = userRepository.findOrFail(UserCriteria(addressedId))
-        requester.beFriends(addressed)
+        requester.beFriendOf(addressed)
         userRepository.saveAll(listOf(requester, addressed))
         return this.apply { this.solicitudeStatus = Status.ACCEPTED }
     }
@@ -53,11 +53,15 @@ data class FriendshipSolicitude(
             friendshipRepository.findAll(
                 FriendshipSolicitudeCriteria(
                     requesterId = this.requesterId,
+                    addressedId = this.addressedId,
                     solicitudeStatus = Status.PENDING
                 )
             )
         if (pendingSolicitudes.isNotEmpty()) {
-            throw FriendshipSolicitudeException.FriendshipSolicitudeAlreadySent(this.requesterId, this.addressedId)
+            throw FriendshipSolicitudeException.FriendshipSolicitudeAlreadySent(
+                this.requesterId,
+                this.addressedId
+            )
         }
     }
 

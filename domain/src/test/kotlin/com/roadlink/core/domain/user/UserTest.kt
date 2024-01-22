@@ -1,7 +1,6 @@
 package com.roadlink.core.domain.user
 
 import io.kotest.core.spec.style.BehaviorSpec
-import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe
 import java.util.UUID
@@ -15,7 +14,7 @@ class UserTest : BehaviorSpec({
         val doe = UserFactory.old(id = doeId)
 
         When("john made friend of doe") {
-            john.beFriends(doe)
+            john.beFriendOf(doe)
 
             Then("the friend ids must be the expected") {
                 john.friends.shouldBe(setOf<UUID>(doeId))
@@ -24,7 +23,7 @@ class UserTest : BehaviorSpec({
         }
 
         When("doe made friend of john") {
-            doe.beFriends(john)
+            doe.beFriendOf(john)
 
             Then("the friend ids must be the expected") {
                 john.friends.shouldBe(setOf<UUID>(doeId))
@@ -40,7 +39,7 @@ class UserTest : BehaviorSpec({
         val doe = UserFactory.old(id = doeId)
 
         When("john made friend of doe") {
-            john.beFriends(doe)
+            john.beFriendOf(doe)
 
             Then("the friend ids must be the expected") {
                 john.friends.shouldContain(doeId)
