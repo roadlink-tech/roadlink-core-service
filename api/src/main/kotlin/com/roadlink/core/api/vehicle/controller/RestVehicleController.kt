@@ -2,14 +2,12 @@ package com.roadlink.core.api.vehicle.controller
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.roadlink.application.command.CommandBus
-import com.roadlink.application.user.UserDTO
 import com.roadlink.application.vehicle.CreateVehicleCommand
 import com.roadlink.application.vehicle.CreateVehicleCommandResponse
 import com.roadlink.application.vehicle.VehicleDTO
-import com.roadlink.core.api.user.controller.UserResponse
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
-import java.util.UUID
+import java.util.*
 
 @RestController
 @RequestMapping("/users/{userId}/vehicles")

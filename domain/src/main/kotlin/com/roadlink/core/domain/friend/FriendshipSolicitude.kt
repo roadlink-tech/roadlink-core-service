@@ -36,16 +36,9 @@ data class FriendshipSolicitude(
         }
     }
 
-    fun checkIfItHasBeenAccepted(friendshipRepository: RepositoryPort<FriendshipSolicitude, FriendshipSolicitudeCriteria>) {
-        val solicitudes =
-            friendshipRepository.findAll(
-                FriendshipSolicitudeCriteria(
-                    id = this.requesterId,
-                    solicitudeStatus = ACCEPTED
-                )
-            )
-        if (solicitudes.isNotEmpty()) {
-            throw FriendshipSolicitudeException.FriendshipSolicitudeAlreadyAccepted(this.id)
+    fun checkIfStatusCanChange() {
+        if (!statusCanChange(this.solicitudeStatus)) {
+            throw FriendshipSolicitudeException.FriendshipSolicitudeStatusCanNotChange(this.id, this.solicitudeStatus)
         }
     }
 
@@ -88,5 +81,12 @@ data class FriendshipSolicitude(
             REJECTED to emptyList(),
             PENDING to listOf(ACCEPTED, REJECTED)
         )
+
+        fun statusCanChange(status: Status): Boolean {
+            return when (status) {
+                PENDING -> true
+                ACCEPTED, REJECTED -> false
+            }
+        }
     }
 }
