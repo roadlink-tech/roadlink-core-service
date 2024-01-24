@@ -9,7 +9,7 @@ import software.amazon.awssdk.services.dynamodb.model.AttributeValue
 import java.util.*
 
 class VehicleDynamoDbEntity constructor(
-    id: UUID,
+    id: String,
     createdDate: Date,
     var brand: String = "",
     var model: String = "",
@@ -21,7 +21,7 @@ class VehicleDynamoDbEntity constructor(
 
     override fun toDomain(): DomainEntity {
         return Vehicle(
-            id = this.id,
+            id = UUID.fromString(this.id),
             brand = this.brand,
             model = this.model,
             licencePlate = this.licencePlate,
@@ -35,7 +35,7 @@ class VehicleDynamoDbEntity constructor(
 
         fun from(item: Map<String, AttributeValue>): VehicleDynamoDbEntity {
             return VehicleDynamoDbEntity(
-                id = UUID.fromString(item["Id"]!!.s()),
+                id = item["Id"]!!.s(),
                 createdDate = DynamoDbDateFormatter.instance().parse(item["CreatedDate"]!!.s()),
                 brand = item["Brand"]!!.s(),
                 model = item["Model"]!!.s(),

@@ -10,7 +10,7 @@ import java.util.*
 
 
 class FriendshipSolicitudeDynamoDbEntity constructor(
-    id: UUID,
+    id: String,
     createdDate: Date = Date(),
     val requesterId: UUID,
     val addressedId: UUID,
@@ -19,7 +19,7 @@ class FriendshipSolicitudeDynamoDbEntity constructor(
 
     override fun toDomain(): DomainEntity {
         return FriendshipSolicitude(
-            id = this.id,
+            id = UUID.fromString(this.id),
             createdDate = this.createdDate,
             requesterId = this.requesterId,
             addressedId = this.addressedId,
@@ -31,7 +31,7 @@ class FriendshipSolicitudeDynamoDbEntity constructor(
 
         fun from(item: Map<String, AttributeValue>): FriendshipSolicitudeDynamoDbEntity {
             return FriendshipSolicitudeDynamoDbEntity(
-                id = UUID.fromString(item["Id"]!!.s()),
+                id = item["Id"]!!.s(),
                 requesterId = UUID.fromString(item["RequesterId"]!!.s()),
                 addressedId = UUID.fromString(item["AddressedId"]!!.s()),
                 solicitudeStatus = FriendshipSolicitude.Status.valueOf(item["SolicitudeStatus"]!!.s()),
