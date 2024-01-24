@@ -17,14 +17,14 @@ interface DynamoDbEntity {
      *  Sorting keys are a fundamental component of DynamoDB's data model, which uses a composite primary key consisting of a partition key
      *  (also known as a hash key) and a sorting key (also known as a range key).
      */
-    var id: UUID
+    var id: String
     var createdDate: Date
 
     fun toDomain(): DomainEntity
 
 }
 
-abstract class BaseDynamoDbEntity(override var id: UUID, override var createdDate: Date) : DynamoDbEntity {
+abstract class BaseDynamoDbEntity(override var id: String, override var createdDate: Date) : DynamoDbEntity {
     override var entityId: String = "EntityId#${Regex("^[A-Z]{1}[a-z]+").find(this::class.java.simpleName)?.value}"
 
 }
