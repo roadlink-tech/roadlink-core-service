@@ -16,7 +16,6 @@ class AcceptFriendshipSolicitudeCommandResponse(val friendshipSolicitude: Friend
 class AcceptFriendshipSolicitudeCommand(val friendshipSolicitude: FriendshipSolicitudeDecisionDTO) :
     Command
 
-// TODO test me!
 class AcceptFriendshipSolicitudeCommandHandler(
     private val userRepository: RepositoryPort<User, UserCriteria>,
     private val friendshipSolicitudeRepository: RepositoryPort<FriendshipSolicitude, FriendshipSolicitudeCriteria>
@@ -25,7 +24,7 @@ class AcceptFriendshipSolicitudeCommandHandler(
     override fun handle(command: AcceptFriendshipSolicitudeCommand): AcceptFriendshipSolicitudeCommandResponse {
         val solicitude =
             friendshipSolicitudeRepository.findOrFail(FriendshipSolicitudeCriteria(id = command.friendshipSolicitude.id))
-        solicitude.checkIfItHasBeenAccepted(friendshipSolicitudeRepository)
+        solicitude.checkIfStatusCanChange()
 
         val addressed =
             userRepository.findOrFail(UserCriteria(id = command.friendshipSolicitude.addressedId))

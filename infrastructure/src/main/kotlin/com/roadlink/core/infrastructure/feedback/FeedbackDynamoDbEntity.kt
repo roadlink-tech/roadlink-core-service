@@ -11,7 +11,7 @@ import software.amazon.awssdk.services.dynamodb.model.QueryResponse
 import java.util.*
 
 class FeedbackDynamoDbEntity constructor(
-    id: UUID,
+    id: String,
     createdDate: Date = Date(),
     /*
     * GSI RatingGSI
@@ -31,7 +31,7 @@ class FeedbackDynamoDbEntity constructor(
 
     override fun toDomain(): DomainEntity {
         return Feedback(
-            id = this.id,
+            id = UUID.fromString(this.id),
             rating = this.rating!!,
             receiverId = this.receiverId!!,
             reviewerId = this.reviewerId!!,
@@ -44,7 +44,7 @@ class FeedbackDynamoDbEntity constructor(
 
         fun from(item: Map<String, AttributeValue>): FeedbackDynamoDbEntity {
             return FeedbackDynamoDbEntity(
-                id = UUID.fromString(item["Id"]!!.s()),
+                id = item["Id"]!!.s(),
                 rating = Integer.valueOf(item["Rating"]!!.n()),
                 receiverId = UUID.fromString(item["ReceiverId"]!!.s()),
                 reviewerId = UUID.fromString(item["ReviewerId"]!!.s()),

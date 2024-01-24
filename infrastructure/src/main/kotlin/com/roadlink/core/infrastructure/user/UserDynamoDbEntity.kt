@@ -12,7 +12,7 @@ import software.amazon.awssdk.services.dynamodb.model.QueryResponse
 import java.util.*
 
 class UserDynamoDbEntity constructor(
-    id: UUID,
+    id: String,
     createdDate: Date,
     var firstName: String = "",
     var lastName: String = "",
@@ -23,7 +23,7 @@ class UserDynamoDbEntity constructor(
 
     override fun toDomain(): DomainEntity {
         return User(
-            id = this.id,
+            id = UUID.fromString(this.id),
             email = this.email,
             firstName = this.firstName,
             lastName = this.lastName,
@@ -37,7 +37,7 @@ class UserDynamoDbEntity constructor(
 
         fun from(item: Map<String, AttributeValue>): UserDynamoDbEntity {
             return UserDynamoDbEntity(
-                id = UUID.fromString(item["Id"]!!.s()),
+                id = item["Id"]!!.s(),
                 createdDate = DynamoDbDateFormatter.instance().parse(item["CreatedDate"]!!.s()),
                 email = item["Email"]!!.s(),
                 firstName = item["FirstName"]!!.s(),

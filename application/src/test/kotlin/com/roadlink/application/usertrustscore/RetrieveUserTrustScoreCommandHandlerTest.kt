@@ -59,6 +59,7 @@ class RetrieveUserTrustScoreCommandHandlerTest : BehaviorSpec({
             val userId = UUID.randomUUID()
             every { feedbackRepository.findAll(match { it.receiverId == userId }) } returns emptyList()
             every { feedbackRepository.findAll(match { it.reviewerId == userId }) } returns emptyList()
+
             every { userRepository.findOrFail(match { it.id == userId }) } returns UserFactory.common(
                 id = userId
             )

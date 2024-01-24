@@ -3,6 +3,7 @@ package com.roadlink.core.domain.friend
 
 import com.roadlink.core.domain.DomainEntity
 import com.roadlink.core.domain.RepositoryPort
+import com.roadlink.core.domain.friend.FriendshipSolicitude.Status.*
 import com.roadlink.core.domain.user.User
 import com.roadlink.core.domain.user.UserCriteria
 import java.util.*
@@ -12,39 +13,23 @@ data class FriendshipSolicitude(
     val requesterId: UUID,
     val addressedId: UUID,
     val createdDate: Date = Date(),
-    var solicitudeStatus: Status = Status.PENDING
+    var solicitudeStatus: Status = PENDING
 ) : DomainEntity {
     fun accept(userRepository: RepositoryPort<User, UserCriteria>): FriendshipSolicitude {
         val requester = userRepository.findOrFail(UserCriteria(requesterId))
         val addressed = userRepository.findOrFail(UserCriteria(addressedId))
-        requester.beFriends(addressed)
+        requester.beFriendOf(addressed)
         userRepository.saveAll(listOf(requester, addressed))
-        return this.apply { this.solicitudeStatus = Status.ACCEPTED }
+        return this.apply { this.solicitudeStatus = ACCEPTED }
     }
 
     fun reject(): FriendshipSolicitude {
-        return this.apply { this.solicitudeStatus = Status.REJECTED }
+        return this.apply { this.solicitudeStatus = REJECTED }
     }
 
-    fun checkStatusTransition(nextStatus: Status) {
-        if (!STATUS_TRANSITION[this.solicitudeStatus]!!.contains(nextStatus)) {
-            throw FriendshipSolicitudeException.InvalidFriendshipSolicitudeStatusTransition(
-                this.solicitudeStatus,
-                nextStatus
-            )
-        }
-    }
-
-    fun checkIfItHasBeenAccepted(friendshipRepository: RepositoryPort<FriendshipSolicitude, FriendshipSolicitudeCriteria>) {
-        val solicitudes =
-            friendshipRepository.findAll(
-                FriendshipSolicitudeCriteria(
-                    id = this.requesterId,
-                    solicitudeStatus = Status.ACCEPTED
-                )
-            )
-        if (solicitudes.isNotEmpty()) {
-            throw FriendshipSolicitudeException.FriendshipSolicitudeAlreadyAccepted(this.id)
+    fun checkIfStatusCanChange() {
+        if (!statusCanChange(this.solicitudeStatus)) {
+            throw FriendshipSolicitudeException.FriendshipSolicitudeStatusCanNotChange(this.id, this.solicitudeStatus)
         }
     }
 
@@ -53,11 +38,21 @@ data class FriendshipSolicitude(
             friendshipRepository.findAll(
                 FriendshipSolicitudeCriteria(
                     requesterId = this.requesterId,
-                    solicitudeStatus = Status.PENDING
+                    addressedId = this.addressedId,
+                    solicitudeStatus = PENDING
+                )
+            ) + friendshipRepository.findAll(
+                FriendshipSolicitudeCriteria(
+                    requesterId = this.addressedId,
+                    addressedId = this.requesterId,
+                    solicitudeStatus = PENDING
                 )
             )
         if (pendingSolicitudes.isNotEmpty()) {
-            throw FriendshipSolicitudeException.FriendshipSolicitudeAlreadySent(this.requesterId, this.addressedId)
+            throw FriendshipSolicitudeException.FriendshipSolicitudeAlreadySent(
+                this.requesterId,
+                this.addressedId
+            )
         }
     }
 
@@ -72,10 +67,11 @@ data class FriendshipSolicitude(
     }
 
     companion object {
-        private val STATUS_TRANSITION = mapOf(
-            Status.ACCEPTED to emptyList(),
-            Status.REJECTED to emptyList(),
-            Status.PENDING to listOf(Status.ACCEPTED, Status.REJECTED)
-        )
+        fun statusCanChange(status: Status): Boolean {
+            return when (status) {
+                PENDING -> true
+                ACCEPTED, REJECTED -> false
+            }
+        }
     }
 }

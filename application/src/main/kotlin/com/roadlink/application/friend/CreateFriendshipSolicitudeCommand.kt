@@ -15,8 +15,6 @@ class CreateFriendshipSolicitudeCommandResponse(val friendshipSolicitude: Friend
 
 class CreateFriendshipSolicitudeCommand(val friendshipSolicitude: FriendshipSolicitudeDTO) : Command
 
-
-// TODO test me!
 class CreateFriendshipSolicitudeCommandHandler(
     private val userRepository: RepositoryPort<User, UserCriteria>,
     private val friendshipSolicitudeRepository: RepositoryPort<FriendshipSolicitude, FriendshipSolicitudeCriteria>
