@@ -9,11 +9,9 @@ import com.roadlink.core.domain.user.UserCriteria
 import java.util.*
 
 
-class DeleteFriendCommandResponse(val friends: Set<UUID>) :
-    CommandResponse
+class DeleteFriendCommandResponse(val friends: Set<UUID>) : CommandResponse
 
-class DeleteFriendCommand(val request: FriendDeletionRequest) :
-    Command
+class DeleteFriendCommand(val request: FriendDeletionRequest) : Command
 
 class DeleteFriendCommandHandler(
     private val userRepository: RepositoryPort<User, UserCriteria>,

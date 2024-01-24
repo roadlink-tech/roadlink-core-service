@@ -33,10 +33,10 @@ data class User(
         return userRepository.save(this)
     }
 
-    fun beFriends(user: User) {
+    fun beFriendOf(user: User) {
         if (this.id != user.id && !this.friends.contains(user.id)) {
             this.friends.add(user.id)
-            user.beFriends(this)
+            user.beFriendOf(this)
         }
     }
 

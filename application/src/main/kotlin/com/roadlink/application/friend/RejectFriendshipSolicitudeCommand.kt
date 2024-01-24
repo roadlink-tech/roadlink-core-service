@@ -14,7 +14,6 @@ class RejectFriendshipSolicitudeCommandResponse(val friendshipSolicitude: Friend
 
 class RejectFriendshipSolicitudeCommand(val friendshipSolicitude: FriendshipSolicitudeDecisionDTO) : Command
 
-// TODO test me!
 class RejectFriendshipSolicitudeCommandHandler(
     private val userRepository: RepositoryPort<User, UserCriteria>,
     private val friendshipSolicitudeRepository: RepositoryPort<FriendshipSolicitude, FriendshipSolicitudeCriteria>
@@ -24,7 +23,7 @@ class RejectFriendshipSolicitudeCommandHandler(
         User.checkIfEntitiesExist(userRepository, listOf(UserCriteria(id = command.friendshipSolicitude.addressedId)))
         val solicitude =
             friendshipSolicitudeRepository.findOrFail(FriendshipSolicitudeCriteria(id = command.friendshipSolicitude.id))
-        solicitude.checkStatusTransition(command.friendshipSolicitude.status)
+        solicitude.checkIfStatusCanChange()
 
         solicitude.reject().save(friendshipSolicitudeRepository).also {
             return RejectFriendshipSolicitudeCommandResponse(FriendshipSolicitudeDTO.from(it))

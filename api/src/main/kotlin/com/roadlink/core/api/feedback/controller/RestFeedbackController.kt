@@ -42,7 +42,7 @@ class FeedbackController(private val commandBus: CommandBus) {
     fun retrieveUserFeedbacks(@PathVariable receiverId: String): List<FeedbackResponse> {
         val response =
             commandBus.publish<RetrieveFeedbacksCommand, RetrieveFeedbacksCommandResponse>(
-                RetrieveFeedbacksCommand(receiverId)
+                RetrieveFeedbacksCommand(UUID.fromString(receiverId))
             )
         return response.feedbacks.map { FeedbackResponse.from(it) }
     }

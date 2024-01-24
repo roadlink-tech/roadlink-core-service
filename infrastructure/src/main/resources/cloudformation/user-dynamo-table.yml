@@ -9,6 +9,8 @@ Resources:
       AttributeDefinitions:
         - AttributeName: EntityId
           AttributeType: S
+        - AttributeName: DriverId
+          AttributeType: S
         - AttributeName: Id
           AttributeType: S
         - AttributeName: Rating
@@ -32,6 +34,15 @@ Resources:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
       GlobalSecondaryIndexes:
+        - IndexName: VehicleDriverIdGSI
+          KeySchema:
+            - AttributeName: DriverId
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: 5
+            WriteCapacityUnits: 5
         - IndexName: RatingGSI
           KeySchema:
             - AttributeName: Rating
