@@ -15,8 +15,7 @@ import org.springframework.context.annotation.Configuration
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient
 
 @Configuration
-open class FeedbackDefinition {
-
+open class FeedbackRepositoryDefinition {
     @Bean
     open fun feedbackRepository(dynamoDbClient: DynamoDbClient): RepositoryPort<Feedback, FeedbackCriteria> {
         val dynamoEntityMapper = FeedbackDynamoDbEntityMapper()
@@ -28,6 +27,10 @@ open class FeedbackDefinition {
             dynamoQueryMapper
         )
     }
+}
+
+@Configuration
+open class FeedbackHandlerDefinition {
 
     @Bean("feedback_creation_command_handler")
     open fun feedbackCreationCommandHandler(

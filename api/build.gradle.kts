@@ -26,13 +26,16 @@ dependencies {
         exclude(module = "spring-boot-starter-tomcat")
     }
     implementation("org.springframework.boot:spring-boot-starter-jetty")
+
     // Datasource
-    //implementation("com.github.derjust:spring-data-dynamodb:$springDataDynamodbVersion")
     implementation("software.amazon.awssdk:dynamodb:$awsJavaSdkDynamodbVersion")
     implementation("software.amazon.awssdk:sts:$awsJavaSdkDynamodbVersion")
 
     // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("com.ninja-squad:springmockk:4.0.2")
+    testImplementation("jakarta.servlet:jakarta.servlet-api:6.0.0") // O la versión más reciente disponible
+    implementation("javax.validation:validation-api:2.0.1.Final")
 }
 
 application {

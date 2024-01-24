@@ -18,6 +18,7 @@ class FeedbackTest : BehaviorSpec({
                     reviewerId = id,
                     receiverId = id,
                     rating = 4,
+                    tripId = UUID.randomUUID(),
                     comment = "asd"
                 )
             }

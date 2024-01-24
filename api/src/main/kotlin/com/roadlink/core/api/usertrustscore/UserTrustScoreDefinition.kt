@@ -15,7 +15,6 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 open class UserTrustScoreDefinition {
 
-
     @Bean("user_trust_score_command_handler")
     open fun userTrustScoreCommandHandler(
         userRepository: RepositoryPort<User, UserCriteria>,
