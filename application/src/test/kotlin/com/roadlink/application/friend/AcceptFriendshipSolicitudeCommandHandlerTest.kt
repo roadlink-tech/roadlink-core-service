@@ -103,7 +103,7 @@ class AcceptFriendshipSolicitudeCommandHandlerTest : BehaviorSpec({
 
             every { userRepository.findOrFail(match { it.id == martin.id }) } returns martin
             every { userRepository.findOrFail(match { it.id == george.id }) } returns george
-            
+
             val exception = shouldThrow<UserException.UserAlreadyAreFriends> {
                 handler.handle(
                     AcceptFriendshipSolicitudeCommand(

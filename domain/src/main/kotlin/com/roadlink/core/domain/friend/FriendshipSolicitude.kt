@@ -27,15 +27,6 @@ data class FriendshipSolicitude(
         return this.apply { this.solicitudeStatus = REJECTED }
     }
 
-    fun checkStatusTransition(nextStatus: Status) {
-        if (!STATUS_TRANSITION[this.solicitudeStatus]!!.contains(nextStatus)) {
-            throw FriendshipSolicitudeException.InvalidFriendshipSolicitudeStatusTransition(
-                this.solicitudeStatus,
-                nextStatus
-            )
-        }
-    }
-
     fun checkIfStatusCanChange() {
         if (!statusCanChange(this.solicitudeStatus)) {
             throw FriendshipSolicitudeException.FriendshipSolicitudeStatusCanNotChange(this.id, this.solicitudeStatus)
@@ -76,12 +67,6 @@ data class FriendshipSolicitude(
     }
 
     companion object {
-        private val STATUS_TRANSITION = mapOf(
-            ACCEPTED to emptyList(),
-            REJECTED to emptyList(),
-            PENDING to listOf(ACCEPTED, REJECTED)
-        )
-
         fun statusCanChange(status: Status): Boolean {
             return when (status) {
                 PENDING -> true
