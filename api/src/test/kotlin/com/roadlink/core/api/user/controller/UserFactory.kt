@@ -7,9 +7,9 @@ object UserFactory {
 
     fun common(
         id: UUID = UUID.randomUUID(),
-        email: String,
-        firstName: String,
-        lastName: String
+        email: String = "cabrerajjorge@gmail.com",
+        firstName: String = "jorge",
+        lastName: String = "cabrera"
     ): User {
         return User(
             id = id,
