@@ -93,7 +93,7 @@ class RestFriendshipSolicitudesController(private val commandBus: CommandBus) {
 data class FriendshipSolicitudeResponse(
     @JsonProperty("id")
     val id: UUID,
-    @JsonProperty("addressed_Id")
+    @JsonProperty("addressed_id")
     val addressedId: UUID,
     @JsonProperty("requester_id")
     val requesterId: UUID,

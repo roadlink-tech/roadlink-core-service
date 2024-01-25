@@ -17,6 +17,9 @@ import com.roadlink.core.domain.user.User
 import com.roadlink.core.domain.user.UserCriteria
 import com.roadlink.core.domain.vehicle.Vehicle
 import com.roadlink.core.domain.vehicle.VehicleCriteria
+import io.mockk.clearAllMocks
+import io.mockk.clearMocks
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.context.annotation.Import
 import org.springframework.test.web.servlet.MockMvc
@@ -50,8 +53,20 @@ abstract class BaseControllerTest {
 
     @BeforeEach
     fun setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(getControllerUnderTest())
+        mockMvc = MockMvcBuilders
+            .standaloneSetup(getControllerUnderTest())
             .setControllerAdvice(ExceptionHandlerController())
             .build()
     }
+
+    /*    @AfterEach
+        fun after() {
+            clearMocks(
+                userRepositoryPort,
+                vehicleRepositoryPort,
+                friendshipSolicitudeRepositoryPort,
+                feedbackRepositoryPort
+            )
+        }
+    */
 }

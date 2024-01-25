@@ -2,15 +2,11 @@ package com.roadlink.core.api.friend.controller
 
 import com.roadlink.core.api.BaseControllerTest
 import com.roadlink.core.api.friend.FriendshipSolicitudeFactory
-import com.roadlink.core.api.user.controller.RestUserController
 import com.roadlink.core.api.user.controller.UserFactory
-import com.roadlink.core.domain.friend.FriendshipSolicitude
-import com.roadlink.core.domain.friend.FriendshipSolicitude.*
-import com.roadlink.core.domain.friend.FriendshipSolicitude.Status.*
-import com.roadlink.core.domain.user.User
+import com.roadlink.core.domain.friend.FriendshipSolicitude.Status.ACCEPTED
+import com.roadlink.core.domain.friend.FriendshipSolicitude.Status.PENDING
+import com.roadlink.core.domain.friend.FriendshipSolicitude.Status.REJECTED
 import com.roadlink.core.infrastructure.dynamodb.error.DynamoDbException
-import io.kotest.assertions.timing.eventually
-import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.mockk.every
@@ -18,11 +14,10 @@ import io.mockk.verify
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.http.MediaType
-import org.springframework.http.MediaType.*
+import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
-import java.util.UUID
+import java.util.*
 
 @WebMvcTest(controllers = [RestFriendshipSolicitudesController::class])
 class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() {
@@ -34,6 +29,7 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
         return this.controller
     }
 
+    // Create Friendship Solicitude
     @Test
     fun `a friendship solicitude can be created successfully`() {
         // Given
@@ -74,7 +70,7 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
             """
             {
                 "id":"${expectedFriendshipSolicitude.id}",
-                "addressed_Id":"${martin.id}",
+                "addressed_id":"${martin.id}",
                 "requester_id":"${george.id}",
                 "status":"PENDING"
             }
@@ -280,5 +276,71 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
         verify(exactly = 0) { friendshipSolicitudeRepositoryPort.save(any()) }
     }
 
+    // Accept Friendship Solicitude
+    @Test
+    fun `when the users are not friends and there isn't any pending solicitude, then a 200 response must be retrieved`() {
+        // Given
+        val george = UserFactory.common()
+        val martin = UserFactory.common()
+        val solicitude =
+            FriendshipSolicitudeFactory.common(addressedId = george.id, requesterId = martin.id)
 
+        every { friendshipSolicitudeRepositoryPort.findOrFail(match { it.id == solicitude.id }) } returns solicitude
+        every { userRepositoryPort.findOrFail(match { it.id == martin.id }) } returns martin
+        every { userRepositoryPort.findOrFail(match { it.id == george.id }) } returns george
+        every { userRepositoryPort.saveAll(any()) } returns listOf(george, martin)
+        every { friendshipSolicitudeRepositoryPort.save(any()) } returns solicitude.copy(
+            solicitudeStatus = ACCEPTED
+        )
+
+        // When
+        val response = mockMvc.perform(
+            MockMvcRequestBuilders.put("/users/${george.id}/friendship_solicitudes/${solicitude.id}/accept")
+        ).andExpect(MockMvcResultMatchers.status().isOk)
+            .andReturn().response.contentAsString
+
+        // Then
+        response.shouldBe(
+            """
+            {
+                "id":"${solicitude.id}",
+                "addressed_id":"${george.id}",
+                "requester_id":"${martin.id}",
+                "status":"ACCEPTED"
+            }
+            """.trimIndent().replace(Regex("\\s+"), "")
+        )
+        verify(exactly = 1) { friendshipSolicitudeRepositoryPort.findOrFail(any()) }
+        verify(exactly = 1) { userRepositoryPort.saveAll(any()) }
+        // TODO it could be resolved with only 2 network calls
+        verify(exactly = 4) { userRepositoryPort.findOrFail(any()) }
+    }
+
+    @Test
+    fun `when the users are not friends but the solicitude was rejected, then an exception must be rejected`() {
+        // Given
+        val george = UserFactory.common()
+        val martin = UserFactory.common()
+        val solicitude =
+            FriendshipSolicitudeFactory.common(
+                addressedId = george.id,
+                requesterId = martin.id,
+                solicitudeStatus = REJECTED
+            )
+
+        every { friendshipSolicitudeRepositoryPort.findOrFail(match { it.id == solicitude.id }) } returns solicitude
+        every { userRepositoryPort.findOrFail(match { it.id == martin.id }) } returns martin
+        every { userRepositoryPort.findOrFail(match { it.id == george.id }) } returns george
+
+        // When
+        val response = mockMvc.perform(
+            MockMvcRequestBuilders.put("/users/${george.id}/friendship_solicitudes/${solicitude.id}/accept")
+        ).andExpect(MockMvcResultMatchers.status().isPreconditionFailed)
+            .andReturn().response.contentAsString
+
+        // Then
+        response.shouldBe("""{"code":"412 PRECONDITION_FAILED","message":"Friendship solicitude ${solicitude.id} status can not change, because it has raised an inmutable status REJECTED"}""")
+        verify(exactly = 0) { userRepositoryPort.save(any()) }
+        verify(exactly = 0) { userRepositoryPort.findAll(any()) }
+    }
 }

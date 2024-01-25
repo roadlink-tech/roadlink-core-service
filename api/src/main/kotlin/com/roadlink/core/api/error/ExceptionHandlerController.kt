@@ -99,6 +99,16 @@ class ExceptionHandlerController {
         return ResponseEntity(errorMessage, HttpStatus.PRECONDITION_FAILED)
     }
 
+    @ExceptionHandler(FriendshipSolicitudeException.FriendshipSolicitudeStatusCanNotChange::class)
+    fun handleFriendshipSolicitudeStatusCanNotChangeException(ex: FriendshipSolicitudeException.FriendshipSolicitudeStatusCanNotChange): ResponseEntity<ErrorResponse> {
+        val errorMessage = ErrorResponse(
+            HttpStatus.PRECONDITION_FAILED.toString(), message = ex.message
+        )
+
+        return ResponseEntity(errorMessage, HttpStatus.PRECONDITION_FAILED)
+    }
+
+
     @ExceptionHandler(UserAlreadyAreFriends::class)
     fun handleUserAlreadyAreFriends(ex: UserAlreadyAreFriends): ResponseEntity<ErrorResponse> {
         val errorMessage = ErrorResponse(
