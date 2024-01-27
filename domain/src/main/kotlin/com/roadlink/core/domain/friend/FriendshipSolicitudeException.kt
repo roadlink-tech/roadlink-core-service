@@ -10,7 +10,7 @@ sealed class FriendshipSolicitudeException(override val message: String, cause: 
         FriendshipSolicitudeException("User $requesterId has a pending friendship solicitude to $addressedId")
 
     class FriendshipSolicitudeStatusCanNotChange(friendshipSolicitude: UUID, status: FriendshipSolicitude.Status) :
-        FriendshipSolicitudeException("Friendship solicitude $friendshipSolicitude status can not change, because it has raised an inmutable status $status")
+        FriendshipSolicitudeException("Friendship solicitude $friendshipSolicitude status can not change, because it has raised an immutable status $status")
 
 
     class InvalidFriendshipSolicitudeStatusTransition(

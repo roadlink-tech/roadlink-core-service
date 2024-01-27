@@ -13,8 +13,7 @@ import org.springframework.context.annotation.Configuration
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient
 
 @Configuration
-open class UserDefinition {
-
+open class UserRepositoryDefinition {
     @Bean
     open fun userRepository(dynamoDbClient: DynamoDbClient): RepositoryPort<User, UserCriteria> {
         val dynamoEntityMapper = UserDynamoDbEntityMapper()
@@ -26,6 +25,10 @@ open class UserDefinition {
             dynamoQueryMapper
         )
     }
+}
+
+@Configuration
+open class UserHandlerDefinition {
 
     @Bean("create_user_command_handler")
     open fun userCreationCommandHandler(userRepositoryPort: RepositoryPort<User, UserCriteria>): CommandHandler<CreateUserCommand, CreateUserCommandResponse> {

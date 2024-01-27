@@ -68,7 +68,11 @@ class CreateFriendshipSolicitudeCommandHandlerTest : BehaviorSpec({
             every { userRepository.findOrFail(match { it.id == martin.id }) } returns martin
 
             every { friendshipSolicitudeRepository.findAll(any()) } returns listOf(
-                FriendshipSolicitudeFactory.common(requesterId = jorge.id, addressedId = martin.id)
+                FriendshipSolicitudeFactory.common(
+                    requesterId = jorge.id,
+                    addressedId = martin.id,
+                    solicitudeStatus = PENDING
+                )
             )
 
             shouldThrow<FriendshipSolicitudeException.FriendshipSolicitudeAlreadySent> {
@@ -84,7 +88,7 @@ class CreateFriendshipSolicitudeCommandHandlerTest : BehaviorSpec({
 
             Then("the solicitude must be created successfully") {
                 verify(exactly = 2) { userRepository.findOrFail(any()) }
-                verify(exactly = 2) { friendshipSolicitudeRepository.findAll(any()) }
+                verify(exactly = 1) { friendshipSolicitudeRepository.findAll(any()) }
                 verify(exactly = 0) { friendshipSolicitudeRepository.save(any()) }
             }
         }

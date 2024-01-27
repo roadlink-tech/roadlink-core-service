@@ -2,6 +2,7 @@ package com.roadlink.core.api.error
 
 import com.roadlink.core.domain.feedback.validation.FeedbackException
 import com.roadlink.core.domain.friend.FriendshipSolicitudeException
+import com.roadlink.core.domain.user.UserException.*
 import com.roadlink.core.infrastructure.dynamodb.error.DynamoDbException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -98,8 +99,8 @@ class ExceptionHandlerController {
         return ResponseEntity(errorMessage, HttpStatus.PRECONDITION_FAILED)
     }
 
-    @ExceptionHandler(com.roadlink.core.domain.user.UserException.UserAlreadyAreFriends::class)
-    fun handleUserAlreadyAreFriends(ex: com.roadlink.core.domain.user.UserException.UserAlreadyAreFriends): ResponseEntity<ErrorResponse> {
+    @ExceptionHandler(FriendshipSolicitudeException.FriendshipSolicitudeStatusCanNotChange::class)
+    fun handleFriendshipSolicitudeStatusCanNotChangeException(ex: FriendshipSolicitudeException.FriendshipSolicitudeStatusCanNotChange): ResponseEntity<ErrorResponse> {
         val errorMessage = ErrorResponse(
             HttpStatus.PRECONDITION_FAILED.toString(), message = ex.message
         )
@@ -107,8 +108,18 @@ class ExceptionHandlerController {
         return ResponseEntity(errorMessage, HttpStatus.PRECONDITION_FAILED)
     }
 
-    @ExceptionHandler(com.roadlink.core.domain.user.UserException.UserEmailAlreadyRegistered::class)
-    fun handleUserEmailAlreadyRegistered(ex: com.roadlink.core.domain.user.UserException.UserAlreadyAreFriends): ResponseEntity<ErrorResponse> {
+
+    @ExceptionHandler(UserAlreadyAreFriends::class)
+    fun handleUserAlreadyAreFriends(ex: UserAlreadyAreFriends): ResponseEntity<ErrorResponse> {
+        val errorMessage = ErrorResponse(
+            HttpStatus.PRECONDITION_FAILED.toString(), message = ex.message
+        )
+
+        return ResponseEntity(errorMessage, HttpStatus.PRECONDITION_FAILED)
+    }
+
+    @ExceptionHandler(UserEmailAlreadyRegistered::class)
+    fun handleUserEmailAlreadyRegistered(ex: UserEmailAlreadyRegistered): ResponseEntity<ErrorResponse> {
         val errorMessage = ErrorResponse(
             HttpStatus.CONFLICT.toString(), message = ex.message
         )
@@ -128,7 +139,6 @@ class ExceptionHandlerController {
     @ExceptionHandler
     fun handleAllUncaughtException(ex: Throwable): ResponseEntity<ErrorResponse> {
         LOGGER.error("Unexpected exception:", ex)
-
         val errorMessage = ErrorResponse(
             HttpStatus.INTERNAL_SERVER_ERROR.toString(), message = "Oops, something wrong happened"
         )

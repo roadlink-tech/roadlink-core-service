@@ -18,8 +18,8 @@ class FeedbackTest : BehaviorSpec({
                     reviewerId = id,
                     receiverId = id,
                     rating = 4,
-                    comment = "asd",
                     tripId = UUID.randomUUID(),
+                    comment = "asd"
                 )
             }
             Then("an expected expcetion must be raised") {

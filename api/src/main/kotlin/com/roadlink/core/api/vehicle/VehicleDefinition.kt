@@ -17,8 +17,7 @@ import software.amazon.awssdk.services.dynamodb.DynamoDbClient
 import com.roadlink.application.command.CommandHandler
 
 @Configuration
-open class VehicleDefinition {
-
+open class VehicleRepositoryDefinition {
     @Bean
     open fun vehicleRepository(dynamoDbClient: DynamoDbClient): RepositoryPort<Vehicle, VehicleCriteria> {
         val dynamoEntityMapper = VehicleDynamoDbEntityMapper()
@@ -30,6 +29,10 @@ open class VehicleDefinition {
             dynamoQueryMapper
         )
     }
+}
+
+@Configuration
+open class VehicleHandlerDefinition {
 
     @Bean("create_vehicle_command_handler")
     open fun createVehicleCommandHandler(

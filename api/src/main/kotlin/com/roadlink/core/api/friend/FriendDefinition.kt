@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient
 
 @Configuration
-open class FriendDefinition {
+open class FriendRepositoryDefinition {
 
     @Bean
     open fun friendshipSolicitudeRepository(dynamoDbClient: DynamoDbClient): RepositoryPort<FriendshipSolicitude, FriendshipSolicitudeCriteria> {
@@ -28,6 +28,10 @@ open class FriendDefinition {
             dynamoQueryMapper
         )
     }
+}
+
+@Configuration
+open class FriendHandlerDefinition {
 
     @Bean("create_friendship_solicitude_command_handler")
     open fun createFriendshipSolicitudeCommandHandler(

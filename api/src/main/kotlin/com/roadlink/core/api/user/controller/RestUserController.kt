@@ -3,13 +3,15 @@ package com.roadlink.core.api.user.controller
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.roadlink.application.command.CommandBus
 import com.roadlink.application.user.*
+import org.jetbrains.annotations.NotNull
 import org.springframework.http.HttpStatus.*
 import org.springframework.web.bind.annotation.*
 import java.util.*
+import javax.validation.constraints.NotBlank
 
 @RestController
 @RequestMapping("/users")
-class UserCreationController(private val commandBus: CommandBus) {
+class RestUserController(private val commandBus: CommandBus) {
 
     @PostMapping
     @ResponseBody
@@ -42,6 +44,7 @@ class UserCreationController(private val commandBus: CommandBus) {
 }
 
 data class UserCreationRequest(
+    @field:NotBlank(message = "Email cannot be blank")
     @JsonProperty("email")
     val email: String,
     @JsonProperty("first_name")

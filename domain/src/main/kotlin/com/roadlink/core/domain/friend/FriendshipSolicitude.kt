@@ -29,30 +29,42 @@ data class FriendshipSolicitude(
 
     fun checkIfStatusCanChange() {
         if (!statusCanChange(this.solicitudeStatus)) {
-            throw FriendshipSolicitudeException.FriendshipSolicitudeStatusCanNotChange(this.id, this.solicitudeStatus)
+            throw FriendshipSolicitudeException.FriendshipSolicitudeStatusCanNotChange(
+                this.id,
+                this.solicitudeStatus
+            )
         }
     }
 
     fun checkIfExistsAPendingSolicitude(friendshipRepository: RepositoryPort<FriendshipSolicitude, FriendshipSolicitudeCriteria>) {
-        val pendingSolicitudes =
-            friendshipRepository.findAll(
-                FriendshipSolicitudeCriteria(
-                    requesterId = this.requesterId,
-                    addressedId = this.addressedId,
-                    solicitudeStatus = PENDING
-                )
-            ) + friendshipRepository.findAll(
-                FriendshipSolicitudeCriteria(
-                    requesterId = this.addressedId,
-                    addressedId = this.requesterId,
-                    solicitudeStatus = PENDING
-                )
+        friendshipRepository.findAll(
+            FriendshipSolicitudeCriteria(
+                requesterId = this.requesterId,
+                addressedId = this.addressedId,
+                solicitudeStatus = PENDING
             )
-        if (pendingSolicitudes.isNotEmpty()) {
-            throw FriendshipSolicitudeException.FriendshipSolicitudeAlreadySent(
-                this.requesterId,
-                this.addressedId
+        ).let {
+            if (it.isNotEmpty()) {
+                throw FriendshipSolicitudeException.FriendshipSolicitudeAlreadySent(
+                    this.requesterId,
+                    this.addressedId
+                )
+            }
+        }
+
+        friendshipRepository.findAll(
+            FriendshipSolicitudeCriteria(
+                requesterId = this.addressedId,
+                addressedId = this.requesterId,
+                solicitudeStatus = PENDING
             )
+        ).let {
+            if (it.isNotEmpty()) {
+                throw FriendshipSolicitudeException.FriendshipSolicitudeAlreadySent(
+                    this.addressedId,
+                    this.requesterId
+                )
+            }
         }
     }
 

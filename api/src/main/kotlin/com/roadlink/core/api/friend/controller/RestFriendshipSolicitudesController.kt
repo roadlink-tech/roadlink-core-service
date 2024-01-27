@@ -9,6 +9,7 @@ import jakarta.websocket.server.PathParam
 import org.springframework.http.HttpStatus.*
 import org.springframework.web.bind.annotation.*
 import java.util.*
+import javax.validation.constraints.NotBlank
 
 @RestController
 @RequestMapping("/users/{userId}/friendship_solicitudes")
@@ -92,7 +93,7 @@ class RestFriendshipSolicitudesController(private val commandBus: CommandBus) {
 data class FriendshipSolicitudeResponse(
     @JsonProperty("id")
     val id: UUID,
-    @JsonProperty("addressed_Id")
+    @JsonProperty("addressed_id")
     val addressedId: UUID,
     @JsonProperty("requester_id")
     val requesterId: UUID,
@@ -113,6 +114,7 @@ data class FriendshipSolicitudeResponse(
 
 
 data class FriendshipSolicitudeCreationRequest(
+    @field:NotBlank(message = "Requester id cannot be blank")
     @JsonProperty("requester_id")
     val requesterId: UUID
 ) {
