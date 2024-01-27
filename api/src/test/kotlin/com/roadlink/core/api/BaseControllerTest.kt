@@ -1,5 +1,6 @@
 package com.roadlink.core.api
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
 import com.roadlink.core.api.command.CommandBusDefinition
 import com.roadlink.core.api.error.ExceptionHandlerController
@@ -21,7 +22,9 @@ import io.mockk.clearAllMocks
 import io.mockk.clearMocks
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Import
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 
@@ -34,6 +37,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders
     UserTrustScoreDefinition::class
 )
 abstract class BaseControllerTest {
+
+    @Autowired
+    lateinit var objectMapper: ObjectMapper
 
     @MockkBean
     lateinit var feedbackRepositoryPort: RepositoryPort<Feedback, FeedbackCriteria>
@@ -53,20 +59,11 @@ abstract class BaseControllerTest {
 
     @BeforeEach
     fun setUp() {
+        val converter = MappingJackson2HttpMessageConverter(objectMapper)
         mockMvc = MockMvcBuilders
             .standaloneSetup(getControllerUnderTest())
+            .setMessageConverters(converter)
             .setControllerAdvice(ExceptionHandlerController())
             .build()
     }
-
-    /*    @AfterEach
-        fun after() {
-            clearMocks(
-                userRepositoryPort,
-                vehicleRepositoryPort,
-                friendshipSolicitudeRepositoryPort,
-                feedbackRepositoryPort
-            )
-        }
-    */
 }
