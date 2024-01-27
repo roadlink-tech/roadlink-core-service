@@ -139,7 +139,6 @@ class ExceptionHandlerController {
     @ExceptionHandler
     fun handleAllUncaughtException(ex: Throwable): ResponseEntity<ErrorResponse> {
         LOGGER.error("Unexpected exception:", ex)
-
         val errorMessage = ErrorResponse(
             HttpStatus.INTERNAL_SERVER_ERROR.toString(), message = "Oops, something wrong happened"
         )

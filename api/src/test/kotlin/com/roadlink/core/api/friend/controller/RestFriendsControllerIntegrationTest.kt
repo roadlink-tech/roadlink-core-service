@@ -3,11 +3,15 @@ package com.roadlink.core.api.friend.controller
 import com.roadlink.core.api.BaseControllerTest
 import com.roadlink.core.api.user.controller.UserFactory
 import com.roadlink.core.infrastructure.dynamodb.error.DynamoDbException
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.sequences.atMostCount
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.mockk.every
 import io.mockk.verify
+import org.eclipse.jetty.server.Authentication.User
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -25,6 +29,9 @@ class RestFriendsControllerIntegrationTest : BaseControllerTest() {
         return controller
     }
 
+    /**
+     * List friends use case
+     */
     @Test
     fun `when list the user friends, then all of them must be retrieved`() {
         // Given
@@ -62,5 +69,60 @@ class RestFriendsControllerIntegrationTest : BaseControllerTest() {
         response.shouldNotBeNull()
         response.shouldBe("""{"code":"404 NOT_FOUND","message":"Entity ${george.id} does not exist"}""")
         verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
+    }
+
+    /**
+     * Delete friend use case
+     */
+    @Test
+    fun `when delete a friend, then the deleted friend must no be returned`() {
+        // Given
+        val george = UserFactory.common(firstName = "jorge")
+        val martin = UserFactory.common(firstName = "martin")
+        val felix = UserFactory.common(firstName = "felix")
+
+        george.beFriendOf(martin)
+        george.beFriendOf(felix)
+
+        every { userRepositoryPort.findOrFail(match { it.id == martin.id }) } returns martin
+        every { userRepositoryPort.findOrFail(match { it.id == george.id }) } returns george
+        every { userRepositoryPort.saveAll(any()) } returns emptyList()
+
+        // When
+        val response = mockMvc.perform(
+            MockMvcRequestBuilders.delete("/users/${george.id}/friends/${martin.id}")
+        ).andExpect(MockMvcResultMatchers.status().isOk)
+            .andReturn().response.contentAsString
+
+        // Then
+        val friendsResponse = objectMapper.readValue(response, FriendsResponse::class.java)
+        friendsResponse.friends.shouldContain(felix.id)
+        verify(exactly = 2) { userRepositoryPort.findOrFail(any()) }
+        verify(exactly = 1) { userRepositoryPort.saveAll(any()) }
+    }
+
+    @Test
+    fun `when delete the single friend which user has, then an empty list friend must be returned`() {
+        // Given
+        val george = UserFactory.common(firstName = "jorge")
+        val martin = UserFactory.common(firstName = "martin")
+
+        george.beFriendOf(martin)
+
+        every { userRepositoryPort.findOrFail(match { it.id == martin.id }) } returns martin
+        every { userRepositoryPort.findOrFail(match { it.id == george.id }) } returns george
+        every { userRepositoryPort.saveAll(any()) } returns emptyList()
+
+        // When
+        val response = mockMvc.perform(
+            MockMvcRequestBuilders.delete("/users/${george.id}/friends/${martin.id}")
+        ).andExpect(MockMvcResultMatchers.status().isOk)
+            .andReturn().response.contentAsString
+
+        // Then
+        val friendsResponse = objectMapper.readValue(response, FriendsResponse::class.java)
+        friendsResponse.friends.shouldBeEmpty()
+        verify(exactly = 2) { userRepositoryPort.findOrFail(any()) }
+        verify(exactly = 1) { userRepositoryPort.saveAll(any()) }
     }
 }
