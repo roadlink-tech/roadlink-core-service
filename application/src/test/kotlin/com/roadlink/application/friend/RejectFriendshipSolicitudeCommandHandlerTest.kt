@@ -101,7 +101,7 @@ class RejectFriendshipSolicitudeCommandHandlerTest : BehaviorSpec({
             }
 
             Then("the exception must not be null") {
-                exception.message.shouldBe("Friendship solicitude $friendshipSolicitudeId status can not change, because it has raised an inmutable status REJECTED")
+                exception.message.shouldBe("Friendship solicitude $friendshipSolicitudeId status can not change, because it has raised an immutable status REJECTED")
                 verify(exactly = 1) { userRepository.findOrFail(any()) }
                 verify(exactly = 1) { friendshipSolicitudeRepository.findOrFail(any()) }
                 verify(exactly = 0) { friendshipSolicitudeRepository.save(any()) }
@@ -128,7 +128,7 @@ class RejectFriendshipSolicitudeCommandHandlerTest : BehaviorSpec({
             }
 
             Then("the exception must not be null") {
-                exception.message.shouldBe("Friendship solicitude $friendshipSolicitudeId status can not change, because it has raised an inmutable status ACCEPTED")
+                exception.message.shouldBe("Friendship solicitude $friendshipSolicitudeId status can not change, because it has raised an immutable status ACCEPTED")
                 verify(exactly = 1) { userRepository.findOrFail(any()) }
                 verify(exactly = 1) { friendshipSolicitudeRepository.findOrFail(any()) }
                 verify(exactly = 0) { friendshipSolicitudeRepository.save(any()) }
