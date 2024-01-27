@@ -317,7 +317,7 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
     }
 
     @Test
-    fun `when the users are not friends but the solicitude was rejected, then an exception must be rejected`() {
+    fun `when the users are not friends but the solicitude was rejected, then an exception must be throw`() {
         // Given
         val george = UserFactory.common()
         val martin = UserFactory.common()
@@ -339,8 +339,130 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
             .andReturn().response.contentAsString
 
         // Then
-        response.shouldBe("""{"code":"412 PRECONDITION_FAILED","message":"Friendship solicitude ${solicitude.id} status can not change, because it has raised an inmutable status REJECTED"}""")
+        response.shouldBe("""{"code":"412 PRECONDITION_FAILED","message":"Friendship solicitude ${solicitude.id} status can not change, because it has raised an immutable status REJECTED"}""")
         verify(exactly = 0) { userRepositoryPort.save(any()) }
         verify(exactly = 0) { userRepositoryPort.findAll(any()) }
+    }
+
+    @Test
+    fun `when the users are not friends but the solicitude was accepted, then an exception must be rejected`() {
+        // Given
+        val george = UserFactory.common()
+        val martin = UserFactory.common()
+        val solicitude =
+            FriendshipSolicitudeFactory.common(
+                addressedId = george.id,
+                requesterId = martin.id,
+                solicitudeStatus = ACCEPTED
+            )
+
+        every { friendshipSolicitudeRepositoryPort.findOrFail(match { it.id == solicitude.id }) } returns solicitude
+        every { userRepositoryPort.findOrFail(match { it.id == martin.id }) } returns martin
+        every { userRepositoryPort.findOrFail(match { it.id == george.id }) } returns george
+
+        // When
+        val response = mockMvc.perform(
+            MockMvcRequestBuilders.put("/users/${george.id}/friendship_solicitudes/${solicitude.id}/accept")
+        ).andExpect(MockMvcResultMatchers.status().isPreconditionFailed)
+            .andReturn().response.contentAsString
+
+        // Then
+        response.shouldBe("""{"code":"412 PRECONDITION_FAILED","message":"Friendship solicitude ${solicitude.id} status can not change, because it has raised an immutable status ACCEPTED"}""")
+        verify(exactly = 0) { userRepositoryPort.save(any()) }
+        verify(exactly = 0) { userRepositoryPort.findAll(any()) }
+    }
+
+    // Reject friendship solicitude
+    @Test
+    fun `when reject a friendship solicitude, the users are not friends and there isn't any pending solicitude, then a 200 response must be retrieved`() {
+        // Given
+        val george = UserFactory.common()
+        val martin = UserFactory.common()
+        val solicitude =
+            FriendshipSolicitudeFactory.common(addressedId = george.id, requesterId = martin.id)
+
+        every { friendshipSolicitudeRepositoryPort.findOrFail(match { it.id == solicitude.id }) } returns solicitude
+        every { userRepositoryPort.findOrFail(match { it.id == martin.id }) } returns martin
+        every { userRepositoryPort.findOrFail(match { it.id == george.id }) } returns george
+        every { userRepositoryPort.saveAll(any()) } returns listOf(george, martin)
+        every { friendshipSolicitudeRepositoryPort.save(any()) } returns solicitude.copy(
+            solicitudeStatus = REJECTED
+        )
+
+        // When
+        val response = mockMvc.perform(
+            MockMvcRequestBuilders.put("/users/${george.id}/friendship_solicitudes/${solicitude.id}/reject")
+        ).andExpect(MockMvcResultMatchers.status().isOk)
+            .andReturn().response.contentAsString
+
+        // Then
+        response.shouldBe(
+            """
+            {
+                "id":"${solicitude.id}",
+                "addressed_id":"${george.id}",
+                "requester_id":"${martin.id}",
+                "status":"REJECTED"
+            }
+            """.trimIndent().replace(Regex("\\s+"), "")
+        )
+        verify(exactly = 1) { friendshipSolicitudeRepositoryPort.findOrFail(any()) }
+        verify(exactly = 1) { friendshipSolicitudeRepositoryPort.save(any()) }
+    }
+
+    @Test
+    fun `when reject a friendship solicitude, the users are not friends but the solicitude was rejected, then an exception must be throw`() {
+        // Given
+        val george = UserFactory.common()
+        val martin = UserFactory.common()
+        val solicitude =
+            FriendshipSolicitudeFactory.common(
+                addressedId = george.id,
+                requesterId = martin.id,
+                solicitudeStatus = REJECTED
+            )
+
+        every { friendshipSolicitudeRepositoryPort.findOrFail(match { it.id == solicitude.id }) } returns solicitude
+        every { userRepositoryPort.findOrFail(match { it.id == martin.id }) } returns martin
+        every { userRepositoryPort.findOrFail(match { it.id == george.id }) } returns george
+
+        // When
+        val response = mockMvc.perform(
+            MockMvcRequestBuilders.put("/users/${george.id}/friendship_solicitudes/${solicitude.id}/reject")
+        ).andExpect(MockMvcResultMatchers.status().isPreconditionFailed)
+            .andReturn().response.contentAsString
+
+        // Then
+        response.shouldBe("""{"code":"412 PRECONDITION_FAILED","message":"Friendship solicitude ${solicitude.id} status can not change, because it has raised an immutable status REJECTED"}""")
+        verify(exactly = 0) { userRepositoryPort.save(any()) }
+        verify(exactly = 0) { userRepositoryPort.findAll(any()) }
+    }
+
+    @Test
+    fun `when reject a friendship solicitude, the users are not friends but the solicitude was accepted, then an exception must be rejected`() {
+        // Given
+        val george = UserFactory.common()
+        val martin = UserFactory.common()
+        val solicitude =
+            FriendshipSolicitudeFactory.common(
+                addressedId = george.id,
+                requesterId = martin.id,
+                solicitudeStatus = ACCEPTED
+            )
+
+        every { friendshipSolicitudeRepositoryPort.findOrFail(match { it.id == solicitude.id }) } returns solicitude
+        every { userRepositoryPort.findOrFail(match { it.id == martin.id }) } returns martin
+        every { userRepositoryPort.findOrFail(match { it.id == george.id }) } returns george
+
+        // When
+        val response = mockMvc.perform(
+            MockMvcRequestBuilders.put("/users/${george.id}/friendship_solicitudes/${solicitude.id}/reject")
+        ).andExpect(MockMvcResultMatchers.status().isPreconditionFailed)
+            .andReturn().response.contentAsString
+
+        // Then
+        response.shouldBe("""{"code":"412 PRECONDITION_FAILED","message":"Friendship solicitude ${solicitude.id} status can not change, because it has raised an immutable status ACCEPTED"}""")
+        verify(exactly = 0) { friendshipSolicitudeRepositoryPort.save(any()) }
+        verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
     }
 }
