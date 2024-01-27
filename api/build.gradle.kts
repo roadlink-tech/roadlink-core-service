@@ -9,6 +9,10 @@ group = "com.roadlink.core.api"
 
 val springDataDynamodbVersion = "5.1.0"
 val awsJavaSdkDynamodbVersion = "2.22.5"
+val jakartaServletApiVersion = "6.0.0"
+val springmokkVersion = "4.0.2"
+val validationApi = "2.0.1.Final"
+
 
 ext["jakarta-servlet.version"] =
     "5.0.0" // This is needed if you want to use jetty instead of tomcat
@@ -21,11 +25,15 @@ dependencies {
 
     // Jackson
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+
     // Spring
     implementation("org.springframework.boot:spring-boot-starter-web") {
         exclude(module = "spring-boot-starter-tomcat")
     }
     implementation("org.springframework.boot:spring-boot-starter-jetty")
+
+    // Validation Api
+    implementation("javax.validation:validation-api:${validationApi}")
 
     // Datasource
     implementation("software.amazon.awssdk:dynamodb:$awsJavaSdkDynamodbVersion")
@@ -33,9 +41,8 @@ dependencies {
 
     // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("com.ninja-squad:springmockk:4.0.2")
-    testImplementation("jakarta.servlet:jakarta.servlet-api:6.0.0") // O la versión más reciente disponible
-    implementation("javax.validation:validation-api:2.0.1.Final")
+    testImplementation("com.ninja-squad:springmockk:$springmokkVersion")
+    testImplementation("jakarta.servlet:jakarta.servlet-api:$jakartaServletApiVersion")
 }
 
 application {
