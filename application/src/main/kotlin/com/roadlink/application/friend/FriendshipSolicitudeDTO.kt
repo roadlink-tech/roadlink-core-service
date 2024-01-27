@@ -1,6 +1,6 @@
 package com.roadlink.application.friend
 
-import com.roadlink.application.DefaultIdGenerator
+import com.roadlink.core.domain.DefaultIdGenerator
 import com.roadlink.core.domain.friend.FriendshipSolicitude
 import java.util.*
 

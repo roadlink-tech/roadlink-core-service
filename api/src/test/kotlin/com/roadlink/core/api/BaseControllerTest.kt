@@ -6,6 +6,7 @@ import com.roadlink.core.api.command.CommandBusDefinition
 import com.roadlink.core.api.error.ExceptionHandlerController
 import com.roadlink.core.api.feedback.FeedbackHandlerDefinition
 import com.roadlink.core.api.friend.FriendHandlerDefinition
+import com.roadlink.core.api.user.GoogleLoginDefinition
 import com.roadlink.core.api.user.UserHandlerDefinition
 import com.roadlink.core.api.usertrustscore.UserTrustScoreDefinition
 import com.roadlink.core.api.vehicle.VehicleHandlerDefinition
@@ -16,6 +17,9 @@ import com.roadlink.core.domain.friend.FriendshipSolicitude
 import com.roadlink.core.domain.friend.FriendshipSolicitudeCriteria
 import com.roadlink.core.domain.user.User
 import com.roadlink.core.domain.user.UserCriteria
+import com.roadlink.core.domain.user.google.GoogleIdTokenValidator
+import com.roadlink.core.domain.user.google.GoogleUser
+import com.roadlink.core.domain.user.google.GoogleUserCriteria
 import com.roadlink.core.domain.vehicle.Vehicle
 import com.roadlink.core.domain.vehicle.VehicleCriteria
 import io.mockk.clearAllMocks
@@ -34,7 +38,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders
     FriendHandlerDefinition::class,
     FeedbackHandlerDefinition::class,
     VehicleHandlerDefinition::class,
-    UserTrustScoreDefinition::class
+    UserTrustScoreDefinition::class,
+    GoogleLoginDefinition::class
 )
 abstract class BaseControllerTest {
 
@@ -52,6 +57,12 @@ abstract class BaseControllerTest {
 
     @MockkBean
     lateinit var userRepositoryPort: RepositoryPort<User, UserCriteria>
+
+    @MockkBean
+    lateinit var googleUserRepositoryPort: RepositoryPort<GoogleUser, GoogleUserCriteria>
+
+    @MockkBean
+    lateinit var googleIdTokenValidator: GoogleIdTokenValidator
 
     lateinit var mockMvc: MockMvc
 

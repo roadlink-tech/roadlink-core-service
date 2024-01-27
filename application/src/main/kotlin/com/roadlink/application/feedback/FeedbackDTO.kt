@@ -1,6 +1,6 @@
 package com.roadlink.application.feedback
 
-import com.roadlink.application.DefaultIdGenerator
+import com.roadlink.core.domain.DefaultIdGenerator
 import com.roadlink.core.domain.feedback.Feedback
 import java.util.UUID
 

@@ -35,6 +35,7 @@ open class CommandBusDefinition {
         @Qualifier("list_friends_command_handler") listFriendsCommandHandler: CommandHandler<ListFriendsCommand, ListFriendsCommandResponse>,
         @Qualifier("delete_friend_command_handler") deleteFriendsCommandHandler: CommandHandler<DeleteFriendCommand, DeleteFriendCommandResponse>,
         @Qualifier("create_vehicle_command_handler") createVehicleCommandHandler: CommandHandler<CreateVehicleCommand, CreateVehicleCommandResponse>,
+        @Qualifier("google_login_command_handler") googleLoginCommandHandler: CommandHandler<GoogleLoginCommand, GoogleLoginCommandResponse>,
     ): CommandBus {
         return SimpleCommandBus().also {
             it.registerHandler(createUserCommandHandler)
@@ -50,6 +51,7 @@ open class CommandBusDefinition {
             it.registerHandler(listFriendsCommandHandler)
             it.registerHandler(deleteFriendsCommandHandler)
             it.registerHandler(createVehicleCommandHandler)
+            it.registerHandler(googleLoginCommandHandler)
         }
     }
 }

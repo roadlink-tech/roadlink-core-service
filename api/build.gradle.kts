@@ -12,7 +12,8 @@ val awsJavaSdkDynamodbVersion = "2.22.5"
 val jakartaServletApiVersion = "6.0.0"
 val springmokkVersion = "4.0.2"
 val validationApi = "2.0.1.Final"
-
+val googleApiClientVersion = "1.33.0"
+val jjwtVersion = "0.12.3"
 
 ext["jakarta-servlet.version"] =
     "5.0.0" // This is needed if you want to use jetty instead of tomcat
@@ -38,6 +39,12 @@ dependencies {
     // Datasource
     implementation("software.amazon.awssdk:dynamodb:$awsJavaSdkDynamodbVersion")
     implementation("software.amazon.awssdk:sts:$awsJavaSdkDynamodbVersion")
+    // Google sdk
+    implementation("com.google.api-client:google-api-client:$googleApiClientVersion")
+    // Jwt
+    implementation("io.jsonwebtoken:jjwt-api:$jjwtVersion")
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:$jjwtVersion")
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:$jjwtVersion")
 
     // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test")

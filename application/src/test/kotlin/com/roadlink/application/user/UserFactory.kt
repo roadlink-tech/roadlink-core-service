@@ -9,14 +9,16 @@ object UserFactory {
         id: UUID = UUID.randomUUID(),
         firstName: String = "jorge",
         lastName: String = "cabrera",
-        email: String = "cabrerajjorge@gmail.com"
+        email: String = "cabrerajjorge@gmail.com",
+        profilePhotoUrl: String = "https://lh3.googleusercontent.com/a/ACg8ocJW5g-yavaNzKPZcF-U8-W5zGfIQdww2mOcyDq_48xfdHE=s96-c"
     ): User {
         return User(
             id = id,
             firstName = firstName,
             lastName = lastName,
             email = email,
-            creationDate = Date()
+            creationDate = Date(),
+            profilePhotoUrl = profilePhotoUrl
         )
     }
 

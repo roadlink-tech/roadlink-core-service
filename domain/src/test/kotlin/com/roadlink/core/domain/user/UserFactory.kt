@@ -10,14 +10,16 @@ object UserFactory {
         id: UUID = UUID.randomUUID(),
         email: String = "cabrerajjorge@gmail.com",
         firstName: String = "Jorge",
-        lastName: String = "Cabrera"
+        lastName: String = "Cabrera",
+        profilePhotoUrl: String = "https://lh3.googleusercontent.com/a/ACg8ocJW5g-yavaNzKPZcF-U8-W5zGfIQdww2mOcyDq_48xfdHE=s96-c"
     ): User {
         return User(
             id = id,
             email = email,
             firstName = firstName,
             lastName = lastName,
-            creationDate = Date()
+            creationDate = Date(),
+            profilePhotoUrl = profilePhotoUrl
         )
     }
 
@@ -25,7 +27,8 @@ object UserFactory {
         id: UUID = UUID.randomUUID(),
         email: String = "cabrerajjorge@gmail.com",
         firstName: String = "Jorge",
-        lastName: String = "Cabrera"
+        lastName: String = "Cabrera",
+        profilePhotoUrl: String = "https://lh3.googleusercontent.com/a/ACg8ocJW5g-yavaNzKPZcF-U8-W5zGfIQdww2mOcyDq_48xfdHE=s96-c"
     ): User {
         return User(
             id = id,
@@ -34,7 +37,8 @@ object UserFactory {
             lastName = lastName,
             creationDate = Date.from(
                 LocalDate.now().minusYears(1).atStartOfDay(ZoneId.systemDefault()).toInstant()
-            )
+            ),
+            profilePhotoUrl = profilePhotoUrl
         )
     }
 
@@ -43,7 +47,8 @@ object UserFactory {
         email: String = "cabrerajjorge@gmail.com",
         firstName: String = "Jorge",
         lastName: String = "Cabrera",
-        amountOfFriends: Int = 100
+        profilePhotoUrl: String = "https://lh3.googleusercontent.com/a/ACg8ocJW5g-yavaNzKPZcF-U8-W5zGfIQdww2mOcyDq_48xfdHE=s96-c",
+        amountOfFriends: Int = 100,
     ): User {
         val friendIds = mutableSetOf<UUID>()
         repeat(amountOfFriends) {
@@ -55,7 +60,8 @@ object UserFactory {
             firstName = firstName,
             lastName = lastName,
             creationDate = Date(),
-            friends = friendIds
+            friends = friendIds,
+            profilePhotoUrl = profilePhotoUrl
         )
     }
 }

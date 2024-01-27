@@ -1,4 +1,4 @@
-package com.roadlink.application
+package com.roadlink.core.domain
 
 import java.util.*
 

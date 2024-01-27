@@ -50,6 +50,7 @@ class UserRepositoryAdapterIntegrationTest : BehaviorSpec({
                 response.firstName shouldBe "Jorge Javier"
                 response.lastName shouldBe "Cabrera Vera"
                 response.email shouldBe "cabrerajjorge@gmail.com"
+                response.profilePhotoUrl shouldBe "https://lh3.googleusercontent.com/a/ACg8ocJW5g-yavaNzKPZcF-U8-W5zGfIQdww2mOcyDq_48xfdHE=s96-c"
             }
         }
 
