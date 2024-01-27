@@ -9,6 +9,7 @@ import com.roadlink.core.domain.friend.FriendshipSolicitude.Status.REJECTED
 import com.roadlink.core.infrastructure.dynamodb.error.DynamoDbException
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
+import io.mockk.InternalPlatformDsl.toStr
 import io.mockk.every
 import io.mockk.verify
 import org.junit.jupiter.api.Test
@@ -29,7 +30,9 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
         return this.controller
     }
 
-    // Create Friendship Solicitude
+    /**
+     * Create Friendship Solicitude
+     */
     @Test
     fun `a friendship solicitude can be created successfully`() {
         // Given
@@ -276,7 +279,9 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
         verify(exactly = 0) { friendshipSolicitudeRepositoryPort.save(any()) }
     }
 
-    // Accept Friendship Solicitude
+    /**
+     * Accept Friendship Solicitude
+     */
     @Test
     fun `when the users are not friends and there isn't any pending solicitude, then a 200 response must be retrieved`() {
         // Given
@@ -372,7 +377,9 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
         verify(exactly = 0) { userRepositoryPort.findAll(any()) }
     }
 
-    // Reject friendship solicitude
+    /**
+     * Reject friendship solicitude
+     */
     @Test
     fun `when reject a friendship solicitude, the users are not friends and there isn't any pending solicitude, then a 200 response must be retrieved`() {
         // Given
@@ -451,7 +458,6 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
             )
 
         every { friendshipSolicitudeRepositoryPort.findOrFail(match { it.id == solicitude.id }) } returns solicitude
-        every { userRepositoryPort.findOrFail(match { it.id == martin.id }) } returns martin
         every { userRepositoryPort.findOrFail(match { it.id == george.id }) } returns george
 
         // When
@@ -463,6 +469,37 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
         // Then
         response.shouldBe("""{"code":"412 PRECONDITION_FAILED","message":"Friendship solicitude ${solicitude.id} status can not change, because it has raised an immutable status ACCEPTED"}""")
         verify(exactly = 0) { friendshipSolicitudeRepositoryPort.save(any()) }
+        verify(exactly = 1) { friendshipSolicitudeRepositoryPort.findOrFail(any()) }
+        verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
+    }
+
+    @Test
+    fun `when reject a friendship solicitude, but the users does not exist then an exception must be rejected`() {
+        // Given
+        val george = UserFactory.common()
+        val addressedId = UUID.randomUUID()
+        val solicitude =
+            FriendshipSolicitudeFactory.common(
+                addressedId = addressedId,
+                requesterId = george.id,
+                solicitudeStatus = PENDING
+            )
+
+        every { friendshipSolicitudeRepositoryPort.findOrFail(match { it.id == solicitude.id }) } returns solicitude
+        every { userRepositoryPort.findOrFail(match { it.id == addressedId }) } throws DynamoDbException.EntityDoesNotExist(
+            addressedId.toString()
+        )
+
+        // When
+        val response = mockMvc.perform(
+            MockMvcRequestBuilders.put("/users/$addressedId/friendship_solicitudes/${solicitude.id}/reject")
+        ).andExpect(MockMvcResultMatchers.status().isNotFound)
+            .andReturn().response.contentAsString
+
+        // Then
+        response.shouldBe("""{"code":"404 NOT_FOUND","message":"Entity $addressedId does not exist"}""")
+        verify(exactly = 0) { friendshipSolicitudeRepositoryPort.save(any()) }
+        verify(exactly = 0) { friendshipSolicitudeRepositoryPort.findOrFail(any()) }
         verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
     }
 }
