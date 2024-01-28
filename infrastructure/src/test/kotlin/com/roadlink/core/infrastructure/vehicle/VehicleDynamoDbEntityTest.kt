@@ -44,7 +44,7 @@ class VehicleRepositoryAdapterIntegrationTest : BehaviorSpec({
         When("try to save a new vehicle entity and find it using the driverId") {
             val driverId = UUID.randomUUID()
             val id = UUID.randomUUID()
-            val vehicle = VehicleFactory.common(id = id, driverId = driverId)
+            val vehicle = VehicleFactory.common(id = id, driverId = driverId, capacity = 6)
             shouldNotThrow<RuntimeException> {
                 repository.save(vehicle)
             }
@@ -57,6 +57,7 @@ class VehicleRepositoryAdapterIntegrationTest : BehaviorSpec({
                 vehicleFoundByDriverId.model.shouldBe("Territory")
                 vehicleFoundByDriverId.licencePlate.shouldBe("AG123AG")
                 vehicleFoundByDriverId.iconUrl.shouldBe("https://icon.com")
+                vehicleFoundByDriverId.capacity.shouldBe(6)
             }
 
             val vehicleFoundById = repository.findOrFail(VehicleCriteria(id = id))
@@ -67,6 +68,7 @@ class VehicleRepositoryAdapterIntegrationTest : BehaviorSpec({
                 vehicleFoundById.model.shouldBe("Territory")
                 vehicleFoundById.licencePlate.shouldBe("AG123AG")
                 vehicleFoundById.iconUrl.shouldBe("https://icon.com")
+                vehicleFoundById.capacity.shouldBe(6)
             }
         }
     }

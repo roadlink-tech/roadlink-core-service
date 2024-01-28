@@ -16,7 +16,8 @@ class VehicleDynamoDbEntity constructor(
     var licencePlate: String = "",
     /** DriverIdGSI */
     var driverId: String = "",
-    var iconUrl: String = ""
+    var iconUrl: String = "",
+    var capacity: Int = 0,
 ) : BaseDynamoDbEntity(id, createdDate) {
 
     override fun toDomain(): DomainEntity {
@@ -26,7 +27,8 @@ class VehicleDynamoDbEntity constructor(
             model = this.model,
             licencePlate = this.licencePlate,
             driverId = UUID.fromString(this.driverId),
-            iconUrl = this.iconUrl
+            iconUrl = this.iconUrl,
+            capacity = this.capacity
         )
     }
 
@@ -41,7 +43,8 @@ class VehicleDynamoDbEntity constructor(
                 model = item["Model"]!!.s(),
                 licencePlate = item["LicencePlate"]!!.s(),
                 iconUrl = item["IconUrl"]!!.s(),
-                driverId = item["DriverId"]!!.s()
+                driverId = item["DriverId"]!!.s(),
+                capacity = Integer.valueOf(item["Capacity"]!!.n()),
             )
         }
     }
@@ -63,6 +66,7 @@ class VehicleDynamoDbEntityMapper : BaseDynamoDbEntityMapper<Vehicle, VehicleDyn
             "IconUrl" to AttributeValue.builder().s(entity.iconUrl).build(),
             "LicencePlate" to AttributeValue.builder().s(entity.licencePlate).build(),
             "DriverId" to AttributeValue.builder().s(entity.driverId.toString()).build(),
+            "Capacity" to AttributeValue.builder().n(entity.capacity.toString()).build()
         )
     }
 }

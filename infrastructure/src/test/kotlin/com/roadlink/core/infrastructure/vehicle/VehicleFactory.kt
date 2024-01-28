@@ -11,7 +11,8 @@ object VehicleFactory {
         model: String = "Territory",
         licencePlate: String = "AG123AG",
         iconUrl: String = "https://icon.com",
-        driverId: UUID = UUID.randomUUID()
+        driverId: UUID = UUID.randomUUID(),
+        capacity: Int = 4,
     ): Vehicle {
         return Vehicle(
             id = id,
@@ -19,7 +20,8 @@ object VehicleFactory {
             model = model,
             licencePlate = licencePlate,
             iconUrl = iconUrl,
-            driverId = driverId
+            driverId = driverId,
+            capacity = capacity
         )
     }
 

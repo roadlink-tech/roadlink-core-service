@@ -2,6 +2,8 @@ package com.roadlink.core.domain.vehicle
 
 import com.roadlink.core.domain.DomainEntity
 import com.roadlink.core.domain.RepositoryPort
+import com.roadlink.core.domain.feedback.validation.FeedbackValidationService
+import com.roadlink.core.domain.vehicle.validation.VehicleValidationService
 import java.util.*
 
 data class Vehicle(
@@ -10,9 +12,14 @@ data class Vehicle(
     val brand: String,
     val model: String,
     val licencePlate: String,
-    val iconUrl: String
-) : DomainEntity  {
+    val iconUrl: String,
+    val capacity: Int,
+) : DomainEntity {
     fun save(repository: RepositoryPort<Vehicle, VehicleCriteria>): Vehicle {
         return repository.save(this)
+    }
+
+    init {
+        VehicleValidationService().validate(this)
     }
 }

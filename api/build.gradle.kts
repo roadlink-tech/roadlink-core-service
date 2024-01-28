@@ -33,9 +33,6 @@ dependencies {
     }
     implementation("org.springframework.boot:spring-boot-starter-jetty")
 
-    // Validation Api
-    implementation("javax.validation:validation-api:${validationApi}")
-
     // Datasource
     implementation("software.amazon.awssdk:dynamodb:$awsJavaSdkDynamodbVersion")
     implementation("software.amazon.awssdk:sts:$awsJavaSdkDynamodbVersion")

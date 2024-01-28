@@ -1,7 +1,7 @@
-package com.roadlink.application.vehicle
+package com.roadlink.core.api.vehicle
 
 import com.roadlink.core.domain.vehicle.Vehicle
-import java.util.UUID
+import java.util.*
 
 object VehicleFactory {
 
@@ -10,9 +10,9 @@ object VehicleFactory {
         driverId: UUID = UUID.randomUUID(),
         brand: String = "Ford",
         model: String = "Territory",
-        licencePlate: String = "AF123AF",
-        iconUrl: String = "http://icon.url",
-        capacity: Int = 4
+        licencePlate: String = "AG154AG",
+        iconUrl: String = "https://icon.com",
+        capacity: Int = 5,
     ): Vehicle {
         return Vehicle(
             id = id,

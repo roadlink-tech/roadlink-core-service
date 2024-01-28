@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
+
 @RestController
 @RequestMapping("/users/{userId}/vehicles")
 class RestVehicleController(private val commandBus: CommandBus) {
@@ -34,14 +35,16 @@ class RestVehicleController(private val commandBus: CommandBus) {
 }
 
 data class VehicleCreationRequest(
-    @JsonProperty("brand")
+    @JsonProperty("brand", required = true)
     val brand: String,
     @JsonProperty("model")
     val model: String,
     @JsonProperty("licence_plate")
     val licencePlate: String,
     @JsonProperty("icon_url")
-    val iconUrl: String
+    val iconUrl: String,
+    @JsonProperty("capacity")
+    val capacity: Int
 ) {
     fun toDto(driverId: String): VehicleDTO {
         return VehicleDTO(
@@ -49,7 +52,8 @@ data class VehicleCreationRequest(
             brand = brand,
             model = model,
             licencePlate = licencePlate,
-            iconUrl = iconUrl
+            iconUrl = iconUrl,
+            capacity = capacity
         )
     }
 }

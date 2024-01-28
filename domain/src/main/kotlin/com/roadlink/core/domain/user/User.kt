@@ -20,7 +20,6 @@ sealed class UserException(override val message: String, cause: Throwable? = nul
     1- photo url
     2- genero
     3- edad
-    4- cantidad de amigos devolverlo
 * */
 data class User(
     val id: UUID,
