@@ -52,6 +52,7 @@ class RetrieveUserTrustScoreCommandHandlerTest : BehaviorSpec({
                 response.userTrustScore.feedbacksReceived.shouldBe(7)
                 response.userTrustScore.feedbacksGiven.shouldBe(0)
                 response.userTrustScore.score.shouldBe(2.43)
+                response.userTrustScore.friends.shouldBe(0)
             }
         }
 

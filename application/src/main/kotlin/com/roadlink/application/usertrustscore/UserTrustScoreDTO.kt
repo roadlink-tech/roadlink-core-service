@@ -7,6 +7,7 @@ data class UserTrustScoreDTO(
     val feedbacksReceived: Int,
     val feedbacksGiven: Int,
     val enrollmentDays: Long,
+    val friends: Int
 ) {
     companion object {
         fun from(userTrustScore: UserTrustScore): UserTrustScoreDTO {
@@ -14,7 +15,8 @@ data class UserTrustScoreDTO(
                 score = userTrustScore.score,
                 feedbacksGiven = userTrustScore.feedbacksGiven,
                 feedbacksReceived = userTrustScore.feedbacksReceived,
-                enrollmentDays = userTrustScore.enrollmentDays
+                enrollmentDays = userTrustScore.enrollmentDays,
+                friends = userTrustScore.friends
             )
         }
     }

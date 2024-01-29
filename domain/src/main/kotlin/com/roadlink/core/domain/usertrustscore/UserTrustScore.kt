@@ -14,7 +14,8 @@ data class UserTrustScore(
     val score: Double,
     val feedbacksReceived: Int,
     val feedbacksGiven: Int,
-    val enrollmentDays: Long
+    val enrollmentDays: Long,
+    val friends: Int
 ) {
 
     companion object {
@@ -34,7 +35,8 @@ data class UserTrustScore(
                     Date().toInstant()
                 ),
                 feedbacksGiven = feedbacksGiven.size,
-                feedbacksReceived = feedbacksReceived.size
+                feedbacksReceived = feedbacksReceived.size,
+                friends = user.friends.size
             )
         }
 

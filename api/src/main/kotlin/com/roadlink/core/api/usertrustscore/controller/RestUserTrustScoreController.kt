@@ -39,7 +39,9 @@ data class UserTrustScoreResponse(
     @JsonProperty("feedbacks")
     val feedbacksInfo: FeedbacksInfo,
     @JsonProperty("enrollment_days")
-    val enrollmentDays: Long
+    val enrollmentDays: Long,
+    @JsonProperty("friends")
+    val friends: Int
 ) {
 
     companion object {
@@ -50,7 +52,8 @@ data class UserTrustScoreResponse(
                     received = response.feedbacksReceived,
                     given = response.feedbacksGiven
                 ),
-                enrollmentDays = response.enrollmentDays
+                enrollmentDays = response.enrollmentDays,
+                friends = response.friends
             )
         }
     }
