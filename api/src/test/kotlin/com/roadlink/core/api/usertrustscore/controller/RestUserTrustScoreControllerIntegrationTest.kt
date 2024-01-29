@@ -4,6 +4,7 @@ import com.roadlink.core.api.BaseControllerTest
 import com.roadlink.core.api.feedback.FeedbackFactory
 import com.roadlink.core.api.user.controller.UserFactory
 import com.roadlink.core.domain.feedback.Feedback
+import com.roadlink.core.infrastructure.dynamodb.error.DynamoDbException
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.verify
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
+import java.util.UUID
 
 @WebMvcTest(controllers = [RestUserTrustScoreController::class])
 class RestUserTrustScoreControllerIntegrationTest : BaseControllerTest() {
@@ -64,6 +66,25 @@ class RestUserTrustScoreControllerIntegrationTest : BaseControllerTest() {
         )
         verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
         verify(exactly = 2) { feedbackRepositoryPort.findAll(any()) }
+    }
+
+    @Test
+    fun `when the user does not exist, then an exception must be thrown`() {
+        // Given
+        val georgeId = UUID.randomUUID()
+        every { userRepositoryPort.findOrFail(match { it.id == georgeId }) } throws DynamoDbException.EntityDoesNotExist(
+            georgeId.toString()
+        )
+
+        // When
+        val response = mockMvc.perform(
+            MockMvcRequestBuilders.get("/users/${georgeId}/user_trust_score")
+        ).andExpect(MockMvcResultMatchers.status().isNotFound).andReturn().response.contentAsString
+
+        // Then
+        response.shouldBe("""{"code":"404 NOT_FOUND","message":"Entity $georgeId does not exist"}""")
+        verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
+        verify(exactly = 0) { feedbackRepositoryPort.findAll(any()) }
     }
 
 }
