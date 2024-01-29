@@ -5,6 +5,8 @@ import com.roadlink.core.api.user.controller.UserFactory
 import com.roadlink.core.api.vehicle.VehicleFactory
 import com.roadlink.core.infrastructure.dynamodb.error.DynamoDbException
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldNotBeEmpty
+import io.mockk.InternalPlatformDsl.toStr
 import io.mockk.every
 import io.mockk.verify
 import org.junit.jupiter.api.Test
@@ -25,6 +27,9 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
         return controller
     }
 
+    /**
+     * Create Vehicle
+     */
     @Test
     fun `when a user try to add valid vehicle, then it must work well`() {
         // Given
@@ -220,5 +225,63 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
         )
         verify(exactly = 0) { vehicleRepositoryPort.save(any()) }
         verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
+    }
+
+    /**
+     * List Vehicles
+     */
+    @Test
+    fun `when list all the user vehicles then it must be retrieved`() {
+        // Given
+        val george = UserFactory.common()
+        val vehicle = VehicleFactory.common()
+        every { userRepositoryPort.findOrFail(match { it.id == george.id }) } returns george
+        every { vehicleRepositoryPort.findAll(match { it.driverId == george.id }) } returns listOf(
+            vehicle
+        )
+
+        // When
+        val response = mockMvc.perform(
+            MockMvcRequestBuilders.get("/users/${george.id}/vehicles")
+        ).andExpect(MockMvcResultMatchers.status().isOk)
+            .andReturn().response.contentAsString
+
+        // Then
+        response.shouldBe(
+            """
+            [
+                {
+                    "id": "${vehicle.id}",
+                    "brand": "Ford",
+                    "model": "Territory",
+                    "licence_plate": "AG154AG",
+                    "icon_url": "https://icon.com",
+                    "capacity": 5,
+                    "color": "white"
+                }
+            ]
+        """.trimIndent().replace(Regex("\\s+"), "")
+        )
+    }
+
+    @Test
+    fun `when list user vehicles, but the user does not exist, then an exception must be thrown`() {
+        // Given
+        val georgeId = UUID.randomUUID()
+        every { userRepositoryPort.findOrFail(match { it.id == georgeId }) } throws DynamoDbException.EntityDoesNotExist(
+            georgeId.toString()
+        )
+
+
+        // When
+        val response = mockMvc.perform(
+            MockMvcRequestBuilders.get("/users/${georgeId}/vehicles")
+        ).andExpect(MockMvcResultMatchers.status().isNotFound)
+            .andReturn().response.contentAsString
+
+        // Then
+        response.shouldBe(
+            """{"code":"404 NOT_FOUND","message":"Entity $georgeId does not exist"}"""
+        )
     }
 }

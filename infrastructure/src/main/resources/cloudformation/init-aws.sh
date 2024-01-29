@@ -12,23 +12,19 @@ awslocal ssm put-parameter \
   --value '{"endpoint":"http://localstack:4566", "region": "us-west-2"}' \
   --type "SecureString" \
   --output table
-
 awslocal ssm put-parameter \
   --name /local/roadlink-core-service/google/credentials \
   --value '{"client_id":"REPLACE_ME"}' \
   --type "SecureString" \
   --output table
-
 echo "========================================================================================================================="
 echo "======================================= Creating Dynamo Table ==========================================================="
 echo "========================================================================================================================="
-
 awslocal cloudformation create-stack \
   --stack-name "user-dynamo-table-stack" \
   --template-body file://user-dynamo-table.yml \
   --region "${AWS_REGION}" \
   --output table
-
 echo "========================================================================================================================="
 echo "======================================= Localstack Setup Ends ==========================================================="
 echo "========================================================================================================================="

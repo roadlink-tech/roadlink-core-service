@@ -15,6 +15,9 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient
 import com.roadlink.application.command.CommandHandler
+import com.roadlink.application.vehicle.ListVehiclesCommand
+import com.roadlink.application.vehicle.ListVehiclesCommandHandler
+import com.roadlink.application.vehicle.ListVehiclesCommandResponse
 
 @Configuration
 open class VehicleRepositoryDefinition {
@@ -40,5 +43,13 @@ open class VehicleHandlerDefinition {
         userRepositoryPort: RepositoryPort<User, UserCriteria>
     ): CommandHandler<CreateVehicleCommand, CreateVehicleCommandResponse> {
         return CreateVehicleCommandHandler(userRepositoryPort, vehicleRepositoryPort)
+    }
+
+    @Bean("list_vehicles_command_handler")
+    open fun listVehiclesCommandHandler(
+        vehicleRepositoryPort: RepositoryPort<Vehicle, VehicleCriteria>,
+        userRepositoryPort: RepositoryPort<User, UserCriteria>
+    ): CommandHandler<ListVehiclesCommand, ListVehiclesCommandResponse> {
+        return ListVehiclesCommandHandler(userRepositoryPort, vehicleRepositoryPort)
     }
 }
