@@ -44,7 +44,8 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
                     "model":"TERRITORY",
                     "licence_plate":"AG154AG",
                     "icon_url":"https://icon.com",
-                    "capacity":"5"
+                    "capacity":"5",
+                    "color":"white"
                 }""".trimIndent()
             ).contentType(MediaType.APPLICATION_JSON)
         ).andExpect(MockMvcResultMatchers.status().isCreated).andReturn().response.contentAsString
@@ -56,7 +57,9 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
                 "brand":"Ford",
                 "model":"Territory",
                 "licence_plate":"AG154AG",
-                "icon_url":"https://icon.com"
+                "icon_url":"https://icon.com",
+                "capacity":5,
+                "color":"white"
             }""".trimIndent().replace(Regex("\\s+"), "")
         )
         verify(exactly = 1) { vehicleRepositoryPort.save(any()) }
@@ -77,10 +80,12 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
                     "model":"TERRITORY",
                     "licence_plate":"AG154AG",
                     "icon_url":"https://icon.com",
-                    "capacity":"5"
+                    "capacity":"5",
+                    "color":"white"
                 }""".trimIndent()
             ).contentType(MediaType.APPLICATION_JSON)
-        ).andExpect(MockMvcResultMatchers.status().isBadRequest).andReturn().response.contentAsString
+        ).andExpect(MockMvcResultMatchers.status().isBadRequest)
+            .andReturn().response.contentAsString
 
         // Then
         response.shouldBe(
@@ -104,10 +109,12 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
                     "model":"",
                     "licence_plate":"",
                     "icon_url":"https://icon.com",
-                    "capacity":"5"
+                    "capacity":"5",
+                    "color":"white"
                 }""".trimIndent()
             ).contentType(MediaType.APPLICATION_JSON)
-        ).andExpect(MockMvcResultMatchers.status().isBadRequest).andReturn().response.contentAsString
+        ).andExpect(MockMvcResultMatchers.status().isBadRequest)
+            .andReturn().response.contentAsString
 
         // Then
         response.shouldBe(
@@ -136,10 +143,12 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
                     "model":"TERRITORY",
                     "licence_plate":"AG154AG",
                     "icon_url":"https://icon.com",
-                    "capacity":"50"
+                    "capacity":"50",
+                    "color":"white"
                 }""".trimIndent()
             ).contentType(MediaType.APPLICATION_JSON)
-        ).andExpect(MockMvcResultMatchers.status().isBadRequest).andReturn().response.contentAsString
+        ).andExpect(MockMvcResultMatchers.status().isBadRequest)
+            .andReturn().response.contentAsString
 
         // Then
         response.shouldBe(
@@ -165,7 +174,8 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
                     "model":"TERRITORY",
                     "licence_plate":"AG154AG",
                     "icon_url":"https://icon.com",
-                    "capacity":"5"
+                    "capacity":"5",
+                    "color":"white"
                 }""".trimIndent()
             ).contentType(MediaType.APPLICATION_JSON)
         ).andExpect(MockMvcResultMatchers.status().isNotFound).andReturn().response.contentAsString
@@ -197,10 +207,12 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
                     "model":"Huayra",
                     "licence_plate":"AG154AG",
                     "icon_url":"https://icon.com",
-                    "capacity":"5"
+                    "capacity":"5",
+                    "color":"white"
                 }""".trimIndent()
             ).contentType(MediaType.APPLICATION_JSON)
-        ).andExpect(MockMvcResultMatchers.status().isBadRequest).andReturn().response.contentAsString
+        ).andExpect(MockMvcResultMatchers.status().isBadRequest)
+            .andReturn().response.contentAsString
 
         // Then
         response.shouldBe(

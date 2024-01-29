@@ -11,7 +11,8 @@ data class VehicleDTO(
     val model: String,
     val licencePlate: String,
     val iconUrl: String,
-    val capacity: Int
+    val capacity: Int,
+    val color: String
 ) {
 
     fun toDomain(): Vehicle {
@@ -22,7 +23,8 @@ data class VehicleDTO(
             licencePlate = licencePlate,
             iconUrl = iconUrl,
             driverId = driverId,
-            capacity = capacity
+            capacity = capacity,
+            color = color
         )
     }
 
@@ -35,7 +37,8 @@ data class VehicleDTO(
                 licencePlate = vehicle.licencePlate,
                 iconUrl = vehicle.iconUrl,
                 driverId = vehicle.driverId,
-                capacity = vehicle.capacity
+                capacity = vehicle.capacity,
+                color = vehicle.color
             )
         }
     }

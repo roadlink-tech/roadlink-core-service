@@ -34,7 +34,7 @@ class VehicleRepositoryAdapterIntegrationTest : BehaviorSpec({
             RepositoryAdapter(dynamoDbClient, "RoadlinkCore", dynamoEntityMapper, dynamoQueryMapper)
         LocalStackHelper.createTableIn(container)
 
-        When("find a user which does not exist") {
+        When("find a vehicle which does not exist") {
             val driverId = UUID.randomUUID()
             shouldThrow<RuntimeException> {
                 repository.findOrFail(VehicleCriteria(driverId = driverId))
@@ -58,6 +58,7 @@ class VehicleRepositoryAdapterIntegrationTest : BehaviorSpec({
                 vehicleFoundByDriverId.licencePlate.shouldBe("AG123AG")
                 vehicleFoundByDriverId.iconUrl.shouldBe("https://icon.com")
                 vehicleFoundByDriverId.capacity.shouldBe(6)
+                vehicleFoundByDriverId.color.shouldBe("White")
             }
 
             val vehicleFoundById = repository.findOrFail(VehicleCriteria(id = id))
@@ -69,6 +70,7 @@ class VehicleRepositoryAdapterIntegrationTest : BehaviorSpec({
                 vehicleFoundById.licencePlate.shouldBe("AG123AG")
                 vehicleFoundById.iconUrl.shouldBe("https://icon.com")
                 vehicleFoundById.capacity.shouldBe(6)
+                vehicleFoundById.color.shouldBe("White")
             }
         }
     }

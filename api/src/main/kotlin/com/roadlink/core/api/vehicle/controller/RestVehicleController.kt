@@ -44,7 +44,9 @@ data class VehicleCreationRequest(
     @JsonProperty("icon_url")
     val iconUrl: String,
     @JsonProperty("capacity")
-    val capacity: Int
+    val capacity: Int,
+    @JsonProperty("color")
+    val color: String,
 ) {
     fun toDto(driverId: String): VehicleDTO {
         return VehicleDTO(
@@ -53,7 +55,8 @@ data class VehicleCreationRequest(
             model = model,
             licencePlate = licencePlate,
             iconUrl = iconUrl,
-            capacity = capacity
+            capacity = capacity,
+            color = color
         )
     }
 }
@@ -68,7 +71,11 @@ data class VehicleResponse(
     @JsonProperty("licence_plate")
     val licencePlate: String,
     @JsonProperty("icon_url")
-    val iconUrl: String
+    val iconUrl: String,
+    @JsonProperty("capacity")
+    val capacity: Int,
+    @JsonProperty("color")
+    val color: String,
 ) {
     companion object {
         fun from(vehicle: VehicleDTO): VehicleResponse {
@@ -77,7 +84,9 @@ data class VehicleResponse(
                 brand = vehicle.brand,
                 model = vehicle.model,
                 licencePlate = vehicle.licencePlate,
-                iconUrl = vehicle.iconUrl
+                iconUrl = vehicle.iconUrl,
+                capacity = vehicle.capacity,
+                color = vehicle.color
             )
         }
     }

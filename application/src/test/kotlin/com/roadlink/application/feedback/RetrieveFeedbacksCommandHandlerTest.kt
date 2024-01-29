@@ -1,37 +1,39 @@
 package com.roadlink.application.feedback
 
+import com.roadlink.application.user.UserFactory
 import com.roadlink.core.domain.RepositoryPort
 import com.roadlink.core.domain.feedback.Feedback
 import com.roadlink.core.domain.feedback.FeedbackCriteria
+import com.roadlink.core.domain.user.User
+import com.roadlink.core.domain.user.UserCriteria
 import io.kotest.core.spec.style.BehaviorSpec
-import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.shouldBe
 import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import java.util.UUID
+import java.util.*
 
 class RetrieveFeedbacksCommandHandlerTest : BehaviorSpec({
     val repository: RepositoryPort<Feedback, FeedbackCriteria> = mockk()
-
+    val userRepository: RepositoryPort<User, UserCriteria> = mockk()
     afterEach {
-        clearMocks(repository)
+        clearMocks(repository, userRepository)
     }
 
     Given("a feedback command handler") {
-        val handler = RetrieveFeedbacksCommandHandler(repository)
+        val handler = RetrieveFeedbacksCommandHandler(userRepository, repository)
 
         When("a user has more than one feedback received") {
-            val userId = UUID.randomUUID()
+            val user = UserFactory.common()
             val feedbacks = mutableListOf<Feedback>()
             repeat(10) {
-                feedbacks.add(FeedbackFactory.common(receiverId = userId))
+                feedbacks.add(FeedbackFactory.common(receiverId = user.id))
             }
-
-            every { repository.findAll(match { it.receiverId == userId }) } returns feedbacks
-            val response = handler.handle(RetrieveFeedbacksCommand(receiverId = userId))
+            every { userRepository.findOrFail(match { it.id == user.id }) } returns user
+            every { repository.findAll(match { it.receiverId == user.id }) } returns feedbacks
+            val response = handler.handle(RetrieveFeedbacksCommand(receiverId = user.id))
 
             Then("all of those must be retrieved") {
                 verify(exactly = 1) { repository.findAll(any()) }
@@ -40,10 +42,10 @@ class RetrieveFeedbacksCommandHandlerTest : BehaviorSpec({
         }
 
         When("a user does not have any feedback received") {
-            val userId = UUID.randomUUID()
-
-            every { repository.findAll(match { it.receiverId == userId }) } returns emptyList()
-            val response = handler.handle(RetrieveFeedbacksCommand(receiverId = userId))
+            val user = UserFactory.common()
+            every { userRepository.findOrFail(match { it.id == user.id }) } returns user
+            every { repository.findAll(match { it.receiverId == user.id }) } returns emptyList()
+            val response = handler.handle(RetrieveFeedbacksCommand(receiverId = user.id))
 
             Then("all of those must be retrieved") {
                 verify(exactly = 1) { repository.findAll(any()) }
