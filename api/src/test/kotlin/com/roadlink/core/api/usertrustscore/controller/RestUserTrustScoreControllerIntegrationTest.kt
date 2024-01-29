@@ -1,0 +1,69 @@
+package com.roadlink.core.api.usertrustscore.controller
+
+import com.roadlink.core.api.BaseControllerTest
+import com.roadlink.core.api.feedback.FeedbackFactory
+import com.roadlink.core.api.user.controller.UserFactory
+import com.roadlink.core.domain.feedback.Feedback
+import io.kotest.matchers.shouldBe
+import io.mockk.every
+import io.mockk.verify
+import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers
+
+@WebMvcTest(controllers = [RestUserTrustScoreController::class])
+class RestUserTrustScoreControllerIntegrationTest : BaseControllerTest() {
+
+    @Autowired
+    private lateinit var controller: RestUserTrustScoreController
+
+    override fun getControllerUnderTest(): Any {
+        return controller
+    }
+
+    @Test
+    fun `when look for the user trust score, then it must be retrieved`() {
+        // Given
+        val george = UserFactory.common()
+        val martin = UserFactory.common()
+        george.beFriendOf(martin)
+        every { userRepositoryPort.findOrFail(match { it.id == george.id }) } returns george
+
+        val feedbacksGiven = mutableListOf<Feedback>()
+        repeat(10) {
+            feedbacksGiven.add(FeedbackFactory.common(reviewerId = george.id, rating = 2))
+        }
+        val feedbacksReceived = mutableListOf<Feedback>()
+        repeat(15) {
+            feedbacksReceived.add(FeedbackFactory.common(receiverId = george.id, rating = 5))
+        }
+
+        every { feedbackRepositoryPort.findAll(match { it.reviewerId == george.id }) } returns feedbacksGiven
+        every { feedbackRepositoryPort.findAll(match { it.receiverId == george.id }) } returns feedbacksReceived
+
+        // When
+        val response = mockMvc.perform(
+            MockMvcRequestBuilders.get("/users/${george.id}/user_trust_score")
+        ).andExpect(MockMvcResultMatchers.status().isOk).andReturn().response.contentAsString
+
+        // Then
+        response.shouldBe(
+            """
+            {
+                "score":5.0,
+                "feedbacks":{
+                    "given":10,
+                    "received":15
+                },
+                "enrollment_days":0,
+                "friends":1
+            }
+        """.trimIndent().replace(Regex("\\s+"), "")
+        )
+        verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
+        verify(exactly = 2) { feedbackRepositoryPort.findAll(any()) }
+    }
+
+}

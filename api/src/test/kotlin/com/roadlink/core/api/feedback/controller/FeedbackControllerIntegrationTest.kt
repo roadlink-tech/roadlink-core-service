@@ -18,7 +18,7 @@ import java.lang.RuntimeException
 import java.util.*
 
 @WebMvcTest(controllers = [FeedbackController::class])
-class FeedbackControllerTest : BaseControllerTest() {
+class FeedbackControllerIntegrationTest : BaseControllerTest() {
 
     @Autowired
     private lateinit var controller: FeedbackController
