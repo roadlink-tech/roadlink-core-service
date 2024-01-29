@@ -18,6 +18,7 @@ class VehicleDynamoDbEntity constructor(
     var driverId: String = "",
     var iconUrl: String = "",
     var capacity: Int = 0,
+    var color: String,
 ) : BaseDynamoDbEntity(id, createdDate) {
 
     override fun toDomain(): DomainEntity {
@@ -28,7 +29,8 @@ class VehicleDynamoDbEntity constructor(
             licencePlate = this.licencePlate,
             driverId = UUID.fromString(this.driverId),
             iconUrl = this.iconUrl,
-            capacity = this.capacity
+            capacity = this.capacity,
+            color = this.color
         )
     }
 
@@ -45,6 +47,7 @@ class VehicleDynamoDbEntity constructor(
                 iconUrl = item["IconUrl"]!!.s(),
                 driverId = item["DriverId"]!!.s(),
                 capacity = Integer.valueOf(item["Capacity"]!!.n()),
+                color = item["Color"]!!.s()
             )
         }
     }
@@ -60,13 +63,15 @@ class VehicleDynamoDbEntityMapper : BaseDynamoDbEntityMapper<Vehicle, VehicleDyn
         return mapOf(
             "EntityId" to AttributeValue.builder().s("EntityId#Vehicle").build(),
             "Id" to AttributeValue.builder().s(entity.id.toString()).build(),
-            "CreatedDate" to AttributeValue.builder().s(DynamoDbDateFormatter.instance().format(Date())).build(),
+            "CreatedDate" to AttributeValue.builder()
+                .s(DynamoDbDateFormatter.instance().format(Date())).build(),
             "Brand" to AttributeValue.builder().s(entity.brand).build(),
             "Model" to AttributeValue.builder().s(entity.model).build(),
             "IconUrl" to AttributeValue.builder().s(entity.iconUrl).build(),
             "LicencePlate" to AttributeValue.builder().s(entity.licencePlate).build(),
             "DriverId" to AttributeValue.builder().s(entity.driverId.toString()).build(),
-            "Capacity" to AttributeValue.builder().n(entity.capacity.toString()).build()
+            "Capacity" to AttributeValue.builder().n(entity.capacity.toString()).build(),
+            "Color" to AttributeValue.builder().s(entity.color).build()
         )
     }
 }

@@ -41,7 +41,10 @@ open class FeedbackHandlerDefinition {
     }
 
     @Bean("retrieve_feedbacks_command_handler")
-    open fun retrieveFeedbacksCommandHandler(feedbackRepository: RepositoryPort<Feedback, FeedbackCriteria>): CommandHandler<RetrieveFeedbacksCommand, RetrieveFeedbacksCommandResponse> {
-        return RetrieveFeedbacksCommandHandler(feedbackRepository)
+    open fun retrieveFeedbacksCommandHandler(
+        userRepository: RepositoryPort<User, UserCriteria>,
+        feedbackRepository: RepositoryPort<Feedback, FeedbackCriteria>
+    ): CommandHandler<RetrieveFeedbacksCommand, RetrieveFeedbacksCommandResponse> {
+        return RetrieveFeedbacksCommandHandler(userRepository, feedbackRepository)
     }
 }

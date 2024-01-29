@@ -14,6 +14,7 @@ data class Vehicle(
     val licencePlate: String,
     val iconUrl: String,
     val capacity: Int,
+    val color: String,
 ) : DomainEntity {
     fun save(repository: RepositoryPort<Vehicle, VehicleCriteria>): Vehicle {
         return repository.save(this)

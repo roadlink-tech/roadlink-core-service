@@ -13,6 +13,7 @@ object VehicleFactory {
         iconUrl: String = "https://icon.com",
         driverId: UUID = UUID.randomUUID(),
         capacity: Int = 4,
+        color: String = "White"
     ): Vehicle {
         return Vehicle(
             id = id,
@@ -21,7 +22,8 @@ object VehicleFactory {
             licencePlate = licencePlate,
             iconUrl = iconUrl,
             driverId = driverId,
-            capacity = capacity
+            capacity = capacity,
+            color = color
         )
     }
 

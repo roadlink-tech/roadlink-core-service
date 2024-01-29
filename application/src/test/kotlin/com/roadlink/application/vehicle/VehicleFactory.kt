@@ -12,7 +12,8 @@ object VehicleFactory {
         model: String = "Territory",
         licencePlate: String = "AF123AF",
         iconUrl: String = "http://icon.url",
-        capacity: Int = 4
+        capacity: Int = 4,
+        color: String = "White"
     ): Vehicle {
         return Vehicle(
             id = id,
@@ -21,7 +22,8 @@ object VehicleFactory {
             model = model,
             licencePlate = licencePlate,
             iconUrl = iconUrl,
-            capacity = capacity
+            capacity = capacity,
+            color = color
         )
     }
 }

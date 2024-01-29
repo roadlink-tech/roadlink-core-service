@@ -22,6 +22,9 @@ class RestUserControllerIntegrationTest : BaseControllerTest() {
         email = "cabrerajjorge@gmail.com", firstName = "jorge", lastName = "cabrera"
     )
 
+    /**
+     * Create User
+     */
     @Test
     fun `when the request does not contain an email, then a bad request must be retrieved`() {
         // When
