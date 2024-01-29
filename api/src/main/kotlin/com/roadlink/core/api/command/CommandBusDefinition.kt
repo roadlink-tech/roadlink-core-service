@@ -13,6 +13,9 @@ import com.roadlink.application.usertrustscore.RetrieveUserTrustScoreCommand
 import com.roadlink.application.usertrustscore.RetrieveUserTrustScoreCommandResponse
 import com.roadlink.application.vehicle.CreateVehicleCommand
 import com.roadlink.application.vehicle.CreateVehicleCommandResponse
+import com.roadlink.application.vehicle.ListVehiclesCommand
+import com.roadlink.application.vehicle.ListVehiclesCommandHandler
+import com.roadlink.application.vehicle.ListVehiclesCommandResponse
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -36,6 +39,7 @@ open class CommandBusDefinition {
         @Qualifier("delete_friend_command_handler") deleteFriendsCommandHandler: CommandHandler<DeleteFriendCommand, DeleteFriendCommandResponse>,
         @Qualifier("create_vehicle_command_handler") createVehicleCommandHandler: CommandHandler<CreateVehicleCommand, CreateVehicleCommandResponse>,
         @Qualifier("google_login_command_handler") googleLoginCommandHandler: CommandHandler<GoogleLoginCommand, GoogleLoginCommandResponse>,
+        @Qualifier("list_vehicles_command_handler") listVehiclesCommandHandler: CommandHandler<ListVehiclesCommand, ListVehiclesCommandResponse>
     ): CommandBus {
         return SimpleCommandBus().also {
             it.registerHandler(createUserCommandHandler)
@@ -51,6 +55,7 @@ open class CommandBusDefinition {
             it.registerHandler(listFriendsCommandHandler)
             it.registerHandler(deleteFriendsCommandHandler)
             it.registerHandler(createVehicleCommandHandler)
+            it.registerHandler(listVehiclesCommandHandler)
             it.registerHandler(googleLoginCommandHandler)
         }
     }

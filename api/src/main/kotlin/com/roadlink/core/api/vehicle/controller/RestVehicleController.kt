@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.roadlink.application.command.CommandBus
 import com.roadlink.application.vehicle.CreateVehicleCommand
 import com.roadlink.application.vehicle.CreateVehicleCommandResponse
+import com.roadlink.application.vehicle.ListVehiclesCommand
+import com.roadlink.application.vehicle.ListVehiclesCommandResponse
 import com.roadlink.application.vehicle.VehicleDTO
-import org.springframework.http.HttpStatus
+import org.springframework.http.HttpStatus.*
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
@@ -16,7 +18,7 @@ class RestVehicleController(private val commandBus: CommandBus) {
 
     @PostMapping
     @ResponseBody
-    @ResponseStatus(value = HttpStatus.CREATED)
+    @ResponseStatus(value = CREATED)
     fun create(
         @PathVariable("userId") driverId: String,
         @RequestBody vehicle: VehicleCreationRequest
@@ -32,6 +34,18 @@ class RestVehicleController(private val commandBus: CommandBus) {
         return VehicleResponse.from(response.vehicle)
     }
 
+    @GetMapping
+    @ResponseBody
+    @ResponseStatus(value = OK)
+    fun list(@PathVariable("userId") driverId: String): List<VehicleResponse> {
+        val response =
+            commandBus.publish<ListVehiclesCommand, ListVehiclesCommandResponse>(
+                ListVehiclesCommand(
+                    driverId = UUID.fromString(driverId)
+                )
+            )
+        return response.vehicles.map { vehicle -> VehicleResponse.from(vehicle) }
+    }
 }
 
 data class VehicleCreationRequest(

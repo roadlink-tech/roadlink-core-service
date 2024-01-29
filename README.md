@@ -1,6 +1,7 @@
 # roadlink-core-service
 
-This service is responsible for managing user information, relationships, feedback and authentication.
+This service is responsible for managing user information, relationships, feedback and
+authentication.
 
 ### Requirements
 
@@ -31,16 +32,23 @@ the [Behaviour style](https://kotest.io/docs/framework/testing-styles.html#behav
 
 This project has 3 types of tests:
 
-* **unit**: Unit tests are automated tests that verify the functionality of small, independent units of code in
+* **unit**: Unit tests are automated tests that verify the functionality of small, independent units
+  of code in
   isolation,
-  typically at the function or method level, and are used to ensure that each unit performs as expected and that changes
+  typically at the function or method level, and are used to ensure that each unit performs as
+  expected and that changes
   to the code do not introduce unintended consequences.
-* **integration**: Integration tests are automated tests that verify the interactions and compatibility between
+* **integration**: Integration tests are automated tests that verify the interactions and
+  compatibility between
   different
-  modules or components of a system, typically at the system or subsystem level, and are used to ensure that the overall
-  system works as expected and that changes to one component do not break the functionality of other components.
-* **acceptance**: Acceptance tests are automated tests that verify that a system or software meets the requirements
-  and specifications defined by the customer or end-user, typically at the end-to-end or user workflow level, and are
+  modules or components of a system, typically at the system or subsystem level, and are used to
+  ensure that the overall
+  system works as expected and that changes to one component do not break the functionality of other
+  components.
+* **acceptance**: Acceptance tests are automated tests that verify that a system or software meets
+  the requirements
+  and specifications defined by the customer or end-user, typically at the end-to-end or user
+  workflow level, and are
   used to ensure that the system is ready for delivery and meets the needs of the customer.
 
 #### Running test
@@ -67,3 +75,10 @@ We'll use the following branch naming convention in out gitflow:
     - test: (adding missing tests, refactoring tests; no production code change)
     - chore: (updating grunt tasks etc; no production code change)
 ```
+
+#### FAQ
+
+- Localstack container is not running on Windows 11 OS. Please check the blank marks, i.e.: /r, /n,
+  /t. Take a look at
+  this https://github.com/localstack/localstack/issues/7289#issuecomment-1367181135. Also be sure
+  that your init-aws.sh file has execution permission added.
