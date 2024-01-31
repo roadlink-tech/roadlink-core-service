@@ -41,17 +41,32 @@ class RepositoryAdapter<T : DomainEntity, E : BaseDynamoDbEntity, C : DomainCrit
         return findAll(criteria)
             .firstOrNull()
     }
+
+    override fun delete(criteria: C) {
+        val query = queryMapper.from(criteria)
+        return this.delete(query.key())
+    }
 }
 
 abstract class BaseDynamoRepository(
     private val dynamoDbClient: DynamoDbClient,
     private val tableName: String,
 ) {
+    fun delete(key: Map<String, AttributeValue>) {
+        val deleteItemRequest = DeleteItemRequest.builder()
+            .tableName(tableName)
+            .key(key)
+            .build()
+
+        dynamoDbClient.deleteItem(deleteItemRequest)
+    }
+
     fun save(entity: Map<String, AttributeValue>) {
         val putItemRequest = PutItemRequest.builder()
             .tableName(tableName)
             .item(entity)
             .build()
+
         dynamoDbClient.putItem(putItemRequest)
     }
 

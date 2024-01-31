@@ -36,8 +36,10 @@ dependencies {
     // Datasource
     implementation("software.amazon.awssdk:dynamodb:$awsJavaSdkDynamodbVersion")
     implementation("software.amazon.awssdk:sts:$awsJavaSdkDynamodbVersion")
+
     // Google sdk
     implementation("com.google.api-client:google-api-client:$googleApiClientVersion")
+
     // Jwt
     implementation("io.jsonwebtoken:jjwt-api:$jjwtVersion")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:$jjwtVersion")

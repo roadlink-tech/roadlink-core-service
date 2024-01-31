@@ -5,9 +5,9 @@ import com.roadlink.core.api.user.controller.UserFactory
 import com.roadlink.core.api.vehicle.VehicleFactory
 import com.roadlink.core.infrastructure.dynamodb.error.DynamoDbException
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.string.shouldNotBeEmpty
-import io.mockk.InternalPlatformDsl.toStr
 import io.mockk.every
+import io.mockk.just
+import io.mockk.runs
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,7 +15,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
-import java.util.UUID
+import java.util.*
 
 @WebMvcTest(controllers = [RestVehicleController::class])
 class RestVehicleControllerIntegrationTest : BaseControllerTest() {
@@ -283,5 +283,47 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
         response.shouldBe(
             """{"code":"404 NOT_FOUND","message":"Entity $georgeId does not exist"}"""
         )
+    }
+
+    /**
+     * Delete Vehicles
+     */
+    @Test
+    fun `when delete an existing vehicle of a user, then it must be remove`() {
+        // Given
+        val george = UserFactory.common()
+        every { userRepositoryPort.findOrFail(match { it.id == george.id }) } returns george
+        val vehicleId = UUID.randomUUID()
+        every { vehicleRepositoryPort.delete(match { it.id == vehicleId }) } just runs
+
+        // When
+        val response = mockMvc.perform(
+            MockMvcRequestBuilders.delete("/users/${george.id}/vehicles/${vehicleId}")
+        ).andExpect(MockMvcResultMatchers.status().isOk)
+            .andReturn().response.contentAsString
+
+        // Return
+        verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
+        verify(exactly = 1) { vehicleRepositoryPort.delete(any()) }
+    }
+
+    @Test
+    fun `when try to delete an existing vehicle but the user does not exist, then an exception must be thrown`() {
+        // Given
+        val georgeId = UUID.randomUUID()
+        every { userRepositoryPort.findOrFail(match { it.id == georgeId }) } throws DynamoDbException.EntityDoesNotExist(
+            georgeId.toString()
+        )
+        val vehicleId = UUID.randomUUID()
+
+        // When
+        mockMvc.perform(
+            MockMvcRequestBuilders.delete("/users/${georgeId}/vehicles/${vehicleId}")
+        ).andExpect(MockMvcResultMatchers.status().isNotFound)
+            .andReturn().response.contentAsString
+
+        // Return
+        verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
+        verify(exactly = 0) { vehicleRepositoryPort.delete(any()) }
     }
 }
