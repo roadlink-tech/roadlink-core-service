@@ -1,5 +1,6 @@
 package com.roadlink.application.user
 
+import com.roadlink.application.ApplicationDateTime
 import com.roadlink.core.domain.RepositoryPort
 import com.roadlink.core.domain.user.User
 import com.roadlink.core.domain.user.UserCriteria
@@ -30,14 +31,20 @@ class CreateUserCommandHandlerTest : BehaviorSpec({
                     id = userId,
                     email = email,
                     firstName = "jorge",
-                    lastName = "cabrera"
+                    lastName = "cabrera",
+                    birthDay = "06/12/1991",
+                    profilePhotoUrl = "https://profile.photo.com",
+                    gender = "male"
                 )
             )
             every { userRepository.save(match { it.id == userId }) } returns User(
                 id = userId,
                 email = email,
                 firstName = "jorge",
-                lastName = "cabrera"
+                lastName = "cabrera",
+                birthDay = ApplicationDateTime.from("06/12/1991"),
+                profilePhotoUrl = "https://profile.photo.com",
+                gender = "male"
             )
 
             every { userRepository.findAll(match { it.email == email }) } returns emptyList()
@@ -45,7 +52,15 @@ class CreateUserCommandHandlerTest : BehaviorSpec({
             val response = handler.handle(command)
 
             Then("the response must not be null") {
-                response.user shouldBe UserDTO(id = userId, email = email, firstName = "jorge", lastName = "cabrera")
+                response.user shouldBe UserDTO(
+                    id = userId,
+                    email = email,
+                    firstName = "jorge",
+                    lastName = "cabrera",
+                    birthDay = "06/12/1991",
+                    profilePhotoUrl = "https://profile.photo.com",
+                    gender = "male"
+                )
                 verify(exactly = 1) { userRepository.findAll(any()) }
                 verify(exactly = 1) { userRepository.save(any()) }
             }
@@ -66,7 +81,10 @@ class CreateUserCommandHandlerTest : BehaviorSpec({
                     id = userId,
                     email = email,
                     firstName = "jorge",
-                    lastName = "cabrera"
+                    lastName = "cabrera",
+                    birthDay = "06/12/1991",
+                    profilePhotoUrl = "https://profile.photo.com",
+                    gender = "male"
                 )
             )
 
