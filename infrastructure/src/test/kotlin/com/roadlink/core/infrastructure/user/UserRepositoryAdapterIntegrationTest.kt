@@ -5,8 +5,10 @@ import com.roadlink.core.domain.user.UserCriteria
 import com.roadlink.core.infrastructure.dynamodb.DynamoDbEntityMapper
 import com.roadlink.core.infrastructure.dynamodb.DynamoDbQueryMapper
 import com.roadlink.core.infrastructure.dynamodb.RepositoryAdapter
+import com.roadlink.core.infrastructure.dynamodb.error.DynamoDbException
 import com.roadlink.core.infrastructure.utils.LocalStackHelper
 import io.kotest.assertions.throwables.shouldNotThrow
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.extensions.testcontainers.perSpec
 import io.kotest.matchers.nulls.shouldNotBeNull
@@ -32,6 +34,21 @@ class UserRepositoryAdapterIntegrationTest : BehaviorSpec({
             val user = UserFactory.custom()
             val response = shouldNotThrow<RuntimeException> {
                 repository.save(user)
+            }
+
+            Then("the response should not be null") {
+                response.shouldNotBeNull()
+            }
+        }
+
+        When("save a new user entity and then delete it") {
+            val user = UserFactory.custom(id = UUID.fromString("6eada274-39a6-4231-837f-cad7e96cb4ce"))
+            repository.save(user)
+
+            shouldNotThrow<RuntimeException> { repository.delete(UserCriteria(id = user.id)) }
+
+            val response = shouldThrow<DynamoDbException.EntityDoesNotExist> {
+                repository.findOrFail(UserCriteria(id = user.id))
             }
 
             Then("the response should not be null") {

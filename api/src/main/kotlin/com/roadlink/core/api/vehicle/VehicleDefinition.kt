@@ -1,8 +1,7 @@
 package com.roadlink.core.api.vehicle
 
-import com.roadlink.application.vehicle.CreateVehicleCommand
-import com.roadlink.application.vehicle.CreateVehicleCommandHandler
-import com.roadlink.application.vehicle.CreateVehicleCommandResponse
+import com.roadlink.application.command.CommandHandler
+import com.roadlink.application.vehicle.*
 import com.roadlink.core.domain.RepositoryPort
 import com.roadlink.core.domain.user.User
 import com.roadlink.core.domain.user.UserCriteria
@@ -14,10 +13,6 @@ import com.roadlink.core.infrastructure.vehicle.VehicleDynamoDbQueryMapper
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient
-import com.roadlink.application.command.CommandHandler
-import com.roadlink.application.vehicle.ListVehiclesCommand
-import com.roadlink.application.vehicle.ListVehiclesCommandHandler
-import com.roadlink.application.vehicle.ListVehiclesCommandResponse
 
 @Configuration
 open class VehicleRepositoryDefinition {
@@ -51,5 +46,13 @@ open class VehicleHandlerDefinition {
         userRepositoryPort: RepositoryPort<User, UserCriteria>
     ): CommandHandler<ListVehiclesCommand, ListVehiclesCommandResponse> {
         return ListVehiclesCommandHandler(userRepositoryPort, vehicleRepositoryPort)
+    }
+
+    @Bean("delete_vehicle_command_handler")
+    open fun deleteVehicleCommandHandler(
+        vehicleRepositoryPort: RepositoryPort<Vehicle, VehicleCriteria>,
+        userRepositoryPort: RepositoryPort<User, UserCriteria>
+    ): CommandHandler<DeleteVehicleCommand, DeleteVehicleCommandResponse> {
+        return DeleteVehicleCommandHandler(userRepositoryPort, vehicleRepositoryPort)
     }
 }

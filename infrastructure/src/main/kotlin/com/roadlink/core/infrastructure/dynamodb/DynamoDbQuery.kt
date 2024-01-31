@@ -1,8 +1,10 @@
 package com.roadlink.core.infrastructure.dynamodb
 
 import com.roadlink.core.domain.DomainCriteria
+import org.w3c.dom.Attr
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue
 import software.amazon.awssdk.services.dynamodb.model.QueryRequest
+import software.amazon.awssdk.services.sts.endpoints.internal.Value.Str
 
 private const val ATTRIBUTE_NAMES = "attributeNames"
 private const val COMPANION = "Companion"
@@ -19,6 +21,7 @@ interface DynamoDbQuery {
     fun expressionAttributeValues(): Map<String, AttributeValue>
     fun filterExpression(): String
     fun indexName(): String
+    fun key(): Map<String, AttributeValue>
 
     class Builder(
         private var indexName: String = "",
@@ -98,6 +101,14 @@ abstract class BaseDynamoDbQuery : DynamoDbQuery {
 
     override fun filterExpression(): String {
         return fieldsInFilterExpression().joinToString(" AND ") { field -> "${field.replaceFirstChar { it.uppercase() }} = :$field" }
+    }
+
+    override fun key(): Map<String, AttributeValue> {
+        val key: MutableMap<String, AttributeValue> = mutableMapOf()
+        fieldsInKeyCondition().forEach { field ->
+            key[field.replaceFirstChar { it.uppercase() }] = expressionAttributeValues()[":$field"]!!
+        }
+        return key
     }
 
     override fun expressionAttributeValues(): Map<String, AttributeValue> {

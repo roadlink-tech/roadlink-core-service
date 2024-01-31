@@ -2,11 +2,7 @@ package com.roadlink.core.api.vehicle.controller
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.roadlink.application.command.CommandBus
-import com.roadlink.application.vehicle.CreateVehicleCommand
-import com.roadlink.application.vehicle.CreateVehicleCommandResponse
-import com.roadlink.application.vehicle.ListVehiclesCommand
-import com.roadlink.application.vehicle.ListVehiclesCommandResponse
-import com.roadlink.application.vehicle.VehicleDTO
+import com.roadlink.application.vehicle.*
 import org.springframework.http.HttpStatus.*
 import org.springframework.web.bind.annotation.*
 import java.util.*
@@ -45,6 +41,21 @@ class RestVehicleController(private val commandBus: CommandBus) {
                 )
             )
         return response.vehicles.map { vehicle -> VehicleResponse.from(vehicle) }
+    }
+
+    @DeleteMapping("/{vehicleId}")
+    @ResponseBody
+    @ResponseStatus(value = OK)
+    fun delete(
+        @PathVariable("userId") driverId: String,
+        @PathVariable("vehicleId") vehicleId: String
+    ) {
+        commandBus.publish<DeleteVehicleCommand, DeleteVehicleCommandResponse>(
+            DeleteVehicleCommand(
+                driverId = UUID.fromString(driverId),
+                vehicleId = UUID.fromString(vehicleId)
+            )
+        )
     }
 }
 
