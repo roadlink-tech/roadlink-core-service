@@ -30,14 +30,16 @@ class CreateUserCommandHandlerTest : BehaviorSpec({
                     id = userId,
                     email = email,
                     firstName = "jorge",
-                    lastName = "cabrera"
+                    lastName = "cabrera",
+                    profilePhotoUrl = "https://lh3.googleusercontent.com/a/ACg8ocJW5g-yavaNzKPZcF-U8-W5zGfIQdww2mOcyDq_48xfdHE=s96-c",
                 )
             )
             every { userRepository.save(match { it.id == userId }) } returns User(
                 id = userId,
                 email = email,
                 firstName = "jorge",
-                lastName = "cabrera"
+                lastName = "cabrera",
+                profilePhotoUrl = "https://lh3.googleusercontent.com/a/ACg8ocJW5g-yavaNzKPZcF-U8-W5zGfIQdww2mOcyDq_48xfdHE=s96-c"
             )
 
             every { userRepository.findAll(match { it.email == email }) } returns emptyList()
@@ -45,7 +47,13 @@ class CreateUserCommandHandlerTest : BehaviorSpec({
             val response = handler.handle(command)
 
             Then("the response must not be null") {
-                response.user shouldBe UserDTO(id = userId, email = email, firstName = "jorge", lastName = "cabrera")
+                response.user shouldBe UserDTO(
+                    id = userId,
+                    email = email,
+                    firstName = "jorge",
+                    lastName = "cabrera",
+                    profilePhotoUrl = "https://lh3.googleusercontent.com/a/ACg8ocJW5g-yavaNzKPZcF-U8-W5zGfIQdww2mOcyDq_48xfdHE=s96-c",
+                )
                 verify(exactly = 1) { userRepository.findAll(any()) }
                 verify(exactly = 1) { userRepository.save(any()) }
             }
@@ -66,7 +74,8 @@ class CreateUserCommandHandlerTest : BehaviorSpec({
                     id = userId,
                     email = email,
                     firstName = "jorge",
-                    lastName = "cabrera"
+                    lastName = "cabrera",
+                    profilePhotoUrl = "https://lh3.googleusercontent.com/a/ACg8ocJW5g-yavaNzKPZcF-U8-W5zGfIQdww2mOcyDq_48xfdHE=s96-c",
                 )
             )
 

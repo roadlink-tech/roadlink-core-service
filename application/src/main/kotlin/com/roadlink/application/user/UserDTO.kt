@@ -19,7 +19,8 @@ data class UserDTO(
             email = email,
             firstName = firstName,
             lastName = lastName,
-            friends = friends.toMutableSet()
+            friends = friends.toMutableSet(),
+            profilePhotoUrl = profilePhotoUrl,
         )
     }
 

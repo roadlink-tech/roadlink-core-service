@@ -69,7 +69,8 @@ class RestUserControllerIntegrationTest : BaseControllerTest() {
                 "email":"cabrerajjorge@gmail.com",
                 "first_name":"jorge",
                 "last_name":"cabrera",
-                "friends":[]
+                "friends":[],
+                "profile_photo_url": ""
             }
             """.trimIndent().replace(Regex("\\s+"), "")
         )
