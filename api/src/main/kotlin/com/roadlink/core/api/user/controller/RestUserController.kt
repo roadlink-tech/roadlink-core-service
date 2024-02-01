@@ -50,7 +50,7 @@ data class UserCreationRequest(
     val lastName: String
 ) {
     fun toDto(): UserDTO {
-        return UserDTO(email = email, firstName = firstName, lastName = lastName)
+        return UserDTO(email = email, firstName = firstName, lastName = lastName, profilePhotoUrl = "")
     }
 }
 
@@ -64,7 +64,9 @@ data class UserResponse(
     @JsonProperty("last_name")
     val lastName: String,
     @JsonProperty("friends")
-    val friends: Set<UUID>
+    val friends: Set<UUID>,
+    @JsonProperty("profile_photo_url")
+    val profilePhotoUrl: String,
 ) {
     companion object {
         fun from(user: UserDTO): UserResponse {
@@ -73,7 +75,8 @@ data class UserResponse(
                 email = user.email,
                 firstName = user.firstName,
                 lastName = user.lastName,
-                friends = user.friends
+                friends = user.friends,
+                profilePhotoUrl = user.profilePhotoUrl,
             )
         }
     }

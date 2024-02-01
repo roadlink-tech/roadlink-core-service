@@ -9,7 +9,8 @@ data class UserDTO(
     val email: String,
     val firstName: String,
     val lastName: String,
-    val friends: Set<UUID> = emptySet()
+    val friends: Set<UUID> = emptySet(),
+    val profilePhotoUrl: String,
     // TODO ojo ver comoo manejar el registration date
 ) {
     fun toDomain(): User {
@@ -29,7 +30,8 @@ data class UserDTO(
                 email = user.email,
                 firstName = user.firstName,
                 lastName = user.lastName,
-                friends = user.friends
+                friends = user.friends,
+                profilePhotoUrl = user.profilePhotoUrl,
             )
         }
     }
