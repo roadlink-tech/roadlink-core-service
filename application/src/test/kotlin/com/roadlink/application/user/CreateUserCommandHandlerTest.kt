@@ -1,5 +1,6 @@
 package com.roadlink.application.user
 
+import com.roadlink.core.infrastructure.DefaultLocalDateTimeHandler
 import com.roadlink.core.domain.RepositoryPort
 import com.roadlink.core.domain.user.User
 import com.roadlink.core.domain.user.UserCriteria
@@ -31,7 +32,10 @@ class CreateUserCommandHandlerTest : BehaviorSpec({
                     email = email,
                     firstName = "jorge",
                     lastName = "cabrera",
+                    birthDay = "06/12/1991",
                     profilePhotoUrl = "https://lh3.googleusercontent.com/a/ACg8ocJW5g-yavaNzKPZcF-U8-W5zGfIQdww2mOcyDq_48xfdHE=s96-c",
+                    gender = "male"
+
                 )
             )
             every { userRepository.save(match { it.id == userId }) } returns User(
@@ -39,7 +43,10 @@ class CreateUserCommandHandlerTest : BehaviorSpec({
                 email = email,
                 firstName = "jorge",
                 lastName = "cabrera",
-                profilePhotoUrl = "https://lh3.googleusercontent.com/a/ACg8ocJW5g-yavaNzKPZcF-U8-W5zGfIQdww2mOcyDq_48xfdHE=s96-c"
+                birthDay = DefaultLocalDateTimeHandler.from("06/12/1991"),
+                profilePhotoUrl = "https://lh3.googleusercontent.com/a/ACg8ocJW5g-yavaNzKPZcF-U8-W5zGfIQdww2mOcyDq_48xfdHE=s96-c",
+                gender = "male"
+
             )
 
             every { userRepository.findAll(match { it.email == email }) } returns emptyList()
@@ -52,7 +59,9 @@ class CreateUserCommandHandlerTest : BehaviorSpec({
                     email = email,
                     firstName = "jorge",
                     lastName = "cabrera",
+                    birthDay = "06/12/1991",
                     profilePhotoUrl = "https://lh3.googleusercontent.com/a/ACg8ocJW5g-yavaNzKPZcF-U8-W5zGfIQdww2mOcyDq_48xfdHE=s96-c",
+                    gender = "male"
                 )
                 verify(exactly = 1) { userRepository.findAll(any()) }
                 verify(exactly = 1) { userRepository.save(any()) }
@@ -75,7 +84,10 @@ class CreateUserCommandHandlerTest : BehaviorSpec({
                     email = email,
                     firstName = "jorge",
                     lastName = "cabrera",
-                    profilePhotoUrl = "https://lh3.googleusercontent.com/a/ACg8ocJW5g-yavaNzKPZcF-U8-W5zGfIQdww2mOcyDq_48xfdHE=s96-c",
+                    birthDay = "06/12/1991",
+                    profilePhotoUrl = "https://profile.photo.com",
+                    gender = "male"
+
                 )
             )
 

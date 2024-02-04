@@ -56,7 +56,10 @@ class RestUserControllerIntegrationTest : BaseControllerTest() {
                 """{
                         "email": "cabrerajjorge@gmail.com",
                         "first_name": "jorge",
-                        "last_name": "cabrera"
+                        "last_name": "cabrera",
+                        "birth_day": "06/12/1991",
+                        "profile_photo_url": "https://profile.photo.com",
+                        "gender": "male"
                     }""".trimIndent()
             ).contentType(MediaType.APPLICATION_JSON)
         ).andExpect(MockMvcResultMatchers.status().isCreated).andReturn().response.contentAsString
@@ -69,8 +72,10 @@ class RestUserControllerIntegrationTest : BaseControllerTest() {
                 "email":"cabrerajjorge@gmail.com",
                 "first_name":"jorge",
                 "last_name":"cabrera",
-                "friends":[],
-                "profile_photo_url": ""
+                "gender":"male",
+                "profile_photo_url":"https://profile.photo.com",
+                "birth_day":"06/12/1991",
+                "friends":[]
             }
             """.trimIndent().replace(Regex("\\s+"), "")
         )
@@ -81,7 +86,6 @@ class RestUserControllerIntegrationTest : BaseControllerTest() {
     @Test
     fun `when try to create a user with an email already registered, then a conflict error must be retrieved`() {
         // Given
-
         every { userRepositoryPort.findAll(any()) } returns listOf(george)
 
         // When
@@ -90,7 +94,10 @@ class RestUserControllerIntegrationTest : BaseControllerTest() {
                 """{
                         "email": "cabrerajjorge@gmail.com",
                         "first_name": "jorge",
-                        "last_name": "cabrera"
+                        "last_name": "cabrera",
+                        "birth_day": "06/12/1991",
+                        "profile_photo_url": "https://profile.photo.com",
+                        "gender": "male"
                     }""".trimMargin()
             ).contentType(MediaType.APPLICATION_JSON)
         ).andExpect(MockMvcResultMatchers.status().isConflict).andReturn().response.contentAsString
@@ -114,7 +121,10 @@ class RestUserControllerIntegrationTest : BaseControllerTest() {
                 """{
                         "email": "cabrerajjorge@gmail.com",
                         "first_name": "jorge",
-                        "last_name": "cabrera"
+                        "last_name": "cabrera",
+                        "birth_day": "06/12/1991",
+                        "profile_photo_url": "https://profile.photo.com",
+                        "gender": "male"
                     }""".trimMargin()
             ).contentType(MediaType.APPLICATION_JSON)
         ).andExpect(MockMvcResultMatchers.status().isInternalServerError)

@@ -2,6 +2,7 @@ package com.roadlink.core.infrastructure.user
 
 import com.roadlink.core.domain.user.User
 import com.roadlink.core.domain.user.UserCriteria
+import com.roadlink.core.infrastructure.DefaultLocalDateTimeHandler
 import com.roadlink.core.infrastructure.dynamodb.DynamoDbEntityMapper
 import com.roadlink.core.infrastructure.dynamodb.DynamoDbQueryMapper
 import com.roadlink.core.infrastructure.dynamodb.RepositoryAdapter
@@ -13,6 +14,7 @@ import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.extensions.testcontainers.perSpec
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
+import java.time.LocalDate
 import java.util.*
 
 class UserRepositoryAdapterIntegrationTest : BehaviorSpec({
@@ -58,7 +60,7 @@ class UserRepositoryAdapterIntegrationTest : BehaviorSpec({
 
         When("save a new user and then find it by id") {
             val id = UUID.randomUUID()
-            val user = UserFactory.custom(id = id)
+            val user = UserFactory.custom(id = id, birthDay = LocalDate.of(1991, 12, 6))
             repository.save(user)
 
             val response = repository.findOrFail(UserCriteria(id = id))
@@ -68,6 +70,8 @@ class UserRepositoryAdapterIntegrationTest : BehaviorSpec({
                 response.lastName shouldBe "Cabrera Vera"
                 response.email shouldBe "cabrerajjorge@gmail.com"
                 response.profilePhotoUrl shouldBe "https://lh3.googleusercontent.com/a/ACg8ocJW5g-yavaNzKPZcF-U8-W5zGfIQdww2mOcyDq_48xfdHE=s96-c"
+                response.gender shouldBe "male"
+                response.birthDay shouldBe DefaultLocalDateTimeHandler.from("06/12/1991")
             }
         }
 
@@ -84,6 +88,8 @@ class UserRepositoryAdapterIntegrationTest : BehaviorSpec({
                 response.lastName shouldBe "Cabrera Vera"
                 response.email shouldBe "cabrerajjorge@gmail.com"
                 response.friends shouldBe friends.toMutableSet()
+                response.gender shouldBe "male"
+                response.birthDay shouldBe null
             }
         }
 

@@ -1,5 +1,6 @@
 package com.roadlink.core.api.user.controller
 
+import com.roadlink.core.infrastructure.DefaultLocalDateTimeHandler
 import com.roadlink.core.domain.user.User
 import java.util.*
 
@@ -9,13 +10,19 @@ object UserFactory {
         id: UUID = UUID.randomUUID(),
         email: String = "cabrerajjorge@gmail.com",
         firstName: String = "jorge",
-        lastName: String = "cabrera"
+        lastName: String = "cabrera",
+        gender: String = "male",
+        profilePhotoUrl: String = "https://profile.photo.com",
+        birthDay: String = "06/12/1991"
     ): User {
         return User(
             id = id,
             email = email,
             firstName = firstName,
-            lastName = lastName
+            lastName = lastName,
+            gender = gender,
+            profilePhotoUrl = profilePhotoUrl,
+            birthDay = DefaultLocalDateTimeHandler.from(birthDay)
         )
     }
 
@@ -24,6 +31,8 @@ object UserFactory {
         email: String = "cabrerajjorge@gmail.com",
         firstName: String = "jorge",
         lastName: String = "cabrera",
+        gender: String = "male",
+        birthDay: String = "06/12/1991",
         amountOfFriends: Int = 50
     ): User {
         val friends = mutableSetOf<UUID>()
@@ -35,7 +44,9 @@ object UserFactory {
             email = email,
             firstName = firstName,
             lastName = lastName,
-            friends = friends
+            friends = friends,
+            gender = gender,
+            birthDay = DefaultLocalDateTimeHandler.from(birthDay)
         )
 
     }

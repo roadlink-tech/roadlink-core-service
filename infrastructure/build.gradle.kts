@@ -9,10 +9,11 @@ val jjwtVersion = "0.12.3"
 
 dependencies {
     implementation(project(":domain"))
+    implementation(project(":application"))
     // DynamoDB
     implementation("software.amazon.awssdk:dynamodb:$awsJavaSdkDynamodbVersion")
     implementation("software.amazon.awssdk:sts:$awsJavaSdkDynamodbVersion")
-    //implementation("org.jetbrains.kotlin:kotlin-reflect:1.5.21")
+
     // Google sdk
     implementation("com.google.api-client:google-api-client:$googleApiClientVersion")
     // Jwt
