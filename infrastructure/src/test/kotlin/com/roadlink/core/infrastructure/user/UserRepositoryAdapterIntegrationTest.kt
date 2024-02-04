@@ -2,7 +2,7 @@ package com.roadlink.core.infrastructure.user
 
 import com.roadlink.core.domain.user.User
 import com.roadlink.core.domain.user.UserCriteria
-import com.roadlink.core.infrastructure.ApplicationDateTime
+import com.roadlink.core.infrastructure.DefaultLocalDateTimeHandler
 import com.roadlink.core.infrastructure.dynamodb.DynamoDbEntityMapper
 import com.roadlink.core.infrastructure.dynamodb.DynamoDbQueryMapper
 import com.roadlink.core.infrastructure.dynamodb.RepositoryAdapter
@@ -71,7 +71,7 @@ class UserRepositoryAdapterIntegrationTest : BehaviorSpec({
                 response.email shouldBe "cabrerajjorge@gmail.com"
                 response.profilePhotoUrl shouldBe "https://lh3.googleusercontent.com/a/ACg8ocJW5g-yavaNzKPZcF-U8-W5zGfIQdww2mOcyDq_48xfdHE=s96-c"
                 response.gender shouldBe "male"
-                response.birthDay shouldBe ApplicationDateTime.from("06/12/1991")
+                response.birthDay shouldBe DefaultLocalDateTimeHandler.from("06/12/1991")
             }
         }
 

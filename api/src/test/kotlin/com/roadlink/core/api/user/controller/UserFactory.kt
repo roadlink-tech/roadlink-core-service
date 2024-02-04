@@ -1,6 +1,6 @@
 package com.roadlink.core.api.user.controller
 
-import com.roadlink.core.infrastructure.ApplicationDateTime
+import com.roadlink.core.infrastructure.DefaultLocalDateTimeHandler
 import com.roadlink.core.domain.user.User
 import java.util.*
 
@@ -22,7 +22,7 @@ object UserFactory {
             lastName = lastName,
             gender = gender,
             profilePhotoUrl = profilePhotoUrl,
-            birthDay = ApplicationDateTime.from(birthDay)
+            birthDay = DefaultLocalDateTimeHandler.from(birthDay)
         )
     }
 
@@ -46,7 +46,7 @@ object UserFactory {
             lastName = lastName,
             friends = friends,
             gender = gender,
-            birthDay = ApplicationDateTime.from(birthDay)
+            birthDay = DefaultLocalDateTimeHandler.from(birthDay)
         )
 
     }

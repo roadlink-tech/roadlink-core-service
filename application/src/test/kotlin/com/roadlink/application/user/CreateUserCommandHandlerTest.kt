@@ -1,6 +1,6 @@
 package com.roadlink.application.user
 
-import com.roadlink.core.infrastructure.ApplicationDateTime
+import com.roadlink.core.infrastructure.DefaultLocalDateTimeHandler
 import com.roadlink.core.domain.RepositoryPort
 import com.roadlink.core.domain.user.User
 import com.roadlink.core.domain.user.UserCriteria
@@ -43,7 +43,7 @@ class CreateUserCommandHandlerTest : BehaviorSpec({
                 email = email,
                 firstName = "jorge",
                 lastName = "cabrera",
-                birthDay = ApplicationDateTime.from("06/12/1991"),
+                birthDay = DefaultLocalDateTimeHandler.from("06/12/1991"),
                 profilePhotoUrl = "https://lh3.googleusercontent.com/a/ACg8ocJW5g-yavaNzKPZcF-U8-W5zGfIQdww2mOcyDq_48xfdHE=s96-c",
                 gender = "male"
 

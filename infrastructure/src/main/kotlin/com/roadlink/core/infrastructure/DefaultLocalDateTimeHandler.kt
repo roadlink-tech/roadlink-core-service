@@ -1,11 +1,12 @@
 package com.roadlink.core.infrastructure
 
+import com.roadlink.application.LocalDateTimeHandler
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-object ApplicationDateTime {
+object DefaultLocalDateTimeHandler : LocalDateTimeHandler {
     private val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-    fun from(dateTime: String): LocalDate? {
+    override fun from(dateTime: String): LocalDate? {
         return if (dateTime.isNotEmpty()) {
             LocalDate.parse(dateTime, formatter)
         } else {
@@ -13,7 +14,7 @@ object ApplicationDateTime {
         }
     }
 
-    fun toString(dateTime: LocalDate?): String {
+    override fun toString(dateTime: LocalDate?): String {
         return if (dateTime != null) {
             dateTime.format(formatter)
         } else {

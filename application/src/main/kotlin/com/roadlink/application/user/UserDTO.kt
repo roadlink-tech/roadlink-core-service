@@ -1,6 +1,6 @@
 package com.roadlink.application.user
 
-import com.roadlink.core.infrastructure.ApplicationDateTime
+import com.roadlink.core.infrastructure.DefaultLocalDateTimeHandler
 import com.roadlink.core.domain.DefaultIdGenerator
 import com.roadlink.core.domain.user.User
 import java.time.format.DateTimeFormatter
@@ -27,7 +27,7 @@ data class UserDTO(
             lastName = lastName,
             gender = gender,
             profilePhotoUrl = profilePhotoUrl,
-            birthDay = ApplicationDateTime.from(birthDay),
+            birthDay = DefaultLocalDateTimeHandler.from(birthDay),
             friends = friends.toMutableSet()
         )
     }
@@ -41,7 +41,7 @@ data class UserDTO(
                 lastName = user.lastName,
                 gender = user.gender,
                 profilePhotoUrl = user.profilePhotoUrl,
-                birthDay = ApplicationDateTime.toString(user.birthDay),
+                birthDay = DefaultLocalDateTimeHandler.toString(user.birthDay),
                 friends = user.friends
             )
         }
