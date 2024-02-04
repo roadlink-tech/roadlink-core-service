@@ -1,4 +1,4 @@
-package com.roadlink.application
+package com.roadlink.core.infrastructure
 
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter

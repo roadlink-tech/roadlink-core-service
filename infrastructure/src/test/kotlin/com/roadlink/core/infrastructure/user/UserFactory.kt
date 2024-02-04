@@ -1,6 +1,7 @@
 package com.roadlink.core.infrastructure.user
 
 import com.roadlink.core.domain.user.User
+import java.time.LocalDate
 import java.util.*
 
 object UserFactory {
@@ -9,7 +10,9 @@ object UserFactory {
         id: UUID = UUID.randomUUID(),
         email: String = "cabrerajjorge@gmail.com",
         friends: Set<UUID> = setOf(),
-        profilePhotoUrl: String = "https://lh3.googleusercontent.com/a/ACg8ocJW5g-yavaNzKPZcF-U8-W5zGfIQdww2mOcyDq_48xfdHE=s96-c"
+        profilePhotoUrl: String = "https://lh3.googleusercontent.com/a/ACg8ocJW5g-yavaNzKPZcF-U8-W5zGfIQdww2mOcyDq_48xfdHE=s96-c",
+        birthDay: LocalDate? = null,
+        gender: String = "male"
     ): User {
         return User(
             id = id,
@@ -17,7 +20,9 @@ object UserFactory {
             firstName = "Jorge Javier",
             lastName = "Cabrera Vera",
             friends = friends.toMutableSet(),
-            profilePhotoUrl = profilePhotoUrl
+            profilePhotoUrl = profilePhotoUrl,
+            birthDay = birthDay,
+            gender = gender
         )
     }
 }

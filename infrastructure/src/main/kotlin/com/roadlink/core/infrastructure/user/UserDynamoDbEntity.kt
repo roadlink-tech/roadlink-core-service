@@ -2,6 +2,7 @@ package com.roadlink.core.infrastructure.user
 
 import com.roadlink.core.domain.DomainEntity
 import com.roadlink.core.domain.user.User
+import com.roadlink.core.infrastructure.ApplicationDateTime
 import com.roadlink.core.infrastructure.dynamodb.BaseDynamoDbEntity
 import com.roadlink.core.infrastructure.dynamodb.BaseDynamoDbEntityMapper
 import com.roadlink.core.infrastructure.dynamodb.DynamoDbDateFormatter
@@ -9,6 +10,7 @@ import com.roadlink.core.infrastructure.dynamodb.DynamoDbEntityMapper
 import com.roadlink.core.infrastructure.feedback.FeedbackDynamoDbEntity
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue
 import software.amazon.awssdk.services.dynamodb.model.QueryResponse
+import java.time.LocalDate
 import java.util.*
 
 class UserDynamoDbEntity constructor(
@@ -19,7 +21,9 @@ class UserDynamoDbEntity constructor(
     /** EmailLSI */
     var email: String = "",
     var friends: Set<UUID> = emptySet(),
-    val profilePhotoUrl: String
+    val profilePhotoUrl: String,
+    val birthDay: LocalDate?,
+    val gender: String,
 ) : BaseDynamoDbEntity(id, createdDate) {
 
     override fun toDomain(): DomainEntity {
@@ -30,7 +34,9 @@ class UserDynamoDbEntity constructor(
             lastName = this.lastName,
             creationDate = this.createdDate,
             friends = this.friends.toMutableSet(),
-            profilePhotoUrl = this.profilePhotoUrl
+            profilePhotoUrl = this.profilePhotoUrl,
+            gender = this.gender,
+            birthDay = this.birthDay
         )
     }
 
@@ -45,7 +51,9 @@ class UserDynamoDbEntity constructor(
                 firstName = item["FirstName"]!!.s(),
                 lastName = item["LastName"]!!.s(),
                 friends = item["Friends"]?.ss()?.map { UUID.fromString(it) }?.toSet() ?: emptySet(),
-                profilePhotoUrl = item["ProfilePhotoUrl"]!!.s()
+                profilePhotoUrl = item["ProfilePhotoUrl"]!!.s(),
+                birthDay = ApplicationDateTime.from(item["BirthDay"]!!.s()),
+                gender = item["Gender"]!!.s()
             )
         }
     }
@@ -66,6 +74,14 @@ class UserDynamoDbEntityMapper : BaseDynamoDbEntityMapper<User, UserDynamoDbEnti
             AttributeValue.builder().nul(true).build()
         }
 
+        val birthDayAttributeValue = if (entity.birthDay != null) {
+            ApplicationDateTime.toString(entity.birthDay)
+        } else {
+            ""
+        }.also { birthDay ->
+            AttributeValue.builder().s(birthDay).build()
+        }
+
         return mapOf(
             "EntityId" to AttributeValue.builder().s("EntityId#User").build(),
             "Id" to AttributeValue.builder().s(entity.id.toString()).build(),
@@ -74,7 +90,9 @@ class UserDynamoDbEntityMapper : BaseDynamoDbEntityMapper<User, UserDynamoDbEnti
             "FirstName" to AttributeValue.builder().s(entity.firstName).build(),
             "LastName" to AttributeValue.builder().s(entity.lastName).build(),
             "Friends" to friendsAttributeValue,
-            "ProfilePhotoUrl" to AttributeValue.builder().s(entity.profilePhotoUrl).build()
+            "ProfilePhotoUrl" to AttributeValue.builder().s(entity.profilePhotoUrl).build(),
+            "BirthDay" to AttributeValue.builder().s(birthDayAttributeValue).build(),
+            "Gender" to AttributeValue.builder().s(entity.gender).build()
         )
     }
 }

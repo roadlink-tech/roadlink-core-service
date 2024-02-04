@@ -1,6 +1,6 @@
 package com.roadlink.application.user
 
-import com.roadlink.application.ApplicationDateTime
+import com.roadlink.core.infrastructure.ApplicationDateTime
 import com.roadlink.core.domain.DefaultIdGenerator
 import com.roadlink.core.domain.user.User
 import java.time.format.DateTimeFormatter
