@@ -15,6 +15,7 @@ import com.roadlink.core.domain.RepositoryPort
 import com.roadlink.core.domain.user.JwtGenerator
 import com.roadlink.core.domain.user.User
 import com.roadlink.core.domain.user.UserCriteria
+import com.roadlink.core.domain.user.UserNameGenerator
 import com.roadlink.core.domain.user.google.GoogleIdTokenValidator
 import com.roadlink.core.domain.user.google.GoogleUser
 import com.roadlink.core.domain.user.google.GoogleUserCriteria
@@ -110,9 +111,17 @@ open class GoogleLoginDefinition {
         googleIdTokenValidator: GoogleIdTokenValidator,
         userRepositoryPort: RepositoryPort<User, UserCriteria>,
         googleUserRepositoryPort: RepositoryPort<GoogleUser, GoogleUserCriteria>,
+        userNameGenerator: UserNameGenerator,
         jwtGenerator: JwtGenerator
     ): CommandHandler<GoogleLoginCommand, GoogleLoginCommandResponse> {
-        return GoogleLoginCommandHandler(googleIdTokenValidator, userRepositoryPort, googleUserRepositoryPort, DefaultIdGenerator(), jwtGenerator)
+        return GoogleLoginCommandHandler(
+            googleIdTokenValidator,
+            userRepositoryPort,
+            googleUserRepositoryPort,
+            DefaultIdGenerator(),
+            userNameGenerator,
+            jwtGenerator
+        )
     }
 }
 

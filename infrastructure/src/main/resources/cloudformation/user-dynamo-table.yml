@@ -21,6 +21,8 @@ Resources:
           AttributeType: S
         - AttributeName: Email
           AttributeType: S
+        - AttributeName: UserName
+          AttributeType: S
         - AttributeName: AddressedId
           AttributeType: S
         - AttributeName: RequesterId
@@ -95,4 +97,11 @@ Resources:
               KeyType: RANGE
           Projection:
             ProjectionType: ALL
-
+        - IndexName: UserNameLSI
+          KeySchema:
+            - AttributeName: EntityId
+              KeyType: HASH
+            - AttributeName: UserName
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL

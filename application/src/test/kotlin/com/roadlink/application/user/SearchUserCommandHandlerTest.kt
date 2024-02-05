@@ -23,7 +23,7 @@ class SearchUserCommandHandlerTest : BehaviorSpec({
             clearMocks(userRepository)
         }
 
-        When("find an existing user") {
+        When("find an existing user by email") {
             val userId = UUID.randomUUID()
             val user = UserFactory.common(
                 id = userId,
@@ -40,6 +40,29 @@ class SearchUserCommandHandlerTest : BehaviorSpec({
                 response.user.firstName.shouldBe("jorge")
                 response.user.lastName.shouldBe("cabrera")
                 response.user.email.shouldBe("cabrerajjorge@gmail.com")
+                verify(exactly = 1) { userRepository.findOrFail(any()) }
+            }
+        }
+
+        When("find an existing user by userName") {
+            val userId = UUID.randomUUID()
+            val user = UserFactory.common(
+                id = userId,
+                firstName = "jorge",
+                lastName = "cabrera",
+                email = "cabrerajjorge@gmail.com",
+                userName = "jorgecabrera"
+            )
+            every { userRepository.findOrFail(match { it.userName == "jorgecabrera" }) } returns user
+
+            val response = handler.handle(SearchUserCommand(userName = "jorgecabrera"))
+
+            Then("the response must be the expected") {
+                response.user.id.shouldBe(userId)
+                response.user.firstName.shouldBe("jorge")
+                response.user.lastName.shouldBe("cabrera")
+                response.user.email.shouldBe("cabrerajjorge@gmail.com")
+                response.user.userName.shouldBe("jorgecabrera")
                 verify(exactly = 1) { userRepository.findOrFail(any()) }
             }
         }

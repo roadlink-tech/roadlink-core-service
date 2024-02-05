@@ -35,8 +35,16 @@ class RestUserController(private val commandBus: CommandBus) {
     @GetMapping("/search")
     @ResponseBody
     @ResponseStatus(value = OK)
-    fun search(@RequestParam("email") email: String): UserResponse {
-        val response = commandBus.publish<SearchUserCommand, SearchUserCommandResponse>(SearchUserCommand(email))
+    fun search(
+        @RequestParam("email", required = false, defaultValue = "") email: String,
+        @RequestParam("user_name", required = false, defaultValue = "") userName: String
+    ): UserResponse {
+        val response = commandBus.publish<SearchUserCommand, SearchUserCommandResponse>(
+            SearchUserCommand(
+                email = email,
+                userName = userName
+            )
+        )
         return UserResponse.from(response.user)
     }
 }
@@ -82,8 +90,10 @@ data class UserResponse(
     val profilePhotoUrl: String,
     @JsonProperty("birth_day")
     val birthDay: String,
+    @JsonProperty("user_name")
+    val userName: String,
     @JsonProperty("friends")
-    val friends: Set<UUID>,
+    val friends: Set<UUID>
 ) {
     companion object {
         fun from(user: UserDTO): UserResponse {
@@ -95,7 +105,8 @@ data class UserResponse(
                 gender = user.gender,
                 profilePhotoUrl = user.profilePhotoUrl,
                 birthDay = user.birthDay,
-                friends = user.friends
+                friends = user.friends,
+                userName = user.userName
             )
         }
     }

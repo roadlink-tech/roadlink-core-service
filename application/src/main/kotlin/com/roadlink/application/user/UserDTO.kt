@@ -1,12 +1,9 @@
 package com.roadlink.application.user
 
-import com.roadlink.core.infrastructure.DefaultLocalDateTimeHandler
 import com.roadlink.core.domain.DefaultIdGenerator
 import com.roadlink.core.domain.user.User
-import java.time.format.DateTimeFormatter
+import com.roadlink.core.infrastructure.DefaultLocalDateTimeHandler
 import java.util.*
-
-private val dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
 
 data class UserDTO(
     val id: UUID = DefaultIdGenerator().next(),
@@ -16,6 +13,7 @@ data class UserDTO(
     val profilePhotoUrl: String,
     val gender: String,
     val birthDay: String,
+    val userName: String = "",
     val friends: Set<UUID> = emptySet()
     // TODO ojo ver comoo manejar el registration date
 ) {
@@ -28,6 +26,7 @@ data class UserDTO(
             gender = gender,
             profilePhotoUrl = profilePhotoUrl,
             birthDay = DefaultLocalDateTimeHandler.from(birthDay),
+            userName = userName,
             friends = friends.toMutableSet()
         )
     }
@@ -42,7 +41,8 @@ data class UserDTO(
                 gender = user.gender,
                 profilePhotoUrl = user.profilePhotoUrl,
                 birthDay = DefaultLocalDateTimeHandler.toString(user.birthDay),
-                friends = user.friends
+                friends = user.friends,
+                userName = user.userName
             )
         }
     }

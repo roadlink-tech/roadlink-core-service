@@ -10,7 +10,8 @@ object UserFactory {
         firstName: String = "jorge",
         lastName: String = "cabrera",
         email: String = "cabrerajjorge@gmail.com",
-        profilePhotoUrl: String = "https://lh3.googleusercontent.com/a/ACg8ocJW5g-yavaNzKPZcF-U8-W5zGfIQdww2mOcyDq_48xfdHE=s96-c"
+        profilePhotoUrl: String = "https://lh3.googleusercontent.com/a/ACg8ocJW5g-yavaNzKPZcF-U8-W5zGfIQdww2mOcyDq_48xfdHE=s96-c",
+        userName: String = "jorgecabrera"
     ): User {
         return User(
             id = id,
@@ -18,7 +19,8 @@ object UserFactory {
             lastName = lastName,
             email = email,
             creationDate = Date(),
-            profilePhotoUrl = profilePhotoUrl
+            profilePhotoUrl = profilePhotoUrl,
+            userName = userName
         )
     }
 
@@ -26,7 +28,8 @@ object UserFactory {
         id: UUID = UUID.randomUUID(),
         firstName: String = "jorge",
         lastName: String = "cabrera",
-        email: String = "cabrerajjorge@gmail.com"
+        email: String = "cabrerajjorge@gmail.com",
+        userName: String = "jorgecabrera"
     ): User {
         val friends = mutableListOf<UUID>()
         repeat(100) {
@@ -38,7 +41,8 @@ object UserFactory {
             lastName = lastName,
             email = email,
             creationDate = Date(),
-            friends = friends.toMutableSet()
+            friends = friends.toMutableSet(),
+            userName = userName
         )
     }
 }

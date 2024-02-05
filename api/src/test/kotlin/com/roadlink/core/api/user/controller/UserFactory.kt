@@ -13,7 +13,8 @@ object UserFactory {
         lastName: String = "cabrera",
         gender: String = "male",
         profilePhotoUrl: String = "https://profile.photo.com",
-        birthDay: String = "06/12/1991"
+        birthDay: String = "06/12/1991",
+        userName: String = "jorgecabrera"
     ): User {
         return User(
             id = id,
@@ -22,7 +23,8 @@ object UserFactory {
             lastName = lastName,
             gender = gender,
             profilePhotoUrl = profilePhotoUrl,
-            birthDay = DefaultLocalDateTimeHandler.from(birthDay)
+            birthDay = DefaultLocalDateTimeHandler.from(birthDay),
+            userName = userName
         )
     }
 
@@ -33,6 +35,7 @@ object UserFactory {
         lastName: String = "cabrera",
         gender: String = "male",
         birthDay: String = "06/12/1991",
+        userName: String = "jorge.cabrera",
         amountOfFriends: Int = 50
     ): User {
         val friends = mutableSetOf<UUID>()
@@ -46,7 +49,8 @@ object UserFactory {
             lastName = lastName,
             friends = friends,
             gender = gender,
-            birthDay = DefaultLocalDateTimeHandler.from(birthDay)
+            birthDay = DefaultLocalDateTimeHandler.from(birthDay),
+            userName = userName
         )
 
     }

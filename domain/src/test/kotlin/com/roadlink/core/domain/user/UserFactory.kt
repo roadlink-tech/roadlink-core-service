@@ -11,7 +11,8 @@ object UserFactory {
         email: String = "cabrerajjorge@gmail.com",
         firstName: String = "Jorge",
         lastName: String = "Cabrera",
-        profilePhotoUrl: String = "https://lh3.googleusercontent.com/a/ACg8ocJW5g-yavaNzKPZcF-U8-W5zGfIQdww2mOcyDq_48xfdHE=s96-c"
+        profilePhotoUrl: String = "https://lh3.googleusercontent.com/a/ACg8ocJW5g-yavaNzKPZcF-U8-W5zGfIQdww2mOcyDq_48xfdHE=s96-c",
+        userName: String = "jorge.cabrera"
     ): User {
         return User(
             id = id,
@@ -19,7 +20,8 @@ object UserFactory {
             firstName = firstName,
             lastName = lastName,
             creationDate = Date(),
-            profilePhotoUrl = profilePhotoUrl
+            profilePhotoUrl = profilePhotoUrl,
+            userName = userName
         )
     }
 
@@ -28,7 +30,8 @@ object UserFactory {
         email: String = "cabrerajjorge@gmail.com",
         firstName: String = "Jorge",
         lastName: String = "Cabrera",
-        profilePhotoUrl: String = "https://lh3.googleusercontent.com/a/ACg8ocJW5g-yavaNzKPZcF-U8-W5zGfIQdww2mOcyDq_48xfdHE=s96-c"
+        profilePhotoUrl: String = "https://lh3.googleusercontent.com/a/ACg8ocJW5g-yavaNzKPZcF-U8-W5zGfIQdww2mOcyDq_48xfdHE=s96-c",
+        userName: String = "jorge.cabrera"
     ): User {
         return User(
             id = id,
@@ -38,7 +41,8 @@ object UserFactory {
             creationDate = Date.from(
                 LocalDate.now().minusYears(1).atStartOfDay(ZoneId.systemDefault()).toInstant()
             ),
-            profilePhotoUrl = profilePhotoUrl
+            profilePhotoUrl = profilePhotoUrl,
+            userName = userName
         )
     }
 
@@ -49,6 +53,7 @@ object UserFactory {
         lastName: String = "Cabrera",
         profilePhotoUrl: String = "https://lh3.googleusercontent.com/a/ACg8ocJW5g-yavaNzKPZcF-U8-W5zGfIQdww2mOcyDq_48xfdHE=s96-c",
         amountOfFriends: Int = 100,
+        userName: String = "jorge.cabrera"
     ): User {
         val friendIds = mutableSetOf<UUID>()
         repeat(amountOfFriends) {
@@ -61,7 +66,8 @@ object UserFactory {
             lastName = lastName,
             creationDate = Date(),
             friends = friendIds,
-            profilePhotoUrl = profilePhotoUrl
+            profilePhotoUrl = profilePhotoUrl,
+            userName = userName
         )
     }
 }
