@@ -21,6 +21,7 @@ class UserDynamoDbEntity constructor(
     val profilePhotoUrl: String,
     val birthDay: LocalDate?,
     val gender: String,
+    /** UserNameLSI */
     val userName: String,
 ) : BaseDynamoDbEntity(id, createdDate) {
 

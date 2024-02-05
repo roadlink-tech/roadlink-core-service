@@ -20,6 +20,7 @@ class GoogleSignInOrSignUpCommandTest : BehaviorSpec({
     val userRepository: RepositoryPort<User, UserCriteria> = mockk()
     val googleUserRepository: RepositoryPort<GoogleUser, GoogleUserCriteria> = mockk()
     val idGenerator: IdGenerator = mockk()
+    val userNameGenerator: UserNameGenerator = mockk()
     val jwtGenerator: JwtGenerator = mockk()
 
     val handler = GoogleLoginCommandHandler(
@@ -27,6 +28,7 @@ class GoogleSignInOrSignUpCommandTest : BehaviorSpec({
         userRepository = userRepository,
         googleUserRepository = googleUserRepository,
         idGenerator = idGenerator,
+        userNameGenerator = userNameGenerator,
         jwtGenerator = jwtGenerator,
     )
 
@@ -88,6 +90,9 @@ class GoogleSignInOrSignUpCommandTest : BehaviorSpec({
         every { idGenerator.next() } returns id
     }
 
+    fun generateAUserName(userNameGenerator: UserNameGenerator) {
+        every { userNameGenerator.from(any(), any()) } returns "carpooler#1sb2"
+    }
     afterEach { clearAllMocks() }
 
     Given("a GoogleSignInOrSignUpCommandHandler") {
@@ -126,6 +131,7 @@ class GoogleSignInOrSignUpCommandTest : BehaviorSpec({
             givenGoogleIdTokenIsValid()
             givenNotExistsUserForThatGoogleAccount()
             generateNextId(id = userId)
+            generateAUserName(userNameGenerator)
             givenUserIsSavedOk()
             givenGoogleUserIsSavedOk()
             generateJwt()
@@ -138,6 +144,7 @@ class GoogleSignInOrSignUpCommandTest : BehaviorSpec({
                 verify(exactly = 1) { userRepository.save(any()) }
                 verify(exactly = 1) { googleUserRepository.save(any()) }
                 verify(exactly = 1) { jwtGenerator.generate(any()) }
+                verify(exactly = 1) { userNameGenerator.from(any(), any()) }
             }
         }
 

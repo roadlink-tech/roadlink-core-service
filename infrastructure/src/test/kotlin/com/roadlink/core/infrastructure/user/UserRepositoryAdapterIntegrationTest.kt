@@ -121,6 +121,67 @@ class UserRepositoryAdapterIntegrationTest : BehaviorSpec({
                 response.email shouldBe email
                 response.firstName shouldBe "Jorge Javier"
                 response.lastName shouldBe "Cabrera Vera"
+                response.userName shouldBe "jorge.cabrera"
+            }
+        }
+
+        When("save a new user and then find it by user name") {
+            val id = UUID.randomUUID()
+            val user = UserFactory.custom(
+                id = id,
+                firstName = "John",
+                lastName = "Doe",
+                userName = "johndoe",
+                email = "john.doe@gmail.com"
+            )
+            repository.save(user)
+
+            val response = repository.findOrFail(UserCriteria(userName = "johndoe"))
+            Then("the response should not be null") {
+                response.id shouldBe id
+                response.firstName shouldBe "John"
+                response.lastName shouldBe "Doe"
+                response.userName shouldBe "johndoe"
+            }
+        }
+
+        When("save a new user and then find it by user name and email") {
+            val id = UUID.randomUUID()
+            val user = UserFactory.custom(
+                id = id,
+                firstName = "John",
+                lastName = "Doe",
+                userName = "johndoe",
+                email = "john.doe@gmail.com"
+            )
+            repository.save(user)
+
+            val response = repository.findOrFail(UserCriteria(userName = "johndoe", email = "john.doe@gmail.com"))
+            Then("the response should not be null") {
+                response.id shouldBe id
+                response.firstName shouldBe "John"
+                response.lastName shouldBe "Doe"
+                response.userName shouldBe "johndoe"
+                response.email shouldBe "john.doe@gmail.com"
+            }
+        }
+
+        When("find a user by user name and email, but it does not exist") {
+            val id = UUID.randomUUID()
+            val user = UserFactory.custom(
+                id = id,
+                firstName = "John",
+                lastName = "Doe",
+                userName = "johndoe",
+                email = "john.doe@gmail.com"
+            )
+            repository.save(user)
+
+            val response = shouldThrow<RuntimeException> {
+                repository.findOrFail(UserCriteria(userName = "juan", email = "roman.riquelme@gmail.com"))
+            }
+            Then("the response should not be null") {
+                response.shouldBe("""Entity UserCriteria(id=null, email=roman.riquelme@gmail.com, userName=juan) does not exist""")
             }
         }
     }

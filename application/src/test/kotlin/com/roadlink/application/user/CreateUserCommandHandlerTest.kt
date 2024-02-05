@@ -5,6 +5,7 @@ import com.roadlink.core.domain.RepositoryPort
 import com.roadlink.core.domain.user.User
 import com.roadlink.core.domain.user.UserCriteria
 import com.roadlink.core.domain.user.UserException
+import com.roadlink.core.domain.user.UserNameGenerator
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
@@ -18,7 +19,8 @@ class CreateUserCommandHandlerTest : BehaviorSpec({
 
     Given("a UserCreationCommandHandler") {
         val userRepository: RepositoryPort<User, UserCriteria> = mockk()
-        val handler = CreateUserCommandHandler(userRepository)
+        val userNameGenerator: UserNameGenerator = mockk()
+        val handler = CreateUserCommandHandler(userRepository, userNameGenerator)
         afterEach {
             clearMocks(userRepository)
         }
@@ -34,7 +36,8 @@ class CreateUserCommandHandlerTest : BehaviorSpec({
                     lastName = "cabrera",
                     birthDay = "06/12/1991",
                     profilePhotoUrl = "https://lh3.googleusercontent.com/a/ACg8ocJW5g-yavaNzKPZcF-U8-W5zGfIQdww2mOcyDq_48xfdHE=s96-c",
-                    gender = "male"
+                    gender = "male",
+                    userName = "jorgecabrera"
 
                 )
             )
@@ -45,11 +48,12 @@ class CreateUserCommandHandlerTest : BehaviorSpec({
                 lastName = "cabrera",
                 birthDay = DefaultLocalDateTimeHandler.from("06/12/1991"),
                 profilePhotoUrl = "https://lh3.googleusercontent.com/a/ACg8ocJW5g-yavaNzKPZcF-U8-W5zGfIQdww2mOcyDq_48xfdHE=s96-c",
-                gender = "male"
-
+                gender = "male",
+                userName = "jorgecabrera"
             )
 
             every { userRepository.findAll(match { it.email == email }) } returns emptyList()
+            every { userNameGenerator.from("jorge", "cabrera") } returns "jorgecabrera"
 
             val response = handler.handle(command)
 
@@ -61,7 +65,8 @@ class CreateUserCommandHandlerTest : BehaviorSpec({
                     lastName = "cabrera",
                     birthDay = "06/12/1991",
                     profilePhotoUrl = "https://lh3.googleusercontent.com/a/ACg8ocJW5g-yavaNzKPZcF-U8-W5zGfIQdww2mOcyDq_48xfdHE=s96-c",
-                    gender = "male"
+                    gender = "male",
+                    userName = "jorgecabrera"
                 )
                 verify(exactly = 1) { userRepository.findAll(any()) }
                 verify(exactly = 1) { userRepository.save(any()) }

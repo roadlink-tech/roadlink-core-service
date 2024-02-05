@@ -35,8 +35,16 @@ class RestUserController(private val commandBus: CommandBus) {
     @GetMapping("/search")
     @ResponseBody
     @ResponseStatus(value = OK)
-    fun search(@RequestParam("email") email: String): UserResponse {
-        val response = commandBus.publish<SearchUserCommand, SearchUserCommandResponse>(SearchUserCommand(email))
+    fun search(
+        @RequestParam("email", required = false, defaultValue = "") email: String,
+        @RequestParam("user_name", required = false, defaultValue = "") userName: String
+    ): UserResponse {
+        val response = commandBus.publish<SearchUserCommand, SearchUserCommandResponse>(
+            SearchUserCommand(
+                email = email,
+                userName = userName
+            )
+        )
         return UserResponse.from(response.user)
     }
 }
