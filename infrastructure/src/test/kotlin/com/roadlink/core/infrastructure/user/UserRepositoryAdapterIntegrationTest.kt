@@ -167,16 +167,6 @@ class UserRepositoryAdapterIntegrationTest : BehaviorSpec({
         }
 
         When("find a user by user name and email, but it does not exist") {
-            val id = UUID.randomUUID()
-            val user = UserFactory.custom(
-                id = id,
-                firstName = "John",
-                lastName = "Doe",
-                userName = "johndoe",
-                email = "john.doe@gmail.com"
-            )
-            repository.save(user)
-
             val response = shouldThrow<RuntimeException> {
                 repository.findOrFail(UserCriteria(userName = "juan", email = "roman.riquelme@gmail.com"))
             }
