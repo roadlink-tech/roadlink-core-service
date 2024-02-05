@@ -23,19 +23,22 @@ class GoogleLoginCommandHandler(
     private val userRepository: RepositoryPort<User, UserCriteria>,
     private val googleUserRepository: RepositoryPort<GoogleUser, GoogleUserCriteria>,
     private val idGenerator: IdGenerator,
+    private val userNameGenerator: UserNameGenerator,
     private val jwtGenerator: JwtGenerator,
 ) : CommandHandler<GoogleLoginCommand, GoogleLoginCommandResponse> {
 
     override fun handle(command: GoogleLoginCommand): GoogleLoginCommandResponse {
-        return googleIdTokenValidator.validate(command.googleIdToken).let { result -> when (result) {
-            GoogleIdTokenValidator.Result.InvalidToken ->
-                invalidGoogleIdToken()
+        return googleIdTokenValidator.validate(command.googleIdToken).let { result ->
+            when (result) {
+                GoogleIdTokenValidator.Result.InvalidToken ->
+                    invalidGoogleIdToken()
 
-            is GoogleIdTokenValidator.Result.ValidToken ->
-                findGoogleUser(GoogleUserCriteria(googleId = result.payload.googleId))
-                    ?.let { signIn(it) }
-                    ?: signUp(result.payload)
-        } }
+                is GoogleIdTokenValidator.Result.ValidToken ->
+                    findGoogleUser(GoogleUserCriteria(googleId = result.payload.googleId))
+                        ?.let { signIn(it) }
+                        ?: signUp(result.payload)
+            }
+        }
     }
 
     private fun findGoogleUser(googleUserCriteria: GoogleUserCriteria): GoogleUser? =
@@ -55,12 +58,14 @@ class GoogleLoginCommandHandler(
                 val googleUser = GoogleUser(googleId = payload.googleId, userId = user.id)
                 googleUserRepository.save(googleUser)
             }
-            .let { user -> jwtGenerator.generate(user.id)
-                .let { jwt -> ok(user, jwt) }
+            .let { user ->
+                jwtGenerator.generate(user.id)
+                    .let { jwt -> ok(user, jwt) }
             }
 
-    private fun userFrom(googleIdTokenPayload: GoogleIdTokenPayload): User =
-        User.from(googleIdTokenPayload, idGenerator)
+    private fun userFrom(googleIdTokenPayload: GoogleIdTokenPayload): User {
+        return User.from(googleIdTokenPayload, idGenerator, userNameGenerator)
+    }
 
     private fun ok(user: User, jwt: String): GoogleLoginCommandResponse.Ok =
         GoogleLoginCommandResponse.Ok(UserDTO.from(user), jwt)

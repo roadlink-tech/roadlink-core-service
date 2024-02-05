@@ -3,8 +3,10 @@ package com.roadlink.core.api.user
 import com.roadlink.application.command.CommandHandler
 import com.roadlink.application.user.*
 import com.roadlink.core.domain.RepositoryPort
+import com.roadlink.core.domain.user.DefaultUserNameGenerator
 import com.roadlink.core.domain.user.User
 import com.roadlink.core.domain.user.UserCriteria
+import com.roadlink.core.domain.user.UserNameGenerator
 import com.roadlink.core.infrastructure.dynamodb.RepositoryAdapter
 import com.roadlink.core.infrastructure.user.UserDynamoDbEntityMapper
 import com.roadlink.core.infrastructure.user.UserDynamoDbQueryMapper
@@ -30,9 +32,17 @@ open class UserRepositoryDefinition {
 @Configuration
 open class UserHandlerDefinition {
 
+    @Bean("user_name_generator")
+    open fun userNameGenerator(userRepositoryPort: RepositoryPort<User, UserCriteria>): UserNameGenerator {
+        return DefaultUserNameGenerator(userRepository = userRepositoryPort)
+    }
+
     @Bean("create_user_command_handler")
-    open fun userCreationCommandHandler(userRepositoryPort: RepositoryPort<User, UserCriteria>): CommandHandler<CreateUserCommand, CreateUserCommandResponse> {
-        return CreateUserCommandHandler(userRepositoryPort)
+    open fun userCreationCommandHandler(
+        userRepositoryPort: RepositoryPort<User, UserCriteria>,
+        userNameGenerator: UserNameGenerator
+    ): CommandHandler<CreateUserCommand, CreateUserCommandResponse> {
+        return CreateUserCommandHandler(userRepositoryPort, userNameGenerator)
     }
 
     @Bean("retrieve_user_command_handler")

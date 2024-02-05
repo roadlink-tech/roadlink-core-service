@@ -72,6 +72,7 @@ class UserRepositoryAdapterIntegrationTest : BehaviorSpec({
                 response.profilePhotoUrl shouldBe "https://lh3.googleusercontent.com/a/ACg8ocJW5g-yavaNzKPZcF-U8-W5zGfIQdww2mOcyDq_48xfdHE=s96-c"
                 response.gender shouldBe "male"
                 response.birthDay shouldBe DefaultLocalDateTimeHandler.from("06/12/1991")
+                response.userName shouldBe "jorge.cabrera"
             }
         }
 

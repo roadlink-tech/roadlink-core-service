@@ -7,6 +7,7 @@ import com.roadlink.core.domain.RepositoryPort
 import com.roadlink.core.domain.user.google.GoogleIdTokenPayload
 import java.time.LocalDate
 import java.util.*
+import javax.xml.stream.events.DTD
 
 sealed class UserException(override val message: String, cause: Throwable? = null) :
     DomainException(message, cause) {
@@ -17,11 +18,6 @@ sealed class UserException(override val message: String, cause: Throwable? = nul
     class UserEmailAlreadyRegistered(email: String) : UserException("User $email is already registered")
 }
 
-/* TODO:
-    1- photo url
-    2- genero
-    3- edad
-* */
 data class User(
     val id: UUID,
     val email: String = "",
@@ -31,7 +27,8 @@ data class User(
     val gender: String = "",
     val friends: MutableSet<UUID> = mutableSetOf(),
     val profilePhotoUrl: String = "",
-    val birthDay: LocalDate? = null
+    val birthDay: LocalDate? = null,
+    val userName: String,
 ) : DomainEntity {
 
     fun save(userRepository: RepositoryPort<User, UserCriteria>): User {
@@ -60,14 +57,24 @@ data class User(
 
     companion object {
 
-        fun from(googleIdTokenPayload: GoogleIdTokenPayload, idGenerator: IdGenerator): User =
-            User(
+        fun from(
+            googleIdTokenPayload: GoogleIdTokenPayload,
+            idGenerator: IdGenerator,
+            userNameGenerator: UserNameGenerator
+        ): User {
+            val userName = userNameGenerator.from(
+                firstName = googleIdTokenPayload.givenName,
+                lastName = googleIdTokenPayload.familyName
+            )
+            return User(
                 id = idGenerator.next(),
                 email = googleIdTokenPayload.email,
                 firstName = googleIdTokenPayload.givenName,
                 lastName = googleIdTokenPayload.familyName,
                 profilePhotoUrl = googleIdTokenPayload.profilePhotoUrl,
+                userName = userName
             )
+        }
 
         fun checkIfUserCanBeCreated(
             userRepository: RepositoryPort<User, UserCriteria>,

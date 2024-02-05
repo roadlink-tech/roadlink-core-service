@@ -21,6 +21,7 @@ class UserDynamoDbEntity constructor(
     val profilePhotoUrl: String,
     val birthDay: LocalDate?,
     val gender: String,
+    val userName: String,
 ) : BaseDynamoDbEntity(id, createdDate) {
 
     override fun toDomain(): DomainEntity {
@@ -33,7 +34,8 @@ class UserDynamoDbEntity constructor(
             friends = this.friends.toMutableSet(),
             profilePhotoUrl = this.profilePhotoUrl,
             gender = this.gender,
-            birthDay = this.birthDay
+            birthDay = this.birthDay,
+            userName = this.userName
         )
     }
 
@@ -50,7 +52,8 @@ class UserDynamoDbEntity constructor(
                 friends = item["Friends"]?.ss()?.map { UUID.fromString(it) }?.toSet() ?: emptySet(),
                 profilePhotoUrl = item["ProfilePhotoUrl"]!!.s(),
                 birthDay = DefaultLocalDateTimeHandler.from(item["BirthDay"]!!.s()),
-                gender = item["Gender"]!!.s()
+                gender = item["Gender"]!!.s(),
+                userName = item["UserName"]!!.s()
             )
         }
     }
@@ -89,7 +92,8 @@ class UserDynamoDbEntityMapper : BaseDynamoDbEntityMapper<User, UserDynamoDbEnti
             "Friends" to friendsAttributeValue,
             "ProfilePhotoUrl" to AttributeValue.builder().s(entity.profilePhotoUrl).build(),
             "BirthDay" to AttributeValue.builder().s(birthDayAttributeValue).build(),
-            "Gender" to AttributeValue.builder().s(entity.gender).build()
+            "Gender" to AttributeValue.builder().s(entity.gender).build(),
+            "UserName" to AttributeValue.builder().s(entity.userName).build(),
         )
     }
 }

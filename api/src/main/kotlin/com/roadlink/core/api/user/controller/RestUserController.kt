@@ -82,8 +82,10 @@ data class UserResponse(
     val profilePhotoUrl: String,
     @JsonProperty("birth_day")
     val birthDay: String,
+    @JsonProperty("user_name")
+    val userName: String,
     @JsonProperty("friends")
-    val friends: Set<UUID>,
+    val friends: Set<UUID>
 ) {
     companion object {
         fun from(user: UserDTO): UserResponse {
@@ -95,7 +97,8 @@ data class UserResponse(
                 gender = user.gender,
                 profilePhotoUrl = user.profilePhotoUrl,
                 birthDay = user.birthDay,
-                friends = user.friends
+                friends = user.friends,
+                userName = user.userName
             )
         }
     }
