@@ -181,7 +181,7 @@ class UserRepositoryAdapterIntegrationTest : BehaviorSpec({
                 repository.findOrFail(UserCriteria(userName = "juan", email = "roman.riquelme@gmail.com"))
             }
             Then("the response should not be null") {
-                response.shouldBe("""Entity UserCriteria(id=null, email=roman.riquelme@gmail.com, userName=juan) does not exist""")
+                response.message.shouldBe("""Entity UserCriteria(id=null, email=roman.riquelme@gmail.com, userName=juan) does not exist""")
             }
         }
     }
