@@ -6,6 +6,7 @@ import com.roadlink.core.domain.vehicle.Vehicle
 
 private const val MIN_CAPACITY = 1
 private const val MAX_CAPACITY = 6
+// TODO this list should exposed througth a endpoint
 private val AVAILABLE_BRANDS = listOf(
     "Chevrolet",
     "Ford",
