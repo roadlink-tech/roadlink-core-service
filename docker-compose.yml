@@ -12,8 +12,8 @@ services:
       - SERVICES=secretsmanager,dynamodb,ssm,cf:cloudformation
       - AWS_DEFAULT_REGION=us-west-2
     volumes:
-      - ./infrastructure/src/main/resources/cloudformation:/etc/localstack/init/ready.d
-      - ./infrastructure/src/main/resources/cloudformation/user-dynamo-table.yml:/opt/code/localstack/user-dynamo-table.yml
+      - ./infrastructure/src/main/resources/scripts/localstack:/etc/localstack/init/ready.d
+      - ./infrastructure/src/main/resources/cloudformation/core-dynamo-table.yml:/opt/code/localstack/core-dynamo-table.yml
       - /var/run/docker.sock:/var/run/docker.sock
     healthcheck:
       test: "curl --silent --fail localstack:4566/_localstack/health || exit 1"
@@ -27,8 +27,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-#      additional_contexts:
-#        - resources=${HOME}/.gradle
+    #      additional_contexts:
+    #        - resources=${HOME}/.gradle
     ports:
       - "8080:8080"
     environment:

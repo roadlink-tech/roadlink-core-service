@@ -14,7 +14,7 @@ import java.net.URI
 
 private const val BASE_CONTAINER_CLASSPATH = "/opt/code/localstack/"
 private const val USER_DYNAMO_TABLE_CLASSPATH =
-    "${BASE_CONTAINER_CLASSPATH}user-dynamo-table.yml"
+    "${BASE_CONTAINER_CLASSPATH}core-dynamo-table.yml"
 private const val CLEAR_DYNAMO_TABLE_CLASSPATH = "${BASE_CONTAINER_CLASSPATH}clear-dynamo-table.sh"
 
 
@@ -26,7 +26,7 @@ object LocalStackHelper {
         return LocalStackContainer(localstackImage)
             .withServices(DYNAMODB, CLOUDFORMATION)
             .withClasspathResourceMapping(
-                "/cloudformation/user-dynamo-table.yml",
+                "/cloudformation/core-dynamo-table.yml",
                 USER_DYNAMO_TABLE_CLASSPATH,
                 READ_WRITE
             )
@@ -46,7 +46,7 @@ object LocalStackHelper {
             "cloudformation",
             "create-stack",
             "--stack-name",
-            "user-dynamo-table-stack",
+            "core-dynamo-table-stack",
             "--template-body",
             "file://$USER_DYNAMO_TABLE_CLASSPATH",
             "--region",
