@@ -14,9 +14,28 @@ class RestUserController(private val commandBus: CommandBus) {
     @PostMapping
     @ResponseBody
     @ResponseStatus(value = CREATED)
-    fun create(@RequestBody user: UserCreationRequest): UserResponse {
+    fun create(@RequestBody request: UserCreationRequest): UserResponse {
         val response =
-            commandBus.publish<CreateUserCommand, CreateUserCommandResponse>(CreateUserCommand(user.toDto()))
+            commandBus.publish<CreateUserCommand, CreateUserCommandResponse>(
+                CreateUserCommand(
+                    request.toDto()
+                )
+            )
+        return UserResponse.from(response.user)
+    }
+
+    @PatchMapping("/{userId}")
+    @ResponseBody
+    @ResponseStatus(value = OK)
+    fun path(
+        @PathVariable("userId") userId: String,
+        @RequestBody request: PatchUserRequest
+    ): UserResponse {
+        val response = commandBus.publish<PatchUserCommand, PatchUserCommandResponse>(
+            PatchUserCommand(
+                request.toDto(UUID.fromString(userId))
+            )
+        )
         return UserResponse.from(response.user)
     }
 
@@ -46,6 +65,33 @@ class RestUserController(private val commandBus: CommandBus) {
             )
         )
         return UserResponse.from(response.user)
+    }
+}
+
+data class PatchUserRequest(
+    @JsonProperty("email")
+    val email: String? = "",
+    @JsonProperty("first_name")
+    val firstName: String? = "",
+    @JsonProperty("last_name")
+    val lastName: String? = "",
+    @JsonProperty("gender")
+    val gender: String? = "",
+    @JsonProperty("profile_photo_url")
+    val profilePhotoUrl: String? = "",
+    @JsonProperty("birth_day")
+    val birthDay: String? = ""
+) {
+    fun toDto(id: UUID): UserDTO {
+        return UserDTO(
+            id = id,
+            email = email!!,
+            firstName = firstName!!,
+            lastName = lastName!!,
+            gender = gender!!,
+            profilePhotoUrl = profilePhotoUrl!!,
+            birthDay = birthDay!!
+        )
     }
 }
 

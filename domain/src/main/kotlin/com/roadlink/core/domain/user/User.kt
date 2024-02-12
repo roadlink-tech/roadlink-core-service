@@ -15,24 +15,48 @@ sealed class UserException(override val message: String, cause: Throwable? = nul
     class UserAlreadyAreFriends(requesterId: UUID, addressedId: UUID) :
         UserException("Users $requesterId and $addressedId already are friends")
 
-    class UserEmailAlreadyRegistered(email: String) : UserException("User $email is already registered")
+    class UserEmailAlreadyRegistered(email: String) :
+        UserException("User $email is already registered")
 }
 
 data class User(
     val id: UUID,
-    val email: String = "",
-    val firstName: String = "",
-    val lastName: String = "",
+    var email: String = "",
+    var firstName: String = "",
+    var lastName: String = "",
     val creationDate: Date = Date(),
-    val gender: String = "",
+    var gender: String = "",
     val friends: MutableSet<UUID> = mutableSetOf(),
-    val profilePhotoUrl: String = "",
-    val birthDay: LocalDate? = null,
+    var profilePhotoUrl: String = "",
+    var birthDay: LocalDate? = null,
     val userName: String,
 ) : DomainEntity {
 
     fun save(userRepository: RepositoryPort<User, UserCriteria>): User {
         return userRepository.save(this)
+    }
+
+    fun merge(user: User): User {
+        return apply {
+            if (user.email != "") {
+                this.email = user.email
+            }
+            if (user.firstName != "") {
+                this.firstName = user.firstName
+            }
+            if (user.lastName != "") {
+                this.lastName = user.lastName
+            }
+            if (user.gender != "") {
+                this.gender = user.gender
+            }
+            if (user.profilePhotoUrl != "") {
+                this.profilePhotoUrl = user.profilePhotoUrl
+            }
+            if (user.birthDay != null) {
+                this.birthDay = user.birthDay
+            }
+        }
     }
 
     fun beFriendOf(user: User) {
@@ -94,6 +118,15 @@ data class User(
             criteria.forEach {
                 userRepository.findOrFail(it)
             }
+        }
+
+        fun checkIfEmailIsBeingUsed(
+            userRepository: RepositoryPort<User, UserCriteria>,
+            email: String
+        ) {
+            userRepository.findOrNull(UserCriteria(email = email))
+                .takeIf { user: User? -> user != null }
+                ?.let { throw UserException.UserEmailAlreadyRegistered(email) }
         }
     }
 }

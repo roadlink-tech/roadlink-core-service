@@ -54,4 +54,9 @@ open class UserHandlerDefinition {
     open fun searchUserCommandHandler(userRepositoryPort: RepositoryPort<User, UserCriteria>): CommandHandler<SearchUserCommand, SearchUserCommandResponse> {
         return SearchUserCommandHandler(userRepositoryPort)
     }
+
+    @Bean("patch_user_command_handler")
+    open fun patchUserCommandHandler(userRepositoryPort: RepositoryPort<User, UserCriteria>): CommandHandler<PatchUserCommand, PatchUserCommandResponse> {
+        return PatchUserCommandHandler(userRepositoryPort)
+    }
 }
