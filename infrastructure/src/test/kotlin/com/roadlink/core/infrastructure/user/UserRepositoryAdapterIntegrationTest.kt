@@ -152,22 +152,22 @@ class UserRepositoryAdapterIntegrationTest : BehaviorSpec({
                 id = id,
                 firstName = "John",
                 lastName = "Doe",
-                userName = "johndoe",
-                email = "john.doe@gmail.com"
+                userName = "john.doe",
+                email = "john.doe.1@gmail.com"
             )
             repository.save(user)
 
             val response = repository.findOrFail(
                 UserCriteria(
-                    userName = "johndoe", email = "john.doe@gmail.com"
+                    userName = "john.doe", email = "john.doe.1@gmail.com"
                 )
             )
             Then("the response should not be null") {
                 response.id shouldBe id
                 response.firstName shouldBe "John"
                 response.lastName shouldBe "Doe"
-                response.userName shouldBe "johndoe"
-                response.email shouldBe "john.doe@gmail.com"
+                response.userName shouldBe "john.doe"
+                response.email shouldBe "john.doe.1@gmail.com"
             }
         }
 
