@@ -3,6 +3,7 @@ package com.roadlink.core.api.user.controller
 import com.roadlink.core.api.BaseControllerTest
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
+import io.mockk.InternalPlatformDsl.toStr
 import io.mockk.every
 import io.mockk.verify
 import org.junit.jupiter.api.Test
@@ -94,7 +95,9 @@ class RestUserControllerIntegrationTest : BaseControllerTest() {
         every { userRepositoryPort.findAll(any()) } returns emptyList()
         every { userRepositoryPort.findOrNull(match { it.userName == "jorgecabrera" }) } returns jorgecabrera
         every { userRepositoryPort.findOrNull(match { it.userName == "jorge.cabrera" }) } returns null
-        every { userRepositoryPort.save(match { it.email == "cabrerajjorge@gmail.com" }) } returns george.copy(userName = "jorge.cabrera")
+        every { userRepositoryPort.save(match { it.email == "cabrerajjorge@gmail.com" }) } returns george.copy(
+            userName = "jorge.cabrera"
+        )
 
         // When
         val response = mockMvc.perform(
@@ -186,13 +189,133 @@ class RestUserControllerIntegrationTest : BaseControllerTest() {
     }
 
     /**
+     * Patch User
+     */
+    @Test
+    fun `when patch the first and last name of an existing user, then it must work`() {
+        // Given
+        val userId = UUID.randomUUID()
+        val martinbosch = UserFactory.common(id = userId, firstName = "martin", lastName = "bosch")
+        every { userRepositoryPort.findOrFail(match { it.id == userId }) } returns martinbosch
+        every { userRepositoryPort.save(match { it.id == userId }) } returns martinbosch.copy(
+            firstName = "jorge", lastName = "cabrera"
+        )
+
+        // When
+        val response = mockMvc.perform(
+            MockMvcRequestBuilders.patch("/users/$userId").content(
+                """{
+                        "first_name": "jorge",
+                        "last_name": "cabrera"
+                    }""".trimMargin()
+            ).contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(MockMvcResultMatchers.status().isOk)
+            .andReturn().response.contentAsString
+
+        // Then
+        response.shouldBe(
+            """
+            {
+                "id":"$userId",
+                "email":"cabrerajjorge@gmail.com",
+                "first_name":"jorge",
+                "last_name":"cabrera",
+                "gender":"male",
+                "profile_photo_url":"https://profile.photo.com",
+                "birth_day":"06/12/1991",
+                "user_name":"jorgecabrera",
+                "friends":[]
+            }
+            """.trimIndent().replace(Regex("\\s+"), "")
+        )
+        verify(exactly = 1) { userRepositoryPort.save(any()) }
+        verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
+    }
+
+    @Test
+    fun `when patch a user with a new email which is not being used, then it must work`() {
+        // Given
+        every { userRepositoryPort.findOrNull(match { it.email == "martin.bosch@roadlink.com" }) } returns null
+        every { userRepositoryPort.findOrFail(match { it.id == george.id }) } returns george
+        every { userRepositoryPort.save(match { it.id == george.id }) } returns george.copy(
+            firstName = "martin",
+            lastName = "bosch",
+            email = "martin.bosch@roadlink.com",
+            profilePhotoUrl = "http://martin.photo.url",
+            gender = "M",
+        )
+
+        // When
+        val response = mockMvc.perform(
+            MockMvcRequestBuilders.patch("/users/${george.id}").content(
+                """{
+                        "first_name": "martin",
+                        "last_name": "bosh",
+                        "email": "martin.bosch@roadlink.com",
+                        "profile_photo_url": "http://martin.photo.url",
+                        "gender": "M"
+                    }""".trimMargin()
+            ).contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(MockMvcResultMatchers.status().isOk)
+            .andReturn().response.contentAsString
+
+        // Then
+        response.shouldBe(
+            """
+            {
+                "id":"${george.id}",
+                "email":"martin.bosch@roadlink.com",
+                "first_name":"martin",
+                "last_name":"bosch",
+                "gender":"M",
+                "profile_photo_url":"http://martin.photo.url",
+                "birth_day":"06/12/1991",
+                "user_name":"jorgecabrera",
+                "friends":[]
+            }
+            """.trimIndent().replace(Regex("\\s+"), "")
+        )
+        verify(exactly = 1) { userRepositoryPort.save(any()) }
+        verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
+        verify(exactly = 1) { userRepositoryPort.findOrNull(any()) }
+    }
+
+    @Test
+    fun `when patch a user with a new email but it is being used, then an exception must be raised`() {
+        // Given
+        every { userRepositoryPort.findOrNull(match { it.email == "martin.bosch@roadlink.com" }) } returns UserFactory.common()
+
+        // When
+        val response = mockMvc.perform(
+            MockMvcRequestBuilders.patch("/users/${george.id}").content(
+                """{
+                        "first_name": "martin",
+                        "last_name": "bosh",
+                        "email": "martin.bosch@roadlink.com",
+                        "profile_photo_url": "http://martin.photo.url",
+                        "gender": "M"
+                    }""".trimMargin()
+            ).contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(MockMvcResultMatchers.status().isConflict)
+            .andReturn().response.contentAsString
+
+        // Then
+        response.shouldBe("""{"code":"409 CONFLICT","message":"User martin.bosch@roadlink.com is already registered"}""")
+        verify(exactly = 0) { userRepositoryPort.save(any()) }
+        verify(exactly = 0) { userRepositoryPort.findOrFail(any()) }
+        verify(exactly = 1) { userRepositoryPort.findOrNull(any()) }
+    }
+
+    /**
      * Search user
      */
     @Test
     fun `when search a user by username an it exist, then it must be retrieved`() {
         // Given
         val userId = UUID.randomUUID()
-        every { userRepositoryPort.findOrFail(match { it.userName == "jorgecabrera" }) } returns UserFactory.common(id = userId)
+        every { userRepositoryPort.findOrFail(match { it.userName == "jorgecabrera" }) } returns UserFactory.common(
+            id = userId
+        )
 
         // When
         val response = mockMvc.perform(
