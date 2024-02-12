@@ -26,10 +26,13 @@ class UserRepositoryAdapterIntegrationTest : BehaviorSpec({
 
     Given("a container with dynamo and the table already created") {
         val dynamoDbClient = LocalStackHelper.dynamoDbClient(container)
-        val dynamoEntityMapper: DynamoDbEntityMapper<User, UserDynamoDbEntity> = UserDynamoDbEntityMapper()
-        val dynamoQueryMapper: DynamoDbQueryMapper<UserCriteria, UserDynamoDbQuery> = UserDynamoDbQueryMapper()
+        val dynamoEntityMapper: DynamoDbEntityMapper<User, UserDynamoDbEntity> =
+            UserDynamoDbEntityMapper()
+        val dynamoQueryMapper: DynamoDbQueryMapper<UserCriteria, UserDynamoDbQuery> =
+            UserDynamoDbQueryMapper()
 
-        val repository = RepositoryAdapter(dynamoDbClient, "RoadlinkCore", dynamoEntityMapper, dynamoQueryMapper)
+        val repository =
+            RepositoryAdapter(dynamoDbClient, "RoadlinkCore", dynamoEntityMapper, dynamoQueryMapper)
         LocalStackHelper.createTableIn(container)
 
         When("try to save a new user entity") {
@@ -44,7 +47,8 @@ class UserRepositoryAdapterIntegrationTest : BehaviorSpec({
         }
 
         When("save a new user entity and then delete it") {
-            val user = UserFactory.custom(id = UUID.fromString("6eada274-39a6-4231-837f-cad7e96cb4ce"))
+            val user =
+                UserFactory.custom(id = UUID.fromString("6eada274-39a6-4231-837f-cad7e96cb4ce"))
             repository.save(user)
 
             shouldNotThrow<RuntimeException> { repository.delete(UserCriteria(id = user.id)) }
@@ -95,14 +99,11 @@ class UserRepositoryAdapterIntegrationTest : BehaviorSpec({
         }
 
         When("save entities in batch") {
-            val response =
-                repository.saveAll(
-                    listOf(
-                        UserFactory.custom(),
-                        UserFactory.custom(),
-                        UserFactory.custom()
-                    )
+            val response = repository.saveAll(
+                listOf(
+                    UserFactory.custom(), UserFactory.custom(), UserFactory.custom()
                 )
+            )
 
             Then("the response should not be null") {
                 response.size.shouldBe(3)
@@ -156,7 +157,11 @@ class UserRepositoryAdapterIntegrationTest : BehaviorSpec({
             )
             repository.save(user)
 
-            val response = repository.findOrFail(UserCriteria(userName = "johndoe", email = "john.doe@gmail.com"))
+            val response = repository.findOrFail(
+                UserCriteria(
+                    userName = "johndoe", email = "john.doe@gmail.com"
+                )
+            )
             Then("the response should not be null") {
                 response.id shouldBe id
                 response.firstName shouldBe "John"
@@ -166,9 +171,42 @@ class UserRepositoryAdapterIntegrationTest : BehaviorSpec({
             }
         }
 
+        When("patch a user then it must work ok") {
+            val userId = UUID.randomUUID()
+            val user = UserFactory.custom(
+                id = userId,
+            )
+            repository.save(user)
+
+            repository.save(
+                user.copy(
+                    email = "martin.bosch@roadlink.com",
+                    firstName = "martin",
+                    lastName = "bosch"
+                )
+            )
+
+            val response = repository.findOrFail(UserCriteria(email = "martin.bosch@roadlink.com"))
+
+            Then("the response should not be null") {
+                response.id shouldBe userId
+                response.firstName shouldBe "martin"
+                response.lastName shouldBe "bosch"
+                response.email shouldBe "martin.bosch@roadlink.com"
+                response.userName shouldBe user.userName
+                response.gender shouldBe user.gender
+                response.birthDay shouldBe user.birthDay
+                response.friends shouldBe user.friends
+            }
+        }
+
         When("find a user by user name and email, but it does not exist") {
             val response = shouldThrow<RuntimeException> {
-                repository.findOrFail(UserCriteria(userName = "juan", email = "roman.riquelme@gmail.com"))
+                repository.findOrFail(
+                    UserCriteria(
+                        userName = "juan", email = "roman.riquelme@gmail.com"
+                    )
+                )
             }
             Then("the response should not be null") {
                 response.message.shouldBe("""Entity UserCriteria(id=null, email=roman.riquelme@gmail.com, userName=juan) does not exist""")
