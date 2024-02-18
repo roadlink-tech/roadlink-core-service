@@ -164,7 +164,7 @@ class FeedbackControllerIntegrationTest : BaseControllerTest() {
             .andReturn().response.contentAsString
 
         // Then
-        response.shouldBe("""{"code":"500 INTERNAL_SERVER_ERROR","message":"Oops, something wrong happened"}""")
+        response.shouldBe("""{"code":"INTERNAL_SERVER_ERROR","message":"Oops, something wrong happened"}""")
         verify(exactly = 2) { userRepositoryPort.findOrFail(any()) }
         verify(exactly = 1) { feedbackRepositoryPort.save(any()) }
     }

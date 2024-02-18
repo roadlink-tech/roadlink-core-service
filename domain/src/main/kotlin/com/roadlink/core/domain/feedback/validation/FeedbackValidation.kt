@@ -25,7 +25,7 @@ class ReviewerAndReceiverMustBeDifferent : Validation<Feedback> {
 class RatingValueMustBeBetweenOneAndFive : Validation<Feedback> {
     override fun execute(entity: Feedback) {
         if (entity.rating !in 1..5) {
-            throw FeedbackException.InvalidRating(entity.rating)
+            throw FeedbackException.InvalidRating()
         }
     }
 }

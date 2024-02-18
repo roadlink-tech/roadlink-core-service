@@ -41,7 +41,7 @@ class RestUserControllerIntegrationTest : BaseControllerTest() {
             .andReturn().response.contentAsString
 
         // Then
-        response.shouldBe("""{"code":"400 BAD_REQUEST","message":"Invalid request format: could not be parsed to a valid JSON"}""")
+        response.shouldBe("""{"code":"INVALID_JSON","message":"Invalid request format: could not be parsed to a valid JSON"}""")
         verify(exactly = 0) { userRepositoryPort.save(any()) }
         verify(exactly = 0) { userRepositoryPort.findAll(any()) }
     }
@@ -155,7 +155,7 @@ class RestUserControllerIntegrationTest : BaseControllerTest() {
 
         // Then
         response.shouldNotBeNull()
-        response.shouldBe("""{"code":"409 CONFLICT","message":"User cabrerajjorge@gmail.com is already registered"}""")
+        response.shouldBe("""{"code":"USER_EMAIL_ALREADY_REGISTERED","message":"User cabrerajjorge@gmail.com is already registered"}""")
         verify(exactly = 0) { userRepositoryPort.save(any()) }
         verify(exactly = 1) { userRepositoryPort.findAll(any()) }
     }
@@ -182,7 +182,7 @@ class RestUserControllerIntegrationTest : BaseControllerTest() {
 
         // Then
         response.shouldNotBeNull()
-        response.shouldBe("""{"code":"500 INTERNAL_SERVER_ERROR","message":"Oops, something wrong happened"}""")
+        response.shouldBe("""{"code":"INTERNAL_SERVER_ERROR","message":"Oops, something wrong happened"}""")
         verify(exactly = 0) { userRepositoryPort.save(any()) }
         verify(exactly = 1) { userRepositoryPort.findAll(any()) }
 
@@ -300,7 +300,7 @@ class RestUserControllerIntegrationTest : BaseControllerTest() {
             .andReturn().response.contentAsString
 
         // Then
-        response.shouldBe("""{"code":"409 CONFLICT","message":"User martin.bosch@roadlink.com is already registered"}""")
+        response.shouldBe("""{"code":"USER_EMAIL_ALREADY_REGISTERED","message":"User martin.bosch@roadlink.com is already registered"}""")
         verify(exactly = 0) { userRepositoryPort.save(any()) }
         verify(exactly = 0) { userRepositoryPort.findOrFail(any()) }
         verify(exactly = 1) { userRepositoryPort.findOrNull(any()) }

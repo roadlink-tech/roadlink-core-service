@@ -94,7 +94,7 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
 
         // Then
         response.shouldBe(
-            """{"code":"400 BAD_REQUEST","message":"The following mandatory fields are empty: [brand]"}"""
+            """{"code":"EMPTY_MANDATORY_FIELDS","message":"The following mandatory fields are empty: [brand]"}"""
         )
         verify(exactly = 0) { vehicleRepositoryPort.save(any()) }
         verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
@@ -123,7 +123,7 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
 
         // Then
         response.shouldBe(
-            """{"code":"400 BAD_REQUEST","message":"The following mandatory fields are empty: [brand, licence_plate, model]"}"""
+            """{"code":"EMPTY_MANDATORY_FIELDS","message":"The following mandatory fields are empty: [brand, licence_plate, model]"}"""
         )
         verify(exactly = 0) { vehicleRepositoryPort.save(any()) }
         verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
@@ -157,7 +157,7 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
 
         // Then
         response.shouldBe(
-            """{"code":"400 BAD_REQUEST","message":"Vehicle Ford TERRITORY must have a capacity between 0 and 5"}"""
+            """{"code":"INVALID_CAPACITY","message":"Vehicle Ford TERRITORY must have a capacity between 0 and 5"}"""
         )
         verify(exactly = 0) { vehicleRepositoryPort.save(any()) }
         verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
@@ -221,7 +221,7 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
 
         // Then
         response.shouldBe(
-            """{"code":"400 BAD_REQUEST","message":"The brand Pagani is not available"}"""
+            """{"code":"INVALID_BRAND","message":"The brand Pagani is not available"}"""
         )
         verify(exactly = 0) { vehicleRepositoryPort.save(any()) }
         verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
