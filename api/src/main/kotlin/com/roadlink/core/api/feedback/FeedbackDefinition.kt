@@ -32,7 +32,7 @@ open class FeedbackRepositoryDefinition {
 @Configuration
 open class FeedbackHandlerDefinition {
 
-    @Bean("feedback_creation_command_handler")
+    @Bean("create_feedback_command_handler")
     open fun feedbackCreationCommandHandler(
         userRepository: RepositoryPort<User, UserCriteria>,
         feedbackRepository: RepositoryPort<Feedback, FeedbackCriteria>

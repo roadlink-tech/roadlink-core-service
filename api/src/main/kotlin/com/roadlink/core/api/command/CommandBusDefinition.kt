@@ -21,40 +21,49 @@ open class CommandBusDefinition {
 
     @Bean
     internal open fun commandBus(
+        // User
         @Qualifier("create_user_command_handler") createUserCommandHandler: CommandHandler<CreateUserCommand, CreateUserCommandResponse>,
+        @Qualifier("patch_user_command_handler") patchUserCommandHandler: CommandHandler<PatchUserCommand, PatchUserCommandResponse>,
         @Qualifier("retrieve_user_command_handler") retrieveUserCommandHandler: CommandHandler<RetrieveUserCommand, RetrieveUserCommandResponse>,
         @Qualifier("search_user_command_handler") searchUserCommandHandler: CommandHandler<SearchUserCommand, SearchUserCommandResponse>,
-        @Qualifier("feedback_creation_command_handler") createFeedbackCommandHandler: CommandHandler<CreateFeedbackCommand, CreateFeedbackCommandResponse>,
+        @Qualifier("retrieve_user_trust_score_command_handler") retrieveUserTrustScoreCommandHandler: CommandHandler<RetrieveUserTrustScoreCommand, RetrieveUserTrustScoreCommandResponse>,
+        @Qualifier("google_login_command_handler") googleLoginCommandHandler: CommandHandler<GoogleLoginCommand, GoogleLoginCommandResponse>,
+        // Feedback
+        @Qualifier("create_feedback_command_handler") createFeedbackCommandHandler: CommandHandler<CreateFeedbackCommand, CreateFeedbackCommandResponse>,
         @Qualifier("retrieve_feedbacks_command_handler") retrieveFeedbacksCommandHandler: CommandHandler<RetrieveFeedbacksCommand, RetrieveFeedbacksCommandResponse>,
-        @Qualifier("user_trust_score_command_handler") retrieveUserTrustScoreCommandHandler: CommandHandler<RetrieveUserTrustScoreCommand, RetrieveUserTrustScoreCommandResponse>,
+        // Friend
         @Qualifier("create_friendship_solicitude_command_handler") createFriendshipSolicitudeCommandHandler: CommandHandler<CreateFriendshipSolicitudeCommand, CreateFriendshipSolicitudeCommandResponse>,
         @Qualifier("accept_friendship_solicitude_command_handler") acceptFriendshipSolicitudeCommandHandler: CommandHandler<AcceptFriendshipSolicitudeCommand, AcceptFriendshipSolicitudeCommandResponse>,
         @Qualifier("list_friendship_solicitudes_command_handler") listFriendshipSolicitudesCommandHandler: CommandHandler<ListFriendshipSolicitudesCommand, ListFriendshipSolicitudesCommandResponse>,
         @Qualifier("reject_friendship_solicitude_command_handler") rejectFriendshipSolicitudeCommandHandler: CommandHandler<RejectFriendshipSolicitudeCommand, RejectFriendshipSolicitudeCommandResponse>,
         @Qualifier("list_friends_command_handler") listFriendsCommandHandler: CommandHandler<ListFriendsCommand, ListFriendsCommandResponse>,
         @Qualifier("delete_friend_command_handler") deleteFriendsCommandHandler: CommandHandler<DeleteFriendCommand, DeleteFriendCommandResponse>,
+        // Vehicle
         @Qualifier("create_vehicle_command_handler") createVehicleCommandHandler: CommandHandler<CreateVehicleCommand, CreateVehicleCommandResponse>,
-        @Qualifier("google_login_command_handler") googleLoginCommandHandler: CommandHandler<GoogleLoginCommand, GoogleLoginCommandResponse>,
         @Qualifier("list_vehicles_command_handler") listVehiclesCommandHandler: CommandHandler<ListVehiclesCommand, ListVehiclesCommandResponse>,
         @Qualifier("delete_vehicle_command_handler") deleteVehicleCommandHandler: CommandHandler<DeleteVehicleCommand, DeleteVehicleCommandResponse>
-
     ): CommandBus {
         return SimpleCommandBus().also {
+            // User
             it.registerHandler(createUserCommandHandler)
-            it.registerHandler(createFeedbackCommandHandler)
+            it.registerHandler(patchUserCommandHandler)
             it.registerHandler(retrieveUserCommandHandler)
             it.registerHandler(searchUserCommandHandler)
-            it.registerHandler(retrieveFeedbacksCommandHandler)
             it.registerHandler(retrieveUserTrustScoreCommandHandler)
+            it.registerHandler(googleLoginCommandHandler)
+            // Feedback
+            it.registerHandler(createFeedbackCommandHandler)
+            it.registerHandler(retrieveFeedbacksCommandHandler)
+            // Friend
             it.registerHandler(createFriendshipSolicitudeCommandHandler)
             it.registerHandler(acceptFriendshipSolicitudeCommandHandler)
             it.registerHandler(listFriendshipSolicitudesCommandHandler)
             it.registerHandler(rejectFriendshipSolicitudeCommandHandler)
             it.registerHandler(listFriendsCommandHandler)
             it.registerHandler(deleteFriendsCommandHandler)
+            // Vehicle
             it.registerHandler(createVehicleCommandHandler)
             it.registerHandler(listVehiclesCommandHandler)
-            it.registerHandler(googleLoginCommandHandler)
             it.registerHandler(deleteVehicleCommandHandler)
         }
     }
