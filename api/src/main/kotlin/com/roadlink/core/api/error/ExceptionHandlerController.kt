@@ -44,7 +44,7 @@ class ExceptionHandlerController {
     )
     fun handleInvalidJSON(ex: HttpMessageNotReadableException): ResponseEntity<ErrorResponse> {
         val errorMessage = ErrorResponse(
-            BAD_REQUEST.toString(),
+            "INVALID_JSON",
             message = "Invalid request format: could not be parsed to a valid JSON"
         )
 
@@ -64,7 +64,7 @@ class ExceptionHandlerController {
     fun handleAllUncaughtException(ex: Throwable): ResponseEntity<ErrorResponse> {
         LOGGER.error("Unexpected exception:", ex)
         val errorMessage = ErrorResponse(
-            INTERNAL_SERVER_ERROR.toString(), message = "Oops, something wrong happened"
+            "INTERNAL_SERVER_ERROR", message = "Oops, something wrong happened"
         )
 
         return ResponseEntity(errorMessage, INTERNAL_SERVER_ERROR)
@@ -76,19 +76,19 @@ class ExceptionHandlerController {
         return when (ex) {
             is EntityDoesNotExist -> ResponseEntity(
                 ErrorResponse(
-                    NOT_FOUND.toString(), message = ex.message
+                    code = ex.code, message = ex.message
                 ), NOT_FOUND
             )
 
             is InvalidQuery -> ResponseEntity(
                 ErrorResponse(
-                    BAD_REQUEST.toString(), message = ex.message
+                    code = ex.code, message = ex.message
                 ), BAD_REQUEST
             )
 
             is InvalidKeyConditionExpression -> ResponseEntity(
                 ErrorResponse(
-                    INTERNAL_SERVER_ERROR.toString(), message = ex.message
+                    code = ex.code, message = ex.message
                 ), INTERNAL_SERVER_ERROR
             )
         }
@@ -97,7 +97,7 @@ class ExceptionHandlerController {
     @ExceptionHandler(FeedbackException::class)
     fun handleFeedbackException(ex: FeedbackException): ResponseEntity<ErrorResponse> {
         val errorMessage = ErrorResponse(
-            PRECONDITION_FAILED.toString(), message = ex.message
+            code = ex.code, message = ex.message
         )
 
         return when (ex) {
@@ -109,7 +109,7 @@ class ExceptionHandlerController {
     @ExceptionHandler(FriendshipSolicitudeException::class)
     fun handleFriendshipSolicitudeException(ex: FriendshipSolicitudeException): ResponseEntity<ErrorResponse> {
         val errorMessage = ErrorResponse(
-            PRECONDITION_FAILED.toString(), message = ex.message
+            code = ex.code, message = ex.message
         )
 
         return when (ex) {
@@ -135,13 +135,13 @@ class ExceptionHandlerController {
         return when (ex) {
             is UserAlreadyAreFriends -> ResponseEntity(
                 ErrorResponse(
-                    PRECONDITION_FAILED.toString(), message = ex.message
+                    code = ex.code, message = ex.message
                 ), PRECONDITION_FAILED
             )
 
             is UserEmailAlreadyRegistered -> ResponseEntity(
                 ErrorResponse(
-                    CONFLICT.toString(), message = ex.message
+                    code = ex.code, message = ex.message
                 ), CONFLICT
             )
         }
@@ -150,7 +150,7 @@ class ExceptionHandlerController {
     @ExceptionHandler(VehicleException::class)
     fun handleInfrastructureException(ex: VehicleException): ResponseEntity<ErrorResponse> {
         val errorMessage = ErrorResponse(
-            BAD_REQUEST.toString(), message = ex.message
+            code = ex.code, message = ex.message
         )
         return when (ex) {
             is InvalidCapacity -> ResponseEntity(

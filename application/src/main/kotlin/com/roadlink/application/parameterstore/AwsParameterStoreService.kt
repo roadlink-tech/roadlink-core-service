@@ -5,10 +5,10 @@ import com.amazonaws.services.simplesystemsmanagement.AWSSimpleSystemsManagement
 import com.amazonaws.services.simplesystemsmanagement.model.GetParameterRequest
 import com.amazonaws.services.simplesystemsmanagement.model.ParameterNotFoundException
 
-sealed class AwsParametersStoreErrors(override val message: String, cause: Throwable? = null) :
-    InfrastructureException(message, cause) {
+sealed class AwsParametersStoreErrors(override val message: String, code: String, cause: Throwable? = null) :
+    InfrastructureException(message, code, cause) {
     class NotFoundException(name: String) :
-        AwsParametersStoreErrors("Parameter $name has not been defined in AWS")
+        AwsParametersStoreErrors("Parameter $name has not been defined in AWS", "PARAMETER_NOT_FOUND")
 }
 
 class AwsParametersStoreService(private var client: AWSSimpleSystemsManagement) : ParametersStoreService {

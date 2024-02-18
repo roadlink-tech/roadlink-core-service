@@ -9,14 +9,17 @@ import java.time.LocalDate
 import java.util.*
 import javax.xml.stream.events.DTD
 
-sealed class UserException(override val message: String, cause: Throwable? = null) :
-    DomainException(message, cause) {
+sealed class UserException(override val message: String, val code: String, cause: Throwable? = null) :
+    DomainException(message, code, cause) {
 
     class UserAlreadyAreFriends(requesterId: UUID, addressedId: UUID) :
-        UserException("Users $requesterId and $addressedId already are friends")
+        UserException(
+            message = "Users $requesterId and $addressedId already are friends",
+            code = "USER_ALREADY_ARE_FRIENDS"
+        )
 
     class UserEmailAlreadyRegistered(email: String) :
-        UserException("User $email is already registered")
+        UserException(message = "User $email is already registered", code = "USER_EMAIL_ALREADY_REGISTERED")
 }
 
 data class User(

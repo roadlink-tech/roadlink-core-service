@@ -4,11 +4,14 @@ import com.roadlink.core.domain.DomainException
 import com.roadlink.core.domain.RepositoryPort
 import kotlin.random.Random
 
-sealed class UserNameGeneratorException(override val message: String, cause: Throwable? = null) :
-    DomainException(message, cause) {
+sealed class UserNameGeneratorException(override val message: String, val code: String, cause: Throwable? = null) :
+    DomainException(message, code, cause) {
 
     class CouldNotGenerateAUserName(firstName: String, lastName: String) :
-        UserNameGeneratorException("Could not generate user_name from first_name $firstName and last_name $lastName")
+        UserNameGeneratorException(
+            message = "Could not generate user_name from first_name $firstName and last_name $lastName",
+            code = "COULD_NOT_GENERATE_A_USER_NAME"
+        )
 }
 
 interface UserNameGenerator {

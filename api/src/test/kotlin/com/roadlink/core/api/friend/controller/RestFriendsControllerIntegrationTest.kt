@@ -67,7 +67,7 @@ class RestFriendsControllerIntegrationTest : BaseControllerTest() {
 
         // Then
         response.shouldNotBeNull()
-        response.shouldBe("""{"code":"404 NOT_FOUND","message":"Entity ${george.id} does not exist"}""")
+        response.shouldBe("""{"code":"ENTITY_NOT_EXIST","message":"Entity ${george.id} does not exist"}""")
         verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
     }
 
