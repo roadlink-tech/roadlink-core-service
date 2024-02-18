@@ -102,7 +102,7 @@ class FeedbackControllerIntegrationTest : BaseControllerTest() {
 
         // Then
         response.shouldBe(
-            """{"code":"404 NOT_FOUND","message":"Entity $georgeId does not exist"}"""
+            """{"code":"ENTITY_NOT_EXIST","message":"Entity $georgeId does not exist"}"""
         )
         verify(exactly = 2) { userRepositoryPort.findOrFail(any()) }
         verify(exactly = 0) { feedbackRepositoryPort.save(any()) }
@@ -133,7 +133,7 @@ class FeedbackControllerIntegrationTest : BaseControllerTest() {
 
         // Then
         response.shouldBe(
-            """{"code":"404 NOT_FOUND","message":"Entity $martinId does not exist"}"""
+            """{"code":"ENTITY_NOT_EXIST","message":"Entity $martinId does not exist"}"""
         )
         verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
         verify(exactly = 0) { feedbackRepositoryPort.save(any()) }
@@ -212,7 +212,7 @@ class FeedbackControllerIntegrationTest : BaseControllerTest() {
             .andReturn().response.contentAsString
 
         // Then
-        response.shouldBe("""{"code":"404 NOT_FOUND","message":"Entity ${george.id} does not exist"}""")
+        response.shouldBe("""{"code":"ENTITY_NOT_EXIST","message":"Entity ${george.id} does not exist"}""")
         verify(exactly = 0) { feedbackRepositoryPort.findAll(any()) }
         verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
     }

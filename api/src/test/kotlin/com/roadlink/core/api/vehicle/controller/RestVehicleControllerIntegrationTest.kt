@@ -187,7 +187,7 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
 
         // Then
         response.shouldBe(
-            """{"code":"404 NOT_FOUND","message":"Entity $userId does not exist"}"""
+            """{"code":"ENTITY_NOT_EXIST","message":"Entity $userId does not exist"}"""
         )
         verify(exactly = 0) { vehicleRepositoryPort.save(any()) }
         verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
@@ -281,7 +281,7 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
 
         // Then
         response.shouldBe(
-            """{"code":"404 NOT_FOUND","message":"Entity $georgeId does not exist"}"""
+            """{"code":"ENTITY_NOT_EXIST","message":"Entity $georgeId does not exist"}"""
         )
     }
 

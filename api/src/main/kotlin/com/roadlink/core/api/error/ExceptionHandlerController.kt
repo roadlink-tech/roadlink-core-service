@@ -76,19 +76,19 @@ class ExceptionHandlerController {
         return when (ex) {
             is EntityDoesNotExist -> ResponseEntity(
                 ErrorResponse(
-                    NOT_FOUND.toString(), message = ex.message
+                    code = ex.code, message = ex.message
                 ), NOT_FOUND
             )
 
             is InvalidQuery -> ResponseEntity(
                 ErrorResponse(
-                    BAD_REQUEST.toString(), message = ex.message
+                    code = ex.code, message = ex.message
                 ), BAD_REQUEST
             )
 
             is InvalidKeyConditionExpression -> ResponseEntity(
                 ErrorResponse(
-                    INTERNAL_SERVER_ERROR.toString(), message = ex.message
+                    code = ex.code, message = ex.message
                 ), INTERNAL_SERVER_ERROR
             )
         }

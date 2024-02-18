@@ -137,7 +137,7 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
 
         // Then
         response.shouldNotBeNull()
-        response.shouldBe("""{"code":"404 NOT_FOUND","message":"Entity $requesterId does not exist"}""")
+        response.shouldBe("""{"code":"ENTITY_NOT_EXIST","message":"Entity $requesterId does not exist"}""")
         verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
         verify(exactly = 0) { friendshipSolicitudeRepositoryPort.findAll(any()) }
         verify(exactly = 0) { friendshipSolicitudeRepositoryPort.save(any()) }
@@ -166,7 +166,7 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
 
         // Then
         response.shouldNotBeNull()
-        response.shouldBe("""{"code":"404 NOT_FOUND","message":"Entity $addressedId does not exist"}""")
+        response.shouldBe("""{"code":"ENTITY_NOT_EXIST","message":"Entity $addressedId does not exist"}""")
         verify(exactly = 2) { userRepositoryPort.findOrFail(any()) }
         verify(exactly = 0) { friendshipSolicitudeRepositoryPort.findAll(any()) }
         verify(exactly = 0) { friendshipSolicitudeRepositoryPort.save(any()) }
@@ -497,7 +497,7 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
             .andReturn().response.contentAsString
 
         // Then
-        response.shouldBe("""{"code":"404 NOT_FOUND","message":"Entity $addressedId does not exist"}""")
+        response.shouldBe("""{"code":"ENTITY_NOT_EXIST","message":"Entity $addressedId does not exist"}""")
         verify(exactly = 0) { friendshipSolicitudeRepositoryPort.save(any()) }
         verify(exactly = 0) { friendshipSolicitudeRepositoryPort.findOrFail(any()) }
         verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
