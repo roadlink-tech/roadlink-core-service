@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.http.MediaType
+import org.springframework.http.MediaType.*
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import java.util.*
@@ -52,7 +53,7 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
                     "capacity":"5",
                     "color":"white"
                 }""".trimIndent()
-            ).contentType(MediaType.APPLICATION_JSON)
+            ).contentType(APPLICATION_JSON)
         ).andExpect(MockMvcResultMatchers.status().isCreated).andReturn().response.contentAsString
 
         // Then
@@ -88,7 +89,7 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
                     "capacity":"5",
                     "color":"white"
                 }""".trimIndent()
-            ).contentType(MediaType.APPLICATION_JSON)
+            ).contentType(APPLICATION_JSON)
         ).andExpect(MockMvcResultMatchers.status().isBadRequest)
             .andReturn().response.contentAsString
 
@@ -117,7 +118,7 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
                     "capacity":"5",
                     "color":"white"
                 }""".trimIndent()
-            ).contentType(MediaType.APPLICATION_JSON)
+            ).contentType(APPLICATION_JSON)
         ).andExpect(MockMvcResultMatchers.status().isBadRequest)
             .andReturn().response.contentAsString
 
@@ -151,7 +152,7 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
                     "capacity":"50",
                     "color":"white"
                 }""".trimIndent()
-            ).contentType(MediaType.APPLICATION_JSON)
+            ).contentType(APPLICATION_JSON)
         ).andExpect(MockMvcResultMatchers.status().isBadRequest)
             .andReturn().response.contentAsString
 
@@ -182,7 +183,7 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
                     "capacity":"5",
                     "color":"white"
                 }""".trimIndent()
-            ).contentType(MediaType.APPLICATION_JSON)
+            ).contentType(APPLICATION_JSON)
         ).andExpect(MockMvcResultMatchers.status().isNotFound).andReturn().response.contentAsString
 
         // Then
@@ -215,7 +216,7 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
                     "capacity":"5",
                     "color":"white"
                 }""".trimIndent()
-            ).contentType(MediaType.APPLICATION_JSON)
+            ).contentType(APPLICATION_JSON)
         ).andExpect(MockMvcResultMatchers.status().isBadRequest)
             .andReturn().response.contentAsString
 
