@@ -187,7 +187,7 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
 
         // Then
         response.shouldNotBeNull()
-        response.shouldBe("""{"code":"400 BAD_REQUEST","message":"Invalid request format: could not be parsed to a valid JSON"}""")
+        response.shouldBe("""{"code":"INVALID_JSON","message":"Invalid request format: could not be parsed to a valid JSON"}""")
     }
 
     @Test
@@ -226,7 +226,7 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
 
         // Then
         response.shouldNotBeNull()
-        response.shouldBe("""{"code":"412 PRECONDITION_FAILED","message":"User ${george.id} has a pending friendship solicitude to ${martin.id}"}""")
+        response.shouldBe("""{"code":"FRIENDSHIP_SOLICITUDE_ALREADY_SENT","message":"User ${george.id} has a pending friendship solicitude to ${martin.id}"}""")
         verify(exactly = 2) { userRepositoryPort.findOrFail(any()) }
         verify(exactly = 1) { friendshipSolicitudeRepositoryPort.findAll(any()) }
         verify(exactly = 0) { friendshipSolicitudeRepositoryPort.save(any()) }
@@ -273,7 +273,7 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
 
         // Then
         response.shouldNotBeNull()
-        response.shouldBe("""{"code":"412 PRECONDITION_FAILED","message":"User ${martin.id} has a pending friendship solicitude to ${george.id}"}""")
+        response.shouldBe("""{"code":"FRIENDSHIP_SOLICITUDE_ALREADY_SENT","message":"User ${martin.id} has a pending friendship solicitude to ${george.id}"}""")
         verify(exactly = 2) { userRepositoryPort.findOrFail(any()) }
         verify(exactly = 2) { friendshipSolicitudeRepositoryPort.findAll(any()) }
         verify(exactly = 0) { friendshipSolicitudeRepositoryPort.save(any()) }
@@ -344,7 +344,7 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
             .andReturn().response.contentAsString
 
         // Then
-        response.shouldBe("""{"code":"412 PRECONDITION_FAILED","message":"Friendship solicitude ${solicitude.id} status can not change, because it has raised an immutable status REJECTED"}""")
+        response.shouldBe("""{"code":"FRIENDSHIP_SOLICITUDE_STATUS_CAN_NOT_CHANGE","message":"Friendship solicitude ${solicitude.id} status can not change, because it has raised an immutable status REJECTED"}""")
         verify(exactly = 0) { userRepositoryPort.save(any()) }
         verify(exactly = 0) { userRepositoryPort.findAll(any()) }
     }
@@ -372,7 +372,7 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
             .andReturn().response.contentAsString
 
         // Then
-        response.shouldBe("""{"code":"412 PRECONDITION_FAILED","message":"Friendship solicitude ${solicitude.id} status can not change, because it has raised an immutable status ACCEPTED"}""")
+        response.shouldBe("""{"code":"FRIENDSHIP_SOLICITUDE_STATUS_CAN_NOT_CHANGE","message":"Friendship solicitude ${solicitude.id} status can not change, because it has raised an immutable status ACCEPTED"}""")
         verify(exactly = 0) { userRepositoryPort.save(any()) }
         verify(exactly = 0) { userRepositoryPort.findAll(any()) }
     }
@@ -440,7 +440,7 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
             .andReturn().response.contentAsString
 
         // Then
-        response.shouldBe("""{"code":"412 PRECONDITION_FAILED","message":"Friendship solicitude ${solicitude.id} status can not change, because it has raised an immutable status REJECTED"}""")
+        response.shouldBe("""{"code":"FRIENDSHIP_SOLICITUDE_STATUS_CAN_NOT_CHANGE","message":"Friendship solicitude ${solicitude.id} status can not change, because it has raised an immutable status REJECTED"}""")
         verify(exactly = 0) { userRepositoryPort.save(any()) }
         verify(exactly = 0) { userRepositoryPort.findAll(any()) }
     }
@@ -467,7 +467,7 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
             .andReturn().response.contentAsString
 
         // Then
-        response.shouldBe("""{"code":"412 PRECONDITION_FAILED","message":"Friendship solicitude ${solicitude.id} status can not change, because it has raised an immutable status ACCEPTED"}""")
+        response.shouldBe("""{"code":"FRIENDSHIP_SOLICITUDE_STATUS_CAN_NOT_CHANGE","message":"Friendship solicitude ${solicitude.id} status can not change, because it has raised an immutable status ACCEPTED"}""")
         verify(exactly = 0) { friendshipSolicitudeRepositoryPort.save(any()) }
         verify(exactly = 1) { friendshipSolicitudeRepositoryPort.findOrFail(any()) }
         verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }

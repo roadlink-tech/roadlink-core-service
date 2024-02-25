@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.http.MediaType
+import org.springframework.http.MediaType.*
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import java.util.*
@@ -52,7 +53,7 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
                     "capacity":"5",
                     "color":"white"
                 }""".trimIndent()
-            ).contentType(MediaType.APPLICATION_JSON)
+            ).contentType(APPLICATION_JSON)
         ).andExpect(MockMvcResultMatchers.status().isCreated).andReturn().response.contentAsString
 
         // Then
@@ -88,13 +89,13 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
                     "capacity":"5",
                     "color":"white"
                 }""".trimIndent()
-            ).contentType(MediaType.APPLICATION_JSON)
+            ).contentType(APPLICATION_JSON)
         ).andExpect(MockMvcResultMatchers.status().isBadRequest)
             .andReturn().response.contentAsString
 
         // Then
         response.shouldBe(
-            """{"code":"400 BAD_REQUEST","message":"The following mandatory fields are empty: [brand]"}"""
+            """{"code":"EMPTY_MANDATORY_FIELDS","message":"The following mandatory fields are empty: [brand]"}"""
         )
         verify(exactly = 0) { vehicleRepositoryPort.save(any()) }
         verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
@@ -117,13 +118,13 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
                     "capacity":"5",
                     "color":"white"
                 }""".trimIndent()
-            ).contentType(MediaType.APPLICATION_JSON)
+            ).contentType(APPLICATION_JSON)
         ).andExpect(MockMvcResultMatchers.status().isBadRequest)
             .andReturn().response.contentAsString
 
         // Then
         response.shouldBe(
-            """{"code":"400 BAD_REQUEST","message":"The following mandatory fields are empty: [brand, licence_plate, model]"}"""
+            """{"code":"EMPTY_MANDATORY_FIELDS","message":"The following mandatory fields are empty: [brand, licence_plate, model]"}"""
         )
         verify(exactly = 0) { vehicleRepositoryPort.save(any()) }
         verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
@@ -151,13 +152,13 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
                     "capacity":"50",
                     "color":"white"
                 }""".trimIndent()
-            ).contentType(MediaType.APPLICATION_JSON)
+            ).contentType(APPLICATION_JSON)
         ).andExpect(MockMvcResultMatchers.status().isBadRequest)
             .andReturn().response.contentAsString
 
         // Then
         response.shouldBe(
-            """{"code":"400 BAD_REQUEST","message":"Vehicle Ford TERRITORY must have a capacity between 0 and 5"}"""
+            """{"code":"INVALID_CAPACITY","message":"Vehicle Ford TERRITORY must have a capacity between 0 and 5"}"""
         )
         verify(exactly = 0) { vehicleRepositoryPort.save(any()) }
         verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
@@ -182,7 +183,7 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
                     "capacity":"5",
                     "color":"white"
                 }""".trimIndent()
-            ).contentType(MediaType.APPLICATION_JSON)
+            ).contentType(APPLICATION_JSON)
         ).andExpect(MockMvcResultMatchers.status().isNotFound).andReturn().response.contentAsString
 
         // Then
@@ -215,13 +216,13 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
                     "capacity":"5",
                     "color":"white"
                 }""".trimIndent()
-            ).contentType(MediaType.APPLICATION_JSON)
+            ).contentType(APPLICATION_JSON)
         ).andExpect(MockMvcResultMatchers.status().isBadRequest)
             .andReturn().response.contentAsString
 
         // Then
         response.shouldBe(
-            """{"code":"400 BAD_REQUEST","message":"The brand Pagani is not available"}"""
+            """{"code":"INVALID_BRAND","message":"The brand Pagani is not available"}"""
         )
         verify(exactly = 0) { vehicleRepositoryPort.save(any()) }
         verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
