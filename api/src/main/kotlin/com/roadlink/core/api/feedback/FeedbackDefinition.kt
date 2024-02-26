@@ -44,7 +44,7 @@ open class FeedbackHandlerDefinition {
     open fun retrieveFeedbacksCommandHandler(
         userRepository: RepositoryPort<User, UserCriteria>,
         feedbackRepository: RepositoryPort<Feedback, FeedbackCriteria>
-    ): CommandHandler<RetrieveFeedbacksCommand, RetrieveFeedbacksCommandResponse> {
-        return RetrieveFeedbacksCommandHandler(userRepository, feedbackRepository)
+    ): CommandHandler<ListFeedbacksCommand, ListFeedbacksCommandResponse> {
+        return ListFeedbacksCommandHandler(userRepository, feedbackRepository)
     }
 }

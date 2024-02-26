@@ -5,8 +5,8 @@ import com.roadlink.application.command.CommandHandler
 import com.roadlink.application.command.SimpleCommandBus
 import com.roadlink.application.feedback.CreateFeedbackCommand
 import com.roadlink.application.feedback.CreateFeedbackCommandResponse
-import com.roadlink.application.feedback.RetrieveFeedbacksCommand
-import com.roadlink.application.feedback.RetrieveFeedbacksCommandResponse
+import com.roadlink.application.feedback.ListFeedbacksCommand
+import com.roadlink.application.feedback.ListFeedbacksCommandResponse
 import com.roadlink.application.friend.*
 import com.roadlink.application.user.*
 import com.roadlink.application.usertrustscore.RetrieveUserTrustScoreCommand
@@ -30,7 +30,7 @@ open class CommandBusDefinition {
         @Qualifier("google_login_command_handler") googleLoginCommandHandler: CommandHandler<GoogleLoginCommand, GoogleLoginCommandResponse>,
         // Feedback
         @Qualifier("create_feedback_command_handler") createFeedbackCommandHandler: CommandHandler<CreateFeedbackCommand, CreateFeedbackCommandResponse>,
-        @Qualifier("retrieve_feedbacks_command_handler") retrieveFeedbacksCommandHandler: CommandHandler<RetrieveFeedbacksCommand, RetrieveFeedbacksCommandResponse>,
+        @Qualifier("retrieve_feedbacks_command_handler") listFeedbacksCommandHandler: CommandHandler<ListFeedbacksCommand, ListFeedbacksCommandResponse>,
         // Friend
         @Qualifier("create_friendship_solicitude_command_handler") createFriendshipSolicitudeCommandHandler: CommandHandler<CreateFriendshipSolicitudeCommand, CreateFriendshipSolicitudeCommandResponse>,
         @Qualifier("accept_friendship_solicitude_command_handler") acceptFriendshipSolicitudeCommandHandler: CommandHandler<AcceptFriendshipSolicitudeCommand, AcceptFriendshipSolicitudeCommandResponse>,
@@ -53,7 +53,7 @@ open class CommandBusDefinition {
             it.registerHandler(googleLoginCommandHandler)
             // Feedback
             it.registerHandler(createFeedbackCommandHandler)
-            it.registerHandler(retrieveFeedbacksCommandHandler)
+            it.registerHandler(listFeedbacksCommandHandler)
             // Friend
             it.registerHandler(createFriendshipSolicitudeCommandHandler)
             it.registerHandler(acceptFriendshipSolicitudeCommandHandler)

@@ -5,8 +5,9 @@ import com.roadlink.application.command.CommandBus
 import com.roadlink.application.feedback.CreateFeedbackCommand
 import com.roadlink.application.feedback.CreateFeedbackCommandResponse
 import com.roadlink.application.feedback.FeedbackDTO
-import com.roadlink.application.feedback.RetrieveFeedbacksCommand
-import com.roadlink.application.feedback.RetrieveFeedbacksCommandResponse
+import com.roadlink.application.feedback.ListFeedbacksCommand
+import com.roadlink.application.feedback.ListFeedbacksCommandResponse
+import jakarta.websocket.server.PathParam
 import org.springframework.http.HttpStatus.*
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -41,8 +42,8 @@ class FeedbackController(private val commandBus: CommandBus) {
     @ResponseStatus(value = OK)
     fun retrieveUserFeedbacks(@PathVariable receiverId: String): List<FeedbackResponse> {
         val response =
-            commandBus.publish<RetrieveFeedbacksCommand, RetrieveFeedbacksCommandResponse>(
-                RetrieveFeedbacksCommand(UUID.fromString(receiverId))
+            commandBus.publish<ListFeedbacksCommand, ListFeedbacksCommandResponse>(
+                ListFeedbacksCommand(UUID.fromString(receiverId))
             )
         return response.feedbacks.map { FeedbackResponse.from(it) }
     }

@@ -173,6 +173,52 @@ class FeedbackControllerIntegrationTest : BaseControllerTest() {
      * List Feedbacks
      */
     @Test
+    fun `when list feedbacks of an existing user with a single review, then it must be retrieved`() {
+        // Given
+        val george = UserFactory.common()
+        val feedbacks = mutableListOf<Feedback>()
+        val feedbackId = UUID.randomUUID()
+        val tripId = UUID.randomUUID()
+        val receiverId = UUID.randomUUID()
+        feedbacks.add(
+            FeedbackFactory.common(
+                reviewerId = george.id,
+                receiverId = receiverId,
+                id = feedbackId,
+                tripId = tripId,
+                comment = "ok"
+            )
+        )
+
+        every { feedbackRepositoryPort.findAll(match { it.receiverId == george.id }) } returns feedbacks
+        every { userRepositoryPort.findOrFail(match { it.id == george.id }) } returns george
+
+        // When
+        val response = mockMvc.perform(
+            MockMvcRequestBuilders.get("/users/${george.id}/feedbacks")
+        ).andExpect(MockMvcResultMatchers.status().isOk)
+            .andReturn().response.contentAsString
+
+        // Then
+        response.shouldBe(
+            """
+            [
+              {
+                "id": "$feedbackId",
+                "reviewer_id": "${george.id}",
+                "receiver_id": "$receiverId",
+                "trip_id": "$tripId",
+                "comment": "ok",
+                "rating": 5
+              }
+            ]
+        """.trimIndent().replace(Regex("\\s+"), "")
+        )
+        verify(exactly = 1) { feedbackRepositoryPort.findAll(any()) }
+        verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
+    }
+
+    @Test
     fun `when list the feedbacks of an existing user, then it must be retrieved`() {
         // Given
         val george = UserFactory.common()

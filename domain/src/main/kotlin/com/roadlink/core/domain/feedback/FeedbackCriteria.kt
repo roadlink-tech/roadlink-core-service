@@ -10,3 +10,4 @@ class FeedbackCriteria(
     val reviewerId: UUID? = null,
     val tripId: UUID? = null
 ) : DomainCriteria
+
