@@ -55,4 +55,12 @@ open class VehicleHandlerDefinition {
     ): CommandHandler<DeleteVehicleCommand, DeleteVehicleCommandResponse> {
         return DeleteVehicleCommandHandler(userRepositoryPort, vehicleRepositoryPort)
     }
+
+    @Bean("patch_vehicle_command_handler")
+    open fun patchVehicleCommandHandler(
+        vehicleRepositoryPort: RepositoryPort<Vehicle, VehicleCriteria>,
+        userRepositoryPort: RepositoryPort<User, UserCriteria>
+    ): CommandHandler<PatchVehicleCommand, PatchVehicleCommandResponse> {
+        return PatchVehicleCommandHandler(userRepositoryPort, vehicleRepositoryPort)
+    }
 }
