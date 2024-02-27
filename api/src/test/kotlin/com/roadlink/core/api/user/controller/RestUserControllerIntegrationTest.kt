@@ -3,7 +3,6 @@ package com.roadlink.core.api.user.controller
 import com.roadlink.core.api.BaseControllerTest
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
-import io.mockk.InternalPlatformDsl.toStr
 import io.mockk.every
 import io.mockk.verify
 import org.junit.jupiter.api.Test
@@ -42,16 +41,16 @@ class RestUserControllerIntegrationTest : BaseControllerTest() {
 
         // Then
         response.shouldBe("""{"code":"INVALID_JSON","message":"Invalid request format: could not be parsed to a valid JSON"}""")
-        verify(exactly = 0) { userRepositoryPort.save(any()) }
-        verify(exactly = 0) { userRepositoryPort.findAll(any()) }
+        verify(exactly = 0) { userRepository.save(any()) }
+        verify(exactly = 0) { userRepository.findAll(any()) }
     }
 
     @Test
     fun `when the user can be created succeeded, then it must be saved and a 201 response must be retrieved`() {
         // Given
-        every { userRepositoryPort.findAll(any()) } returns emptyList()
-        every { userRepositoryPort.findOrNull(match { it.userName == "jorgecabrera" }) } returns null
-        every { userRepositoryPort.save(match { it.email == "cabrerajjorge@gmail.com" }) } returns george
+        every { userRepository.findAll(any()) } returns emptyList()
+        every { userRepository.findOrNull(match { it.userName == "jorgecabrera" }) } returns null
+        every { userRepository.save(match { it.email == "cabrerajjorge@gmail.com" }) } returns george
 
         // When
         val response = mockMvc.perform(
@@ -83,19 +82,19 @@ class RestUserControllerIntegrationTest : BaseControllerTest() {
             }
             """.trimIndent().replace(Regex("\\s+"), "")
         )
-        verify(exactly = 1) { userRepositoryPort.save(any()) }
-        verify(exactly = 1) { userRepositoryPort.findAll(any()) }
-        verify { userRepositoryPort.findOrNull(any()) }
+        verify(exactly = 1) { userRepository.save(any()) }
+        verify(exactly = 1) { userRepository.findAll(any()) }
+        verify { userRepository.findOrNull(any()) }
     }
 
     @Test
     fun `when the user can be created succeeded, but the user name must contain a dot, then it must be saved and a 201 response must be retrieved`() {
         // Given
         val jorgecabrera = UserFactory.common(userName = "jorgecabrera")
-        every { userRepositoryPort.findAll(any()) } returns emptyList()
-        every { userRepositoryPort.findOrNull(match { it.userName == "jorgecabrera" }) } returns jorgecabrera
-        every { userRepositoryPort.findOrNull(match { it.userName == "jorge.cabrera" }) } returns null
-        every { userRepositoryPort.save(match { it.email == "cabrerajjorge@gmail.com" }) } returns george.copy(
+        every { userRepository.findAll(any()) } returns emptyList()
+        every { userRepository.findOrNull(match { it.userName == "jorgecabrera" }) } returns jorgecabrera
+        every { userRepository.findOrNull(match { it.userName == "jorge.cabrera" }) } returns null
+        every { userRepository.save(match { it.email == "cabrerajjorge@gmail.com" }) } returns george.copy(
             userName = "jorge.cabrera"
         )
 
@@ -129,15 +128,15 @@ class RestUserControllerIntegrationTest : BaseControllerTest() {
             }
             """.trimIndent().replace(Regex("\\s+"), "")
         )
-        verify(exactly = 1) { userRepositoryPort.save(any()) }
-        verify(exactly = 1) { userRepositoryPort.findAll(any()) }
-        verify { userRepositoryPort.findOrNull(any()) }
+        verify(exactly = 1) { userRepository.save(any()) }
+        verify(exactly = 1) { userRepository.findAll(any()) }
+        verify { userRepository.findOrNull(any()) }
     }
 
     @Test
     fun `when try to create a user with an email already registered, then a conflict error must be retrieved`() {
         // Given
-        every { userRepositoryPort.findAll(any()) } returns listOf(george)
+        every { userRepository.findAll(any()) } returns listOf(george)
 
         // When
         val response = mockMvc.perform(
@@ -156,14 +155,14 @@ class RestUserControllerIntegrationTest : BaseControllerTest() {
         // Then
         response.shouldNotBeNull()
         response.shouldBe("""{"code":"USER_EMAIL_ALREADY_REGISTERED","message":"User cabrerajjorge@gmail.com is already registered"}""")
-        verify(exactly = 0) { userRepositoryPort.save(any()) }
-        verify(exactly = 1) { userRepositoryPort.findAll(any()) }
+        verify(exactly = 0) { userRepository.save(any()) }
+        verify(exactly = 1) { userRepository.findAll(any()) }
     }
 
     @Test
     fun `when try to create a user but the repository works badly, then a 500 error must be retrieved`() {
         // Given
-        every { userRepositoryPort.findAll(any()) } throws RuntimeException()
+        every { userRepository.findAll(any()) } throws RuntimeException()
 
         // When
         val response = mockMvc.perform(
@@ -183,8 +182,8 @@ class RestUserControllerIntegrationTest : BaseControllerTest() {
         // Then
         response.shouldNotBeNull()
         response.shouldBe("""{"code":"INTERNAL_SERVER_ERROR","message":"Oops, something wrong happened"}""")
-        verify(exactly = 0) { userRepositoryPort.save(any()) }
-        verify(exactly = 1) { userRepositoryPort.findAll(any()) }
+        verify(exactly = 0) { userRepository.save(any()) }
+        verify(exactly = 1) { userRepository.findAll(any()) }
 
     }
 
@@ -196,8 +195,8 @@ class RestUserControllerIntegrationTest : BaseControllerTest() {
         // Given
         val userId = UUID.randomUUID()
         val martinbosch = UserFactory.common(id = userId, firstName = "martin", lastName = "bosch")
-        every { userRepositoryPort.findOrFail(match { it.id == userId }) } returns martinbosch
-        every { userRepositoryPort.save(match { it.id == userId }) } returns martinbosch.copy(
+        every { userRepository.findOrFail(match { it.id == userId }) } returns martinbosch
+        every { userRepository.save(match { it.id == userId }) } returns martinbosch.copy(
             firstName = "jorge", lastName = "cabrera"
         )
 
@@ -228,16 +227,16 @@ class RestUserControllerIntegrationTest : BaseControllerTest() {
             }
             """.trimIndent().replace(Regex("\\s+"), "")
         )
-        verify(exactly = 1) { userRepositoryPort.save(any()) }
-        verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
+        verify(exactly = 1) { userRepository.save(any()) }
+        verify(exactly = 1) { userRepository.findOrFail(any()) }
     }
 
     @Test
     fun `when patch a user with a new email which is not being used, then it must work`() {
         // Given
-        every { userRepositoryPort.findOrNull(match { it.email == "martin.bosch@roadlink.com" }) } returns null
-        every { userRepositoryPort.findOrFail(match { it.id == george.id }) } returns george
-        every { userRepositoryPort.save(match { it.id == george.id }) } returns george.copy(
+        every { userRepository.findOrNull(match { it.email == "martin.bosch@roadlink.com" }) } returns null
+        every { userRepository.findOrFail(match { it.id == george.id }) } returns george
+        every { userRepository.save(match { it.id == george.id }) } returns george.copy(
             firstName = "martin",
             lastName = "bosch",
             email = "martin.bosch@roadlink.com",
@@ -275,15 +274,15 @@ class RestUserControllerIntegrationTest : BaseControllerTest() {
             }
             """.trimIndent().replace(Regex("\\s+"), "")
         )
-        verify(exactly = 1) { userRepositoryPort.save(any()) }
-        verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
-        verify(exactly = 1) { userRepositoryPort.findOrNull(any()) }
+        verify(exactly = 1) { userRepository.save(any()) }
+        verify(exactly = 1) { userRepository.findOrFail(any()) }
+        verify(exactly = 1) { userRepository.findOrNull(any()) }
     }
 
     @Test
     fun `when patch a user with a new email but it is being used, then an exception must be raised`() {
         // Given
-        every { userRepositoryPort.findOrNull(match { it.email == "martin.bosch@roadlink.com" }) } returns UserFactory.common()
+        every { userRepository.findOrNull(match { it.email == "martin.bosch@roadlink.com" }) } returns UserFactory.common()
 
         // When
         val response = mockMvc.perform(
@@ -301,9 +300,9 @@ class RestUserControllerIntegrationTest : BaseControllerTest() {
 
         // Then
         response.shouldBe("""{"code":"USER_EMAIL_ALREADY_REGISTERED","message":"User martin.bosch@roadlink.com is already registered"}""")
-        verify(exactly = 0) { userRepositoryPort.save(any()) }
-        verify(exactly = 0) { userRepositoryPort.findOrFail(any()) }
-        verify(exactly = 1) { userRepositoryPort.findOrNull(any()) }
+        verify(exactly = 0) { userRepository.save(any()) }
+        verify(exactly = 0) { userRepository.findOrFail(any()) }
+        verify(exactly = 1) { userRepository.findOrNull(any()) }
     }
 
     /**
@@ -313,7 +312,7 @@ class RestUserControllerIntegrationTest : BaseControllerTest() {
     fun `when search a user by username an it exist, then it must be retrieved`() {
         // Given
         val userId = UUID.randomUUID()
-        every { userRepositoryPort.findOrFail(match { it.userName == "jorgecabrera" }) } returns UserFactory.common(
+        every { userRepository.findOrFail(match { it.userName == "jorgecabrera" }) } returns UserFactory.common(
             id = userId
         )
 
@@ -338,14 +337,14 @@ class RestUserControllerIntegrationTest : BaseControllerTest() {
                 "friends":[]
             }""".trimIndent().replace(Regex("\\s+"), "")
         )
-        verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
+        verify(exactly = 1) { userRepository.findOrFail(any()) }
     }
 
     @Test
     fun `when search a user by email an it exist, then it must be retrieved`() {
         // Given
         val userId = UUID.randomUUID()
-        every { userRepositoryPort.findOrFail(match { it.email == "cabrerajjorge@gmail.com" }) } returns UserFactory.common(
+        every { userRepository.findOrFail(match { it.email == "cabrerajjorge@gmail.com" }) } returns UserFactory.common(
             id = userId
         )
 
@@ -370,14 +369,14 @@ class RestUserControllerIntegrationTest : BaseControllerTest() {
                 "friends":[]
             }""".trimIndent().replace(Regex("\\s+"), "")
         )
-        verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
+        verify(exactly = 1) { userRepository.findOrFail(any()) }
     }
 
     @Test
     fun `when search a user by email and user name and it exist, then it must be retrieved`() {
         // Given
         val userId = UUID.randomUUID()
-        every { userRepositoryPort.findOrFail(match { it.email == "cabrerajjorge@gmail.com" && it.userName == "jorgecabrera" }) } returns UserFactory.common(
+        every { userRepository.findOrFail(match { it.email == "cabrerajjorge@gmail.com" && it.userName == "jorgecabrera" }) } returns UserFactory.common(
             id = userId
         )
 
@@ -402,7 +401,7 @@ class RestUserControllerIntegrationTest : BaseControllerTest() {
                 "friends":[]
             }""".trimIndent().replace(Regex("\\s+"), "")
         )
-        verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
+        verify(exactly = 1) { userRepository.findOrFail(any()) }
     }
 
     override fun getControllerUnderTest(): Any {

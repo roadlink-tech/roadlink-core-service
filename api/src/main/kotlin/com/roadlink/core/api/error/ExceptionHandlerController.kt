@@ -2,6 +2,8 @@ package com.roadlink.core.api.error
 
 import com.roadlink.core.domain.feedback.validation.FeedbackException
 import com.roadlink.core.domain.feedback.validation.FeedbackException.*
+import com.roadlink.core.domain.feedback.validation.FeedbackSolicitudeException
+import com.roadlink.core.domain.feedback.validation.FeedbackSolicitudeException.*
 import com.roadlink.core.domain.friend.FriendshipSolicitudeException
 import com.roadlink.core.domain.friend.FriendshipSolicitudeException.*
 import com.roadlink.core.domain.user.UserException
@@ -103,6 +105,25 @@ class ExceptionHandlerController {
         return when (ex) {
             is InvalidReviewerIdAndReceiverId -> ResponseEntity(errorMessage, PRECONDITION_FAILED)
             is InvalidRating -> ResponseEntity(errorMessage, PRECONDITION_FAILED)
+        }
+    }
+
+    @ExceptionHandler(FeedbackSolicitudeException::class)
+    fun handleFeedbackSolicitudeException(ex: FeedbackSolicitudeException): ResponseEntity<ErrorResponse> {
+        val errorMessage = ErrorResponse(
+            code = ex.code, message = ex.message
+        )
+
+        return when (ex) {
+            is FeedbackSolicitudeAlreadyRejected -> ResponseEntity(
+                errorMessage,
+                PRECONDITION_FAILED
+            )
+
+            is FeedbackSolicitudeAlreadyCompleted -> ResponseEntity(
+                errorMessage,
+                PRECONDITION_FAILED
+            )
         }
     }
 

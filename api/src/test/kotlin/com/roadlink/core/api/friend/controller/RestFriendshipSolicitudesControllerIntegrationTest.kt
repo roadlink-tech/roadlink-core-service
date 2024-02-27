@@ -9,7 +9,6 @@ import com.roadlink.core.domain.friend.FriendshipSolicitude.Status.REJECTED
 import com.roadlink.core.infrastructure.dynamodb.error.DynamoDbException
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
-import io.mockk.InternalPlatformDsl.toStr
 import io.mockk.every
 import io.mockk.verify
 import org.junit.jupiter.api.Test
@@ -47,11 +46,11 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
             addressedId = martin.id
         )
 
-        every { userRepositoryPort.findOrFail(match { it.id == george.id }) } returns george
-        every { userRepositoryPort.findOrFail(match { it.id == martin.id }) } returns martin
-        every { friendshipSolicitudeRepositoryPort.findAll(any()) } returns emptyList()
+        every { userRepository.findOrFail(match { it.id == george.id }) } returns george
+        every { userRepository.findOrFail(match { it.id == martin.id }) } returns martin
+        every { friendshipSolicitudeRepository.findAll(any()) } returns emptyList()
         every {
-            friendshipSolicitudeRepositoryPort.save(match {
+            friendshipSolicitudeRepository.save(match {
                 it.requesterId == george.id
                         && it.addressedId == martin.id
             })
@@ -79,9 +78,9 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
             }
         """.trimIndent().replace(Regex("\\s+"), "")
         )
-        verify(exactly = 2) { userRepositoryPort.findOrFail(any()) }
-        verify(exactly = 2) { friendshipSolicitudeRepositoryPort.findAll(any()) }
-        verify(exactly = 1) { friendshipSolicitudeRepositoryPort.save(any()) }
+        verify(exactly = 2) { userRepository.findOrFail(any()) }
+        verify(exactly = 2) { friendshipSolicitudeRepository.findAll(any()) }
+        verify(exactly = 1) { friendshipSolicitudeRepository.save(any()) }
     }
 
     @Test
@@ -95,9 +94,9 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
         )
         martin.beFriendOf(george)
 
-        every { userRepositoryPort.findOrFail(match { it.id == george.id }) } returns george
-        every { userRepositoryPort.findOrFail(match { it.id == martin.id }) } returns martin
-        every { friendshipSolicitudeRepositoryPort.findAll(any()) } returns emptyList()
+        every { userRepository.findOrFail(match { it.id == george.id }) } returns george
+        every { userRepository.findOrFail(match { it.id == martin.id }) } returns martin
+        every { friendshipSolicitudeRepository.findAll(any()) } returns emptyList()
 
         // When
         val response = mockMvc.perform(
@@ -111,9 +110,9 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
 
         // Then
         response.shouldNotBeNull()
-        verify(exactly = 2) { userRepositoryPort.findOrFail(any()) }
-        verify(exactly = 0) { friendshipSolicitudeRepositoryPort.findAll(any()) }
-        verify(exactly = 0) { friendshipSolicitudeRepositoryPort.save(any()) }
+        verify(exactly = 2) { userRepository.findOrFail(any()) }
+        verify(exactly = 0) { friendshipSolicitudeRepository.findAll(any()) }
+        verify(exactly = 0) { friendshipSolicitudeRepository.save(any()) }
     }
 
     @Test
@@ -121,7 +120,7 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
         // Given
         val requesterId = UUID.randomUUID()
         val addressedId = UUID.randomUUID()
-        every { userRepositoryPort.findOrFail(match { it.id == requesterId }) } throws DynamoDbException.EntityDoesNotExist(
+        every { userRepository.findOrFail(match { it.id == requesterId }) } throws DynamoDbException.EntityDoesNotExist(
             requesterId.toString()
         )
 
@@ -138,9 +137,9 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
         // Then
         response.shouldNotBeNull()
         response.shouldBe("""{"code":"ENTITY_NOT_EXIST","message":"Entity $requesterId does not exist"}""")
-        verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
-        verify(exactly = 0) { friendshipSolicitudeRepositoryPort.findAll(any()) }
-        verify(exactly = 0) { friendshipSolicitudeRepositoryPort.save(any()) }
+        verify(exactly = 1) { userRepository.findOrFail(any()) }
+        verify(exactly = 0) { friendshipSolicitudeRepository.findAll(any()) }
+        verify(exactly = 0) { friendshipSolicitudeRepository.save(any()) }
     }
 
     @Test
@@ -149,8 +148,8 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
         val martin = UserFactory.common()
         val addressedId = UUID.randomUUID()
 
-        every { userRepositoryPort.findOrFail(match { it.id == martin.id }) } returns martin
-        every { userRepositoryPort.findOrFail(match { it.id == addressedId }) } throws DynamoDbException.EntityDoesNotExist(
+        every { userRepository.findOrFail(match { it.id == martin.id }) } returns martin
+        every { userRepository.findOrFail(match { it.id == addressedId }) } throws DynamoDbException.EntityDoesNotExist(
             addressedId.toString()
         )
 
@@ -167,9 +166,9 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
         // Then
         response.shouldNotBeNull()
         response.shouldBe("""{"code":"ENTITY_NOT_EXIST","message":"Entity $addressedId does not exist"}""")
-        verify(exactly = 2) { userRepositoryPort.findOrFail(any()) }
-        verify(exactly = 0) { friendshipSolicitudeRepositoryPort.findAll(any()) }
-        verify(exactly = 0) { friendshipSolicitudeRepositoryPort.save(any()) }
+        verify(exactly = 2) { userRepository.findOrFail(any()) }
+        verify(exactly = 0) { friendshipSolicitudeRepository.findAll(any()) }
+        verify(exactly = 0) { friendshipSolicitudeRepository.save(any()) }
     }
 
     @Test
@@ -204,10 +203,10 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
             addressedId = martin.id
         )
 
-        every { userRepositoryPort.findOrFail(match { it.id == george.id }) } returns george
-        every { userRepositoryPort.findOrFail(match { it.id == martin.id }) } returns martin
+        every { userRepository.findOrFail(match { it.id == george.id }) } returns george
+        every { userRepository.findOrFail(match { it.id == martin.id }) } returns martin
         every {
-            friendshipSolicitudeRepositoryPort.findAll(match {
+            friendshipSolicitudeRepository.findAll(match {
                 it.addressedId == martin.id && it.requesterId == george.id && it.solicitudeStatus == PENDING
             })
         } returns listOf(
@@ -227,9 +226,9 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
         // Then
         response.shouldNotBeNull()
         response.shouldBe("""{"code":"FRIENDSHIP_SOLICITUDE_ALREADY_SENT","message":"User ${george.id} has a pending friendship solicitude to ${martin.id}"}""")
-        verify(exactly = 2) { userRepositoryPort.findOrFail(any()) }
-        verify(exactly = 1) { friendshipSolicitudeRepositoryPort.findAll(any()) }
-        verify(exactly = 0) { friendshipSolicitudeRepositoryPort.save(any()) }
+        verify(exactly = 2) { userRepository.findOrFail(any()) }
+        verify(exactly = 1) { friendshipSolicitudeRepository.findAll(any()) }
+        verify(exactly = 0) { friendshipSolicitudeRepository.save(any()) }
     }
 
     @Test
@@ -246,15 +245,15 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
             addressedId = martin.id
         )
 
-        every { userRepositoryPort.findOrFail(match { it.id == george.id }) } returns george
-        every { userRepositoryPort.findOrFail(match { it.id == martin.id }) } returns martin
+        every { userRepository.findOrFail(match { it.id == george.id }) } returns george
+        every { userRepository.findOrFail(match { it.id == martin.id }) } returns martin
         every {
-            friendshipSolicitudeRepositoryPort.findAll(match {
+            friendshipSolicitudeRepository.findAll(match {
                 it.addressedId == martin.id && it.requesterId == george.id && it.solicitudeStatus == PENDING
             })
         } returns listOf()
         every {
-            friendshipSolicitudeRepositoryPort.findAll(match {
+            friendshipSolicitudeRepository.findAll(match {
                 it.addressedId == george.id && it.requesterId == martin.id && it.solicitudeStatus == PENDING
             })
         } returns listOf(
@@ -274,9 +273,9 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
         // Then
         response.shouldNotBeNull()
         response.shouldBe("""{"code":"FRIENDSHIP_SOLICITUDE_ALREADY_SENT","message":"User ${martin.id} has a pending friendship solicitude to ${george.id}"}""")
-        verify(exactly = 2) { userRepositoryPort.findOrFail(any()) }
-        verify(exactly = 2) { friendshipSolicitudeRepositoryPort.findAll(any()) }
-        verify(exactly = 0) { friendshipSolicitudeRepositoryPort.save(any()) }
+        verify(exactly = 2) { userRepository.findOrFail(any()) }
+        verify(exactly = 2) { friendshipSolicitudeRepository.findAll(any()) }
+        verify(exactly = 0) { friendshipSolicitudeRepository.save(any()) }
     }
 
     /**
@@ -290,11 +289,11 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
         val solicitude =
             FriendshipSolicitudeFactory.common(addressedId = george.id, requesterId = martin.id)
 
-        every { friendshipSolicitudeRepositoryPort.findOrFail(match { it.id == solicitude.id }) } returns solicitude
-        every { userRepositoryPort.findOrFail(match { it.id == martin.id }) } returns martin
-        every { userRepositoryPort.findOrFail(match { it.id == george.id }) } returns george
-        every { userRepositoryPort.saveAll(any()) } returns listOf(george, martin)
-        every { friendshipSolicitudeRepositoryPort.save(any()) } returns solicitude.copy(
+        every { friendshipSolicitudeRepository.findOrFail(match { it.id == solicitude.id }) } returns solicitude
+        every { userRepository.findOrFail(match { it.id == martin.id }) } returns martin
+        every { userRepository.findOrFail(match { it.id == george.id }) } returns george
+        every { userRepository.saveAll(any()) } returns listOf(george, martin)
+        every { friendshipSolicitudeRepository.save(any()) } returns solicitude.copy(
             solicitudeStatus = ACCEPTED
         )
 
@@ -315,10 +314,10 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
             }
             """.trimIndent().replace(Regex("\\s+"), "")
         )
-        verify(exactly = 1) { friendshipSolicitudeRepositoryPort.findOrFail(any()) }
-        verify(exactly = 1) { userRepositoryPort.saveAll(any()) }
+        verify(exactly = 1) { friendshipSolicitudeRepository.findOrFail(any()) }
+        verify(exactly = 1) { userRepository.saveAll(any()) }
         // TODO it could be resolved with only 2 network calls
-        verify(exactly = 4) { userRepositoryPort.findOrFail(any()) }
+        verify(exactly = 4) { userRepository.findOrFail(any()) }
     }
 
     @Test
@@ -333,9 +332,9 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
                 solicitudeStatus = REJECTED
             )
 
-        every { friendshipSolicitudeRepositoryPort.findOrFail(match { it.id == solicitude.id }) } returns solicitude
-        every { userRepositoryPort.findOrFail(match { it.id == martin.id }) } returns martin
-        every { userRepositoryPort.findOrFail(match { it.id == george.id }) } returns george
+        every { friendshipSolicitudeRepository.findOrFail(match { it.id == solicitude.id }) } returns solicitude
+        every { userRepository.findOrFail(match { it.id == martin.id }) } returns martin
+        every { userRepository.findOrFail(match { it.id == george.id }) } returns george
 
         // When
         val response = mockMvc.perform(
@@ -345,8 +344,8 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
 
         // Then
         response.shouldBe("""{"code":"FRIENDSHIP_SOLICITUDE_STATUS_CAN_NOT_CHANGE","message":"Friendship solicitude ${solicitude.id} status can not change, because it has raised an immutable status REJECTED"}""")
-        verify(exactly = 0) { userRepositoryPort.save(any()) }
-        verify(exactly = 0) { userRepositoryPort.findAll(any()) }
+        verify(exactly = 0) { userRepository.save(any()) }
+        verify(exactly = 0) { userRepository.findAll(any()) }
     }
 
     @Test
@@ -361,9 +360,9 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
                 solicitudeStatus = ACCEPTED
             )
 
-        every { friendshipSolicitudeRepositoryPort.findOrFail(match { it.id == solicitude.id }) } returns solicitude
-        every { userRepositoryPort.findOrFail(match { it.id == martin.id }) } returns martin
-        every { userRepositoryPort.findOrFail(match { it.id == george.id }) } returns george
+        every { friendshipSolicitudeRepository.findOrFail(match { it.id == solicitude.id }) } returns solicitude
+        every { userRepository.findOrFail(match { it.id == martin.id }) } returns martin
+        every { userRepository.findOrFail(match { it.id == george.id }) } returns george
 
         // When
         val response = mockMvc.perform(
@@ -373,8 +372,8 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
 
         // Then
         response.shouldBe("""{"code":"FRIENDSHIP_SOLICITUDE_STATUS_CAN_NOT_CHANGE","message":"Friendship solicitude ${solicitude.id} status can not change, because it has raised an immutable status ACCEPTED"}""")
-        verify(exactly = 0) { userRepositoryPort.save(any()) }
-        verify(exactly = 0) { userRepositoryPort.findAll(any()) }
+        verify(exactly = 0) { userRepository.save(any()) }
+        verify(exactly = 0) { userRepository.findAll(any()) }
     }
 
     /**
@@ -388,11 +387,11 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
         val solicitude =
             FriendshipSolicitudeFactory.common(addressedId = george.id, requesterId = martin.id)
 
-        every { friendshipSolicitudeRepositoryPort.findOrFail(match { it.id == solicitude.id }) } returns solicitude
-        every { userRepositoryPort.findOrFail(match { it.id == martin.id }) } returns martin
-        every { userRepositoryPort.findOrFail(match { it.id == george.id }) } returns george
-        every { userRepositoryPort.saveAll(any()) } returns listOf(george, martin)
-        every { friendshipSolicitudeRepositoryPort.save(any()) } returns solicitude.copy(
+        every { friendshipSolicitudeRepository.findOrFail(match { it.id == solicitude.id }) } returns solicitude
+        every { userRepository.findOrFail(match { it.id == martin.id }) } returns martin
+        every { userRepository.findOrFail(match { it.id == george.id }) } returns george
+        every { userRepository.saveAll(any()) } returns listOf(george, martin)
+        every { friendshipSolicitudeRepository.save(any()) } returns solicitude.copy(
             solicitudeStatus = REJECTED
         )
 
@@ -413,8 +412,8 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
             }
             """.trimIndent().replace(Regex("\\s+"), "")
         )
-        verify(exactly = 1) { friendshipSolicitudeRepositoryPort.findOrFail(any()) }
-        verify(exactly = 1) { friendshipSolicitudeRepositoryPort.save(any()) }
+        verify(exactly = 1) { friendshipSolicitudeRepository.findOrFail(any()) }
+        verify(exactly = 1) { friendshipSolicitudeRepository.save(any()) }
     }
 
     @Test
@@ -429,9 +428,9 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
                 solicitudeStatus = REJECTED
             )
 
-        every { friendshipSolicitudeRepositoryPort.findOrFail(match { it.id == solicitude.id }) } returns solicitude
-        every { userRepositoryPort.findOrFail(match { it.id == martin.id }) } returns martin
-        every { userRepositoryPort.findOrFail(match { it.id == george.id }) } returns george
+        every { friendshipSolicitudeRepository.findOrFail(match { it.id == solicitude.id }) } returns solicitude
+        every { userRepository.findOrFail(match { it.id == martin.id }) } returns martin
+        every { userRepository.findOrFail(match { it.id == george.id }) } returns george
 
         // When
         val response = mockMvc.perform(
@@ -441,8 +440,8 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
 
         // Then
         response.shouldBe("""{"code":"FRIENDSHIP_SOLICITUDE_STATUS_CAN_NOT_CHANGE","message":"Friendship solicitude ${solicitude.id} status can not change, because it has raised an immutable status REJECTED"}""")
-        verify(exactly = 0) { userRepositoryPort.save(any()) }
-        verify(exactly = 0) { userRepositoryPort.findAll(any()) }
+        verify(exactly = 0) { userRepository.save(any()) }
+        verify(exactly = 0) { userRepository.findAll(any()) }
     }
 
     @Test
@@ -457,8 +456,8 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
                 solicitudeStatus = ACCEPTED
             )
 
-        every { friendshipSolicitudeRepositoryPort.findOrFail(match { it.id == solicitude.id }) } returns solicitude
-        every { userRepositoryPort.findOrFail(match { it.id == george.id }) } returns george
+        every { friendshipSolicitudeRepository.findOrFail(match { it.id == solicitude.id }) } returns solicitude
+        every { userRepository.findOrFail(match { it.id == george.id }) } returns george
 
         // When
         val response = mockMvc.perform(
@@ -468,9 +467,9 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
 
         // Then
         response.shouldBe("""{"code":"FRIENDSHIP_SOLICITUDE_STATUS_CAN_NOT_CHANGE","message":"Friendship solicitude ${solicitude.id} status can not change, because it has raised an immutable status ACCEPTED"}""")
-        verify(exactly = 0) { friendshipSolicitudeRepositoryPort.save(any()) }
-        verify(exactly = 1) { friendshipSolicitudeRepositoryPort.findOrFail(any()) }
-        verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
+        verify(exactly = 0) { friendshipSolicitudeRepository.save(any()) }
+        verify(exactly = 1) { friendshipSolicitudeRepository.findOrFail(any()) }
+        verify(exactly = 1) { userRepository.findOrFail(any()) }
     }
 
     @Test
@@ -485,8 +484,8 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
                 solicitudeStatus = PENDING
             )
 
-        every { friendshipSolicitudeRepositoryPort.findOrFail(match { it.id == solicitude.id }) } returns solicitude
-        every { userRepositoryPort.findOrFail(match { it.id == addressedId }) } throws DynamoDbException.EntityDoesNotExist(
+        every { friendshipSolicitudeRepository.findOrFail(match { it.id == solicitude.id }) } returns solicitude
+        every { userRepository.findOrFail(match { it.id == addressedId }) } throws DynamoDbException.EntityDoesNotExist(
             addressedId.toString()
         )
 
@@ -498,8 +497,8 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
 
         // Then
         response.shouldBe("""{"code":"ENTITY_NOT_EXIST","message":"Entity $addressedId does not exist"}""")
-        verify(exactly = 0) { friendshipSolicitudeRepositoryPort.save(any()) }
-        verify(exactly = 0) { friendshipSolicitudeRepositoryPort.findOrFail(any()) }
-        verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
+        verify(exactly = 0) { friendshipSolicitudeRepository.save(any()) }
+        verify(exactly = 0) { friendshipSolicitudeRepository.findOrFail(any()) }
+        verify(exactly = 1) { userRepository.findOrFail(any()) }
     }
 }
