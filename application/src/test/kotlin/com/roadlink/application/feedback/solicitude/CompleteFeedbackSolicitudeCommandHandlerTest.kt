@@ -76,12 +76,10 @@ class CompleteFeedbackSolicitudeCommandHandlerTest : BehaviorSpec({
             )
 
             Then("the response should be the expected") {
-                response.feedback.id.shouldNotBeNull()
-                response.feedback.receiverId.shouldBe(receiverId)
-                response.feedback.reviewerId.shouldBe(reviewerId)
-                response.feedback.tripId.shouldBe(tripId)
-                response.feedback.rating.shouldBe(rating)
-                response.feedback.comment.shouldBe(comment)
+                response.solicitude.id.shouldNotBeNull()
+                response.solicitude.receiverId.shouldBe(receiverId)
+                response.solicitude.reviewerId.shouldBe(reviewerId)
+                response.solicitude.tripId.shouldBe(tripId)
                 verify { userRepository.findOrFail(any()) }
                 verify { feedbackRepository.save(any()) }
                 verify { feedbackSolicitudeRepository.save(any()) }
@@ -138,7 +136,11 @@ class CompleteFeedbackSolicitudeCommandHandlerTest : BehaviorSpec({
             val rating = 5
 
             every { userRepository.findOrFail(match { it.id == reviewerId }) } returns UserFactory.common(id = reviewerId)
-            every { feedbackSolicitudeRepository.findOrFail(match { it.id == feedbackSolicitudeId }) } returns FeedbackSolicitudeFactory.common(
+            every {
+                feedbackSolicitudeRepository.findOrFail(match {
+                    it.id == feedbackSolicitudeId
+                })
+            } returns FeedbackSolicitudeFactory.common(
                 id = feedbackSolicitudeId,
                 reviewerId = reviewerId,
                 receiverId = receiverId,

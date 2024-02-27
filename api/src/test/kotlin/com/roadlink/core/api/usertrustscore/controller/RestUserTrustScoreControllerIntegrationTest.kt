@@ -31,7 +31,7 @@ class RestUserTrustScoreControllerIntegrationTest : BaseControllerTest() {
         val george = UserFactory.common()
         val martin = UserFactory.common()
         george.beFriendOf(martin)
-        every { userRepositoryPort.findOrFail(match { it.id == george.id }) } returns george
+        every { userRepository.findOrFail(match { it.id == george.id }) } returns george
 
         val feedbacksGiven = mutableListOf<Feedback>()
         repeat(10) {
@@ -42,8 +42,8 @@ class RestUserTrustScoreControllerIntegrationTest : BaseControllerTest() {
             feedbacksReceived.add(FeedbackFactory.common(receiverId = george.id, rating = 5))
         }
 
-        every { feedbackRepositoryPort.findAll(match { it.reviewerId == george.id }) } returns feedbacksGiven
-        every { feedbackRepositoryPort.findAll(match { it.receiverId == george.id }) } returns feedbacksReceived
+        every { feedbackRepository.findAll(match { it.reviewerId == george.id }) } returns feedbacksGiven
+        every { feedbackRepository.findAll(match { it.receiverId == george.id }) } returns feedbacksReceived
 
         // When
         val response = mockMvc.perform(
@@ -64,15 +64,15 @@ class RestUserTrustScoreControllerIntegrationTest : BaseControllerTest() {
             }
         """.trimIndent().replace(Regex("\\s+"), "")
         )
-        verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
-        verify(exactly = 2) { feedbackRepositoryPort.findAll(any()) }
+        verify(exactly = 1) { userRepository.findOrFail(any()) }
+        verify(exactly = 2) { feedbackRepository.findAll(any()) }
     }
 
     @Test
     fun `when the user does not exist, then an exception must be thrown`() {
         // Given
         val georgeId = UUID.randomUUID()
-        every { userRepositoryPort.findOrFail(match { it.id == georgeId }) } throws DynamoDbException.EntityDoesNotExist(
+        every { userRepository.findOrFail(match { it.id == georgeId }) } throws DynamoDbException.EntityDoesNotExist(
             georgeId.toString()
         )
 
@@ -83,8 +83,8 @@ class RestUserTrustScoreControllerIntegrationTest : BaseControllerTest() {
 
         // Then
         response.shouldBe("""{"code":"ENTITY_NOT_EXIST","message":"Entity $georgeId does not exist"}""")
-        verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
-        verify(exactly = 0) { feedbackRepositoryPort.findAll(any()) }
+        verify(exactly = 1) { userRepository.findOrFail(any()) }
+        verify(exactly = 0) { feedbackRepository.findAll(any()) }
     }
 
 }

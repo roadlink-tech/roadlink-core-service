@@ -38,9 +38,9 @@ class FeedbackControllerIntegrationTest : BaseControllerTest() {
         val tripId = UUID.randomUUID()
         val feedbackId = UUID.randomUUID()
 
-        every { userRepositoryPort.findOrFail(match { it.id == george.id }) } returns george
-        every { userRepositoryPort.findOrFail(match { it.id == martin.id }) } returns martin
-        every { feedbackRepositoryPort.save(any()) } returns FeedbackFactory.common(
+        every { userRepository.findOrFail(match { it.id == george.id }) } returns george
+        every { userRepository.findOrFail(match { it.id == martin.id }) } returns martin
+        every { feedbackRepository.save(any()) } returns FeedbackFactory.common(
             id = feedbackId,
             tripId = tripId,
             reviewerId = martin.id,
@@ -72,8 +72,8 @@ class FeedbackControllerIntegrationTest : BaseControllerTest() {
                 "rating":5
             }""".trimIndent().replace(Regex("\\s+"), "")
         )
-        verify(exactly = 2) { userRepositoryPort.findOrFail(any()) }
-        verify(exactly = 1) { feedbackRepositoryPort.save(any()) }
+        verify(exactly = 2) { userRepository.findOrFail(any()) }
+        verify(exactly = 1) { feedbackRepository.save(any()) }
     }
 
     @Test
@@ -83,10 +83,10 @@ class FeedbackControllerIntegrationTest : BaseControllerTest() {
         val martin = UserFactory.common()
         val tripId = UUID.randomUUID()
 
-        every { userRepositoryPort.findOrFail(match { it.id == georgeId }) } throws DynamoDbException.EntityDoesNotExist(
+        every { userRepository.findOrFail(match { it.id == georgeId }) } throws DynamoDbException.EntityDoesNotExist(
             georgeId.toString()
         )
-        every { userRepositoryPort.findOrFail(match { it.id == martin.id }) } returns martin
+        every { userRepository.findOrFail(match { it.id == martin.id }) } returns martin
 
         // When
         val response = mockMvc.perform(
@@ -104,8 +104,8 @@ class FeedbackControllerIntegrationTest : BaseControllerTest() {
         response.shouldBe(
             """{"code":"ENTITY_NOT_EXIST","message":"Entity $georgeId does not exist"}"""
         )
-        verify(exactly = 2) { userRepositoryPort.findOrFail(any()) }
-        verify(exactly = 0) { feedbackRepositoryPort.save(any()) }
+        verify(exactly = 2) { userRepository.findOrFail(any()) }
+        verify(exactly = 0) { feedbackRepository.save(any()) }
     }
 
     @Test
@@ -115,8 +115,8 @@ class FeedbackControllerIntegrationTest : BaseControllerTest() {
         val martinId = UUID.randomUUID()
         val tripId = UUID.randomUUID()
 
-        every { userRepositoryPort.findOrFail(match { it.id == george.id }) } returns george
-        every { userRepositoryPort.findOrFail(match { it.id == martinId }) } throws DynamoDbException.EntityDoesNotExist(
+        every { userRepository.findOrFail(match { it.id == george.id }) } returns george
+        every { userRepository.findOrFail(match { it.id == martinId }) } throws DynamoDbException.EntityDoesNotExist(
             martinId.toString()
         )
         // When
@@ -135,8 +135,8 @@ class FeedbackControllerIntegrationTest : BaseControllerTest() {
         response.shouldBe(
             """{"code":"ENTITY_NOT_EXIST","message":"Entity $martinId does not exist"}"""
         )
-        verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
-        verify(exactly = 0) { feedbackRepositoryPort.save(any()) }
+        verify(exactly = 1) { userRepository.findOrFail(any()) }
+        verify(exactly = 0) { feedbackRepository.save(any()) }
     }
 
     @Test
@@ -146,9 +146,9 @@ class FeedbackControllerIntegrationTest : BaseControllerTest() {
         val martin = UserFactory.common()
         val tripId = UUID.randomUUID()
 
-        every { userRepositoryPort.findOrFail(match { it.id == george.id }) } returns george
-        every { userRepositoryPort.findOrFail(match { it.id == martin.id }) } returns martin
-        every { feedbackRepositoryPort.save(any()) } throws RuntimeException()
+        every { userRepository.findOrFail(match { it.id == george.id }) } returns george
+        every { userRepository.findOrFail(match { it.id == martin.id }) } returns martin
+        every { feedbackRepository.save(any()) } throws RuntimeException()
 
         // When
         val response = mockMvc.perform(
@@ -165,8 +165,8 @@ class FeedbackControllerIntegrationTest : BaseControllerTest() {
 
         // Then
         response.shouldBe("""{"code":"INTERNAL_SERVER_ERROR","message":"Oops, something wrong happened"}""")
-        verify(exactly = 2) { userRepositoryPort.findOrFail(any()) }
-        verify(exactly = 1) { feedbackRepositoryPort.save(any()) }
+        verify(exactly = 2) { userRepository.findOrFail(any()) }
+        verify(exactly = 1) { feedbackRepository.save(any()) }
     }
 
     /**
@@ -190,8 +190,8 @@ class FeedbackControllerIntegrationTest : BaseControllerTest() {
             )
         )
 
-        every { feedbackRepositoryPort.findAll(match { it.receiverId == george.id }) } returns feedbacks
-        every { userRepositoryPort.findOrFail(match { it.id == george.id }) } returns george
+        every { feedbackRepository.findAll(match { it.receiverId == george.id }) } returns feedbacks
+        every { userRepository.findOrFail(match { it.id == george.id }) } returns george
 
         // When
         val response = mockMvc.perform(
@@ -214,8 +214,8 @@ class FeedbackControllerIntegrationTest : BaseControllerTest() {
             ]
         """.trimIndent().replace(Regex("\\s+"), "")
         )
-        verify(exactly = 1) { feedbackRepositoryPort.findAll(any()) }
-        verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
+        verify(exactly = 1) { feedbackRepository.findAll(any()) }
+        verify(exactly = 1) { userRepository.findOrFail(any()) }
     }
 
     @Test
@@ -226,8 +226,8 @@ class FeedbackControllerIntegrationTest : BaseControllerTest() {
         repeat(5) {
             feedbacks.add(FeedbackFactory.common(receiverId = george.id))
         }
-        every { feedbackRepositoryPort.findAll(match { it.receiverId == george.id }) } returns feedbacks
-        every { userRepositoryPort.findOrFail(match { it.id == george.id }) } returns george
+        every { feedbackRepository.findAll(match { it.receiverId == george.id }) } returns feedbacks
+        every { userRepository.findOrFail(match { it.id == george.id }) } returns george
 
         // When
         val response = mockMvc.perform(
@@ -239,15 +239,15 @@ class FeedbackControllerIntegrationTest : BaseControllerTest() {
         val feedbacksResponse: List<FeedbackResponse> =
             objectMapper.readValue(response, List::class.java) as List<FeedbackResponse>
         feedbacksResponse.size.shouldBe(5)
-        verify(exactly = 1) { feedbackRepositoryPort.findAll(any()) }
-        verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
+        verify(exactly = 1) { feedbackRepository.findAll(any()) }
+        verify(exactly = 1) { userRepository.findOrFail(any()) }
     }
 
     @Test
     fun `when list the feedbacks but the user does not exist, then an exception must be throw`() {
         // Given
         val george = UserFactory.common()
-        every { userRepositoryPort.findOrFail(match { it.id == george.id }) } throws DynamoDbException.EntityDoesNotExist(
+        every { userRepository.findOrFail(match { it.id == george.id }) } throws DynamoDbException.EntityDoesNotExist(
             george.id.toString()
         )
 
@@ -259,7 +259,7 @@ class FeedbackControllerIntegrationTest : BaseControllerTest() {
 
         // Then
         response.shouldBe("""{"code":"ENTITY_NOT_EXIST","message":"Entity ${george.id} does not exist"}""")
-        verify(exactly = 0) { feedbackRepositoryPort.findAll(any()) }
-        verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
+        verify(exactly = 0) { feedbackRepository.findAll(any()) }
+        verify(exactly = 1) { userRepository.findOrFail(any()) }
     }
 }

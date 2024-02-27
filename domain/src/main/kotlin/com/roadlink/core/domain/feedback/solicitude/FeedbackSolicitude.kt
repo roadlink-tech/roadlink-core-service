@@ -27,7 +27,7 @@ data class FeedbackSolicitude(
         rating: Int,
         feedbackRepository: RepositoryPort<Feedback, FeedbackCriteria>,
         feedbackSolicitudeRepository: RepositoryPort<FeedbackSolicitude, FeedbackSolicitudeCriteria>
-    ): Feedback {
+    ): FeedbackSolicitude {
         if (status == Status.REJECTED) {
             throw FeedbackSolicitudeException.FeedbackSolicitudeAlreadyRejected(id)
         }
@@ -44,7 +44,7 @@ data class FeedbackSolicitude(
             comment = comment
         )
         feedbackRepository.save(feedback)
-        feedbackSolicitudeRepository.save(this.copy(status = Status.COMPLETED)).also { return feedback }
+        feedbackSolicitudeRepository.save(this.copy(status = Status.COMPLETED)).also { return it }
     }
 
     fun reject(
@@ -57,5 +57,20 @@ data class FeedbackSolicitude(
         PENDING,
         REJECTED,
         COMPLETED
+    }
+
+    companion object {
+
+        fun findByIdAndStatusPending(
+            feedbackSolicitudeRepository: RepositoryPort<FeedbackSolicitude, FeedbackSolicitudeCriteria>,
+            id: UUID
+        ): FeedbackSolicitude {
+            return feedbackSolicitudeRepository.findOrFail(
+                FeedbackSolicitudeCriteria(
+                    id = id,
+                    status = Status.PENDING
+                )
+            )
+        }
     }
 }

@@ -20,14 +20,15 @@ import org.springframework.web.bind.annotation.RestController
 import java.util.*
 
 @RestController
-@RequestMapping("/users/{receiverId}/feedbacks")
+@RequestMapping("/users/{userId}/feedbacks")
 class FeedbackController(private val commandBus: CommandBus) {
 
+    @Deprecated("This endpoint must no be necessary because the feedbacks are create once a feedback solicitude is completed")
     @PostMapping
     @ResponseBody
     @ResponseStatus(value = CREATED)
-    fun createFeedback(
-        @PathVariable receiverId: String,
+    fun create(
+        @PathVariable("userId") receiverId: String,
         @RequestBody request: FeedbackCreationRequest
     ): FeedbackResponse {
         val response =
@@ -40,7 +41,7 @@ class FeedbackController(private val commandBus: CommandBus) {
     @GetMapping
     @ResponseBody
     @ResponseStatus(value = OK)
-    fun retrieveUserFeedbacks(@PathVariable receiverId: String): List<FeedbackResponse> {
+    fun list(@PathVariable("userId") receiverId: String): List<FeedbackResponse> {
         val response =
             commandBus.publish<ListFeedbacksCommand, ListFeedbacksCommandResponse>(
                 ListFeedbacksCommand(UUID.fromString(receiverId))
