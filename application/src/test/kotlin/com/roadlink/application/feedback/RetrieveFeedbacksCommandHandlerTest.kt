@@ -13,7 +13,6 @@ import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import java.util.*
 
 class RetrieveFeedbacksCommandHandlerTest : BehaviorSpec({
     val repository: RepositoryPort<Feedback, FeedbackCriteria> = mockk()
@@ -23,7 +22,7 @@ class RetrieveFeedbacksCommandHandlerTest : BehaviorSpec({
     }
 
     Given("a feedback command handler") {
-        val handler = RetrieveFeedbacksCommandHandler(userRepository, repository)
+        val handler = ListFeedbacksCommandHandler(userRepository, repository)
 
         When("a user has more than one feedback received") {
             val user = UserFactory.common()
@@ -33,7 +32,7 @@ class RetrieveFeedbacksCommandHandlerTest : BehaviorSpec({
             }
             every { userRepository.findOrFail(match { it.id == user.id }) } returns user
             every { repository.findAll(match { it.receiverId == user.id }) } returns feedbacks
-            val response = handler.handle(RetrieveFeedbacksCommand(receiverId = user.id))
+            val response = handler.handle(ListFeedbacksCommand(receiverId = user.id))
 
             Then("all of those must be retrieved") {
                 verify(exactly = 1) { repository.findAll(any()) }
@@ -45,7 +44,7 @@ class RetrieveFeedbacksCommandHandlerTest : BehaviorSpec({
             val user = UserFactory.common()
             every { userRepository.findOrFail(match { it.id == user.id }) } returns user
             every { repository.findAll(match { it.receiverId == user.id }) } returns emptyList()
-            val response = handler.handle(RetrieveFeedbacksCommand(receiverId = user.id))
+            val response = handler.handle(ListFeedbacksCommand(receiverId = user.id))
 
             Then("all of those must be retrieved") {
                 verify(exactly = 1) { repository.findAll(any()) }
