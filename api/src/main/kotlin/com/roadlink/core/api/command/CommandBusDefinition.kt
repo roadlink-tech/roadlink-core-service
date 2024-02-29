@@ -75,7 +75,7 @@ open class CommandBusDefinition {
             it.registerHandler(createVehicleCommandHandler)
             it.registerHandler(listVehiclesCommandHandler)
             it.registerHandler(deleteVehicleCommandHandler)
-            it.registerHandler(patchUserCommandHandler)
+            it.registerHandler(patchVehicleCommandHandler)
         }
     }
 }

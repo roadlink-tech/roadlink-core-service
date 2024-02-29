@@ -33,7 +33,7 @@ class PatchVehicleCommandHandler(
                     model = command.vehicle.model,
                     licencePlate = command.vehicle.licencePlate
                 ).save(vehicleRepository).also {
-                    return PatchVehicleCommandResponse(vehicle = VehicleDTO.from(vehicle))
+                    return PatchVehicleCommandResponse(vehicle = VehicleDTO.from(it))
                 }
             }
     }

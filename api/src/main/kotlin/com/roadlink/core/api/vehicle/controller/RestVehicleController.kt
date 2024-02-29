@@ -75,28 +75,28 @@ class RestVehicleController(private val commandBus: CommandBus) {
 
 data class PatchVehicleRequest(
     @JsonProperty("brand")
-    val brand: String,
+    val brand: String? = "",
     @JsonProperty("model")
-    val model: String,
+    val model: String? = "",
     @JsonProperty("licence_plate")
-    val licencePlate: String,
+    val licencePlate: String? = "",
     @JsonProperty("icon_url")
-    val iconUrl: String,
+    val iconUrl: String? = "",
     @JsonProperty("capacity")
-    val capacity: Int,
+    val capacity: Int? = null,
     @JsonProperty("color")
-    val color: String,
+    val color: String? = "",
 ) {
     fun toDto(driverId: String, vehicleId: String): VehicleDTO {
         return VehicleDTO(
             id = UUID.fromString(vehicleId),
             driverId = UUID.fromString(driverId),
-            brand = brand,
-            model = model,
-            licencePlate = licencePlate,
-            iconUrl = iconUrl,
-            capacity = capacity,
-            color = color
+            brand = brand ?: "",
+            model = model ?: "",
+            licencePlate = licencePlate ?: "",
+            iconUrl = iconUrl ?: "",
+            capacity = capacity ?: 0,
+            color = color ?: ""
         )
     }
 }

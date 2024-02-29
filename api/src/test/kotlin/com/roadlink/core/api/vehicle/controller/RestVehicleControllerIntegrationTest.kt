@@ -326,4 +326,124 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
         verify(exactly = 1) { userRepository.findOrFail(any()) }
         verify(exactly = 0) { vehicleRepository.delete(any()) }
     }
+
+    /**
+     * Patch Vehicle
+     */
+    @Test
+    fun `when patch an existing vehicle, then it must be updated`() {
+        // Given
+        val george = UserFactory.common()
+        every { userRepository.findOrFail(match { it.id == george.id }) } returns george
+        val vehicleId = UUID.randomUUID()
+        val vehicle = VehicleFactory.common(id = vehicleId)
+        every { vehicleRepository.findOrFail(match { it.id == vehicleId }) } returns vehicle
+        every { vehicleRepository.save(match { it.id == vehicleId }) } returns vehicle.copy(
+            brand = "Ford",
+            model = "Bronco",
+            licencePlate = "AG123AG",
+            iconUrl = "https://ford.bronco.com",
+            capacity = 2,
+            color = "black"
+        )
+
+        // When
+        val response = mockMvc.perform(
+            MockMvcRequestBuilders.patch("/users/${george.id}/vehicles/${vehicleId}").content(
+                """{
+                    "brand":"Ford",
+                    "model":"Bronco",
+                    "licence_plate":"AG123AG",
+                    "icon_url":"https://ford.bronco.com",
+                    "capacity":"2",
+                    "color":"black"
+                }""".trimIndent()
+            ).contentType(APPLICATION_JSON)
+        ).andExpect(MockMvcResultMatchers.status().isOk)
+            .andReturn().response.contentAsString
+
+        // Return
+        response.shouldBe(
+            """
+            {
+              "id": "$vehicleId",
+              "brand": "Ford",
+              "model": "Bronco",
+              "licence_plate": "AG123AG",
+              "icon_url": "https://ford.bronco.com",
+              "capacity": 2,
+              "color": "black"
+            }
+        """.trimIndent().replace(Regex("\\s+"), "")
+        )
+        verify(exactly = 1) { userRepository.findOrFail(any()) }
+        verify(exactly = 1) { vehicleRepository.findOrFail(any()) }
+        verify(exactly = 1) { vehicleRepository.save(any()) }
+    }
+
+    @Test
+    fun `when patch an existing vehicle with an invalid brand, then it must thrown an error`() {
+        // Given
+        val george = UserFactory.common()
+        every { userRepository.findOrFail(match { it.id == george.id }) } returns george
+        val vehicleId = UUID.randomUUID()
+        val vehicle = VehicleFactory.common(id = vehicleId)
+        every { vehicleRepository.findOrFail(match { it.id == vehicleId }) } returns vehicle
+
+        // When
+        val response = mockMvc.perform(
+            MockMvcRequestBuilders.patch("/users/${george.id}/vehicles/${vehicleId}").content(
+                """{
+                    "brand":"Frutelli"
+                }""".trimIndent()
+            ).contentType(APPLICATION_JSON)
+        ).andExpect(MockMvcResultMatchers.status().isBadRequest)
+            .andReturn().response.contentAsString
+
+        // Return
+        response.shouldBe("""{"code":"INVALID_BRAND","message":"The brand Frutelli is not available"}""")
+        verify(exactly = 1) { userRepository.findOrFail(any()) }
+        verify(exactly = 1) { vehicleRepository.findOrFail(any()) }
+        verify(exactly = 0) { vehicleRepository.save(any()) }
+    }
+
+    @Test
+    fun `when patch an existing vehicle with the capacity, then it must work ok`() {
+        // Given
+        val george = UserFactory.common()
+        every { userRepository.findOrFail(match { it.id == george.id }) } returns george
+        val vehicleId = UUID.randomUUID()
+        val vehicle = VehicleFactory.common(id = vehicleId)
+        every { vehicleRepository.findOrFail(match { it.id == vehicleId }) } returns vehicle
+        every { vehicleRepository.save(match { it.id == vehicleId }) } returns vehicle.copy(capacity = 2)
+
+        // When
+        val response = mockMvc.perform(
+            MockMvcRequestBuilders.patch("/users/${george.id}/vehicles/${vehicleId}").content(
+                """{
+                    "capacity":2
+                }""".trimIndent()
+            ).contentType(APPLICATION_JSON)
+        ).andExpect(MockMvcResultMatchers.status().isOk)
+            .andReturn().response.contentAsString
+
+        // Return
+        response.shouldBe(
+            """
+            {
+              "id": "$vehicleId",
+              "brand": "Ford",
+              "model": "Territory",
+              "licence_plate": "AG154AG",
+              "icon_url": "https://icon.com",
+              "capacity": 2,
+              "color": "white"
+            }
+        """.trimIndent().replace(Regex("\\s+"), "")
+        )
+        verify(exactly = 1) { userRepository.findOrFail(any()) }
+        verify(exactly = 1) { vehicleRepository.findOrFail(any()) }
+        verify(exactly = 1) { vehicleRepository.save(any()) }
+    }
+
 }

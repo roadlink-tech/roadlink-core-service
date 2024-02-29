@@ -43,7 +43,7 @@ data class Vehicle(
         if (color.isNotEmpty() && color != this.color) {
             this.color = color
         }
-        if (capacity != null && capacity != this.capacity) {
+        if (capacity != null && capacity > 0 && capacity != this.capacity) {
             this.capacity = capacity
         }
         VehicleValidationService().validate(this)
