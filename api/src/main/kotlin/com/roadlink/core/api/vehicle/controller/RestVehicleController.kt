@@ -57,6 +57,48 @@ class RestVehicleController(private val commandBus: CommandBus) {
             )
         )
     }
+
+    @PatchMapping("/{vehicleId}")
+    @ResponseBody
+    @ResponseStatus(value = OK)
+    fun patch(
+        @PathVariable("userId") driverId: String,
+        @PathVariable("vehicleId") vehicleId: String,
+        @RequestBody body: PatchVehicleRequest
+    ): VehicleResponse {
+        val response = commandBus.publish<PatchVehicleCommand, PatchVehicleCommandResponse>(
+            PatchVehicleCommand(body.toDto(driverId = driverId, vehicleId = vehicleId))
+        )
+        return VehicleResponse.from(response.vehicle)
+    }
+}
+
+data class PatchVehicleRequest(
+    @JsonProperty("brand")
+    val brand: String? = "",
+    @JsonProperty("model")
+    val model: String? = "",
+    @JsonProperty("licence_plate")
+    val licencePlate: String? = "",
+    @JsonProperty("icon_url")
+    val iconUrl: String? = "",
+    @JsonProperty("capacity")
+    val capacity: Int? = null,
+    @JsonProperty("color")
+    val color: String? = "",
+) {
+    fun toDto(driverId: String, vehicleId: String): VehicleDTO {
+        return VehicleDTO(
+            id = UUID.fromString(vehicleId),
+            driverId = UUID.fromString(driverId),
+            brand = brand ?: "",
+            model = model ?: "",
+            licencePlate = licencePlate ?: "",
+            iconUrl = iconUrl ?: "",
+            capacity = capacity ?: 0,
+            color = color ?: ""
+        )
+    }
 }
 
 data class VehicleCreationRequest(

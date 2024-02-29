@@ -46,7 +46,8 @@ open class CommandBusDefinition {
         // Vehicle
         @Qualifier("create_vehicle_command_handler") createVehicleCommandHandler: CommandHandler<CreateVehicleCommand, CreateVehicleCommandResponse>,
         @Qualifier("list_vehicles_command_handler") listVehiclesCommandHandler: CommandHandler<ListVehiclesCommand, ListVehiclesCommandResponse>,
-        @Qualifier("delete_vehicle_command_handler") deleteVehicleCommandHandler: CommandHandler<DeleteVehicleCommand, DeleteVehicleCommandResponse>
+        @Qualifier("delete_vehicle_command_handler") deleteVehicleCommandHandler: CommandHandler<DeleteVehicleCommand, DeleteVehicleCommandResponse>,
+        @Qualifier("patch_vehicle_command_handler") patchVehicleCommandHandler: CommandHandler<PatchVehicleCommand, PatchVehicleCommandResponse>
     ): CommandBus {
         return SimpleCommandBus().also {
             // User
@@ -74,6 +75,7 @@ open class CommandBusDefinition {
             it.registerHandler(createVehicleCommandHandler)
             it.registerHandler(listVehiclesCommandHandler)
             it.registerHandler(deleteVehicleCommandHandler)
+            it.registerHandler(patchVehicleCommandHandler)
         }
     }
 }

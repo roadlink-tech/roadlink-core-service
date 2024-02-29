@@ -9,15 +9,45 @@ import java.util.*
 data class Vehicle(
     val id: UUID,
     val driverId: UUID,
-    val brand: String,
-    val model: String,
-    val licencePlate: String,
-    val iconUrl: String,
-    val capacity: Int,
-    val color: String,
+    var brand: String,
+    var model: String,
+    var licencePlate: String,
+    var iconUrl: String,
+    var color: String,
+    var capacity: Int,
 ) : DomainEntity {
     fun save(repository: RepositoryPort<Vehicle, VehicleCriteria>): Vehicle {
         return repository.save(this)
+    }
+
+    fun merge(
+        brand: String = "",
+        model: String = "",
+        licencePlate: String = "",
+        iconUrl: String = "",
+        color: String = "",
+        capacity: Int? = null,
+    ): Vehicle {
+        if (brand.isNotEmpty() && this.brand != brand) {
+            this.brand = brand
+        }
+        if (model.isNotEmpty() && this.model != model) {
+            this.model = model
+        }
+        if (licencePlate.isNotEmpty() && licencePlate != iconUrl) {
+            this.licencePlate = licencePlate
+        }
+        if (iconUrl.isNotEmpty() && this.iconUrl != iconUrl) {
+            this.iconUrl = iconUrl
+        }
+        if (color.isNotEmpty() && color != this.color) {
+            this.color = color
+        }
+        if (capacity != null && capacity > 0 && capacity != this.capacity) {
+            this.capacity = capacity
+        }
+        VehicleValidationService().validate(this)
+        return this
     }
 
     init {
