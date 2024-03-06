@@ -63,4 +63,12 @@ open class VehicleHandlerDefinition {
     ): CommandHandler<PatchVehicleCommand, PatchVehicleCommandResponse> {
         return PatchVehicleCommandHandler(userRepositoryPort, vehicleRepositoryPort)
     }
+
+    @Bean("get_vehicle_command_handler")
+    open fun getVehicleCommandHandler(
+        vehicleRepositoryPort: RepositoryPort<Vehicle, VehicleCriteria>,
+        userRepositoryPort: RepositoryPort<User, UserCriteria>
+    ): CommandHandler<GetVehicleCommand, GetVehicleCommandResponse> {
+        return GetVehicleCommandHandler(userRepositoryPort, vehicleRepositoryPort)
+    }
 }

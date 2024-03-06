@@ -43,6 +43,24 @@ class RestVehicleController(private val commandBus: CommandBus) {
         return response.vehicles.map { vehicle -> VehicleResponse.from(vehicle) }
     }
 
+
+    @GetMapping("/{vehicleId}")
+    @ResponseBody
+    @ResponseStatus(value = OK)
+    fun get(
+        @PathVariable("userId") driverId: String,
+        @PathVariable("vehicleId") vehicleId: String
+    ): VehicleResponse {
+        val response =
+            commandBus.publish<GetVehicleCommand, GetVehicleCommandResponse>(
+                GetVehicleCommand(
+                    driverId = UUID.fromString(driverId),
+                    vehicleId = UUID.fromString(vehicleId)
+                )
+            )
+        return VehicleResponse.from(response.vehicle)
+    }
+
     @DeleteMapping("/{vehicleId}")
     @ResponseBody
     @ResponseStatus(value = OK)

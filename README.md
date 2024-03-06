@@ -19,7 +19,10 @@ make setup
 
 ### Local deployment
 
-Once you have configured docker, run the following command in order to execute a local deployment:
+First of all, you must change the _client_id_ parameter value in init-aws.sh file. You must use the same value which is
+being used in your Android App.
+
+Once you have configured docker and the _client_id_ value, run the following command in order to execute a local deployment:
 
 ```bash
 make deploy

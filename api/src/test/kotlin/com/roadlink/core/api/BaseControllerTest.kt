@@ -1,8 +1,6 @@
 package com.roadlink.core.api
 
-import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.ninjasquad.springmockk.MockkBean
 import com.roadlink.core.api.command.CommandBusDefinition
 import com.roadlink.core.api.error.ExceptionHandlerController
