@@ -36,7 +36,7 @@ class CompleteFeedbackSolicitudeCommandHandlerTest : BehaviorSpec({
         When("complete a solicitude successfully") {
             val reviewerId = UUID.randomUUID()
             val receiverId = UUID.randomUUID()
-            val tripId = UUID.randomUUID()
+            val tripLegId = UUID.randomUUID()
             val feedbackSolicitudeId = UUID.randomUUID()
             val comment = "ok"
             val rating = 5
@@ -46,19 +46,19 @@ class CompleteFeedbackSolicitudeCommandHandlerTest : BehaviorSpec({
                 id = feedbackSolicitudeId,
                 reviewerId = reviewerId,
                 receiverId = receiverId,
-                tripId = tripId
+                tripLegId = tripLegId
             )
             every { feedbackRepository.save(any()) } returns Feedback(
                 id = UUID.randomUUID(),
                 reviewerId = reviewerId,
                 receiverId = receiverId,
-                tripId = tripId,
+                tripLegId = tripLegId,
                 rating = rating,
                 comment = comment
             )
             every { feedbackSolicitudeRepository.save(match { it.status == Status.COMPLETED && it.id == feedbackSolicitudeId }) } returns FeedbackSolicitude(
                 id = feedbackSolicitudeId,
-                tripId = tripId,
+                tripLegId = tripLegId,
                 receiverId = receiverId,
                 reviewerId = reviewerId,
                 status = Status.COMPLETED
@@ -79,7 +79,7 @@ class CompleteFeedbackSolicitudeCommandHandlerTest : BehaviorSpec({
                 response.solicitude.id.shouldNotBeNull()
                 response.solicitude.receiverId.shouldBe(receiverId)
                 response.solicitude.reviewerId.shouldBe(reviewerId)
-                response.solicitude.tripId.shouldBe(tripId)
+                response.solicitude.tripLegId.shouldBe(tripLegId)
                 verify { userRepository.findOrFail(any()) }
                 verify { feedbackRepository.save(any()) }
                 verify { feedbackSolicitudeRepository.save(any()) }
@@ -90,7 +90,7 @@ class CompleteFeedbackSolicitudeCommandHandlerTest : BehaviorSpec({
         When("try to complete a solicitude already completed") {
             val reviewerId = UUID.randomUUID()
             val receiverId = UUID.randomUUID()
-            val tripId = UUID.randomUUID()
+            val tripLegId = UUID.randomUUID()
             val feedbackSolicitudeId = UUID.randomUUID()
             val comment = "ok"
             val rating = 5
@@ -100,7 +100,7 @@ class CompleteFeedbackSolicitudeCommandHandlerTest : BehaviorSpec({
                 id = feedbackSolicitudeId,
                 reviewerId = reviewerId,
                 receiverId = receiverId,
-                tripId = tripId,
+                tripLegId = tripLegId,
                 status = Status.COMPLETED
             )
 
@@ -130,7 +130,7 @@ class CompleteFeedbackSolicitudeCommandHandlerTest : BehaviorSpec({
         When("try to complete a solicitude already rejected") {
             val reviewerId = UUID.randomUUID()
             val receiverId = UUID.randomUUID()
-            val tripId = UUID.randomUUID()
+            val tripLegId = UUID.randomUUID()
             val feedbackSolicitudeId = UUID.randomUUID()
             val comment = "ok"
             val rating = 5
@@ -144,7 +144,7 @@ class CompleteFeedbackSolicitudeCommandHandlerTest : BehaviorSpec({
                 id = feedbackSolicitudeId,
                 reviewerId = reviewerId,
                 receiverId = receiverId,
-                tripId = tripId,
+                tripLegId = tripLegId,
                 status = Status.REJECTED
             )
 

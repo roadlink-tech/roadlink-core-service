@@ -64,14 +64,14 @@ class FeedbackSolicitudeRepositoryAdapterIntegrationTest : BehaviorSpec({
 
         When("save new feedback solicitudes and find it by trip id and status") {
             val reviewerId = UUID.randomUUID()
-            val tripId = UUID.randomUUID()
+            val tripLegId = UUID.randomUUID()
             repeat(10) {
                 repository.save(FeedbackSolicitudeFactory.custom(reviewerId = reviewerId, status = Status.PENDING))
             }
             repository.save(
                 FeedbackSolicitudeFactory.custom(
                     reviewerId = reviewerId,
-                    tripId = tripId,
+                    tripLegId = tripLegId,
                     status = Status.REJECTED
                 )
             )
@@ -79,7 +79,7 @@ class FeedbackSolicitudeRepositoryAdapterIntegrationTest : BehaviorSpec({
             val feedbackSolicitudesFound = repository.findAll(
                 criteria = FeedbackSolicitudeCriteria(
                     reviewerId = reviewerId,
-                    tripId = tripId
+                    tripLegId = tripLegId
                 )
             )
 

@@ -2,7 +2,6 @@ package com.roadlink.core.api.feedback.controller
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.roadlink.application.command.CommandBus
-import com.roadlink.application.feedback.*
 import com.roadlink.application.feedback.solicitude.*
 import com.roadlink.core.domain.feedback.solicitude.FeedbackSolicitude
 import org.springframework.http.HttpStatus
@@ -73,14 +72,14 @@ class FeedbackSolicitudeController(private val commandBus: CommandBus) {
 data class FeedbackSolicitudeCreationRequest(
     @JsonProperty("reviewer_id")
     val reviewerId: String,
-    @JsonProperty("trip_id")
-    val tripId: String
+    @JsonProperty("trip_leg_id")
+    val tripLegId: String
 ) {
     fun toDto(receiverId: String): FeedbackSolicitudeDTO {
         return FeedbackSolicitudeDTO(
             reviewerId = UUID.fromString(reviewerId),
             receiverId = UUID.fromString(receiverId),
-            tripId = UUID.fromString(tripId)
+            tripLegId = UUID.fromString(tripLegId)
         )
     }
 }
@@ -99,8 +98,8 @@ data class FeedbackSolicitudeResponse(
     val reviewerId: UUID,
     @JsonProperty("receiver_id")
     val receiverId: UUID,
-    @JsonProperty("trip_id")
-    val tripId: UUID,
+    @JsonProperty("trip_leg_id")
+    val tripLegId: UUID,
     @JsonProperty("status")
     val status: String? = null,
 ) {
@@ -111,7 +110,7 @@ data class FeedbackSolicitudeResponse(
                 reviewerId = feedback.reviewerId,
                 receiverId = feedback.receiverId,
                 status = feedback.status?.toString(),
-                tripId = feedback.tripId
+                tripLegId = feedback.tripLegId
             )
         }
     }

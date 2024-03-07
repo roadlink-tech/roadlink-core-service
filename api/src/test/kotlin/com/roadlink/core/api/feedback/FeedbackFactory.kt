@@ -10,7 +10,7 @@ object FeedbackFactory {
         receiverId: UUID = UUID.randomUUID(),
         reviewerId: UUID = UUID.randomUUID(),
         comment: String = "Sin comentarios",
-        tripId: UUID = UUID.randomUUID(),
+        tripLegId: UUID = UUID.randomUUID(),
         rating: Int = 5
     ): Feedback {
         return Feedback(
@@ -19,7 +19,7 @@ object FeedbackFactory {
             receiverId = receiverId,
             rating = rating,
             comment = comment,
-            tripId = tripId
+            tripLegId = tripLegId
         )
     }
 }

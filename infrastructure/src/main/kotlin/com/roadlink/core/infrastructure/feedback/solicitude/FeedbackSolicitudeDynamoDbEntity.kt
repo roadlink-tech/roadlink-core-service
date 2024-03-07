@@ -16,7 +16,7 @@ class FeedbackSolicitudeDynamoDbEntity constructor(
     * */
     var reviewerId: UUID? = null,
     var receiverId: UUID? = null,
-    var tripId: UUID? = null,
+    var tripLegId: UUID? = null,
     var feedbackSolicitudeStatus: String = "",
 ) : BaseDynamoDbEntity(id, createdDate) {
 
@@ -25,7 +25,7 @@ class FeedbackSolicitudeDynamoDbEntity constructor(
             id = UUID.fromString(this.id),
             receiverId = this.receiverId!!,
             reviewerId = this.reviewerId!!,
-            tripId = this.tripId!!,
+            tripLegId = this.tripLegId!!,
             status = FeedbackSolicitude.Status.valueOf(this.feedbackSolicitudeStatus)
         )
     }
@@ -37,7 +37,7 @@ class FeedbackSolicitudeDynamoDbEntity constructor(
                 id = item["Id"]!!.s(),
                 receiverId = UUID.fromString(item["ReceiverId"]!!.s()),
                 reviewerId = UUID.fromString(item["ReviewerId"]!!.s()),
-                tripId = UUID.fromString(item["TripId"]!!.s()),
+                tripLegId = UUID.fromString(item["TripLegId"]!!.s()),
                 createdDate = DynamoDbDateFormatter.instance().parse(item["CreatedDate"]!!.s()),
                 feedbackSolicitudeStatus = item["FeedbackSolicitudeStatus"]!!.s()
             )
@@ -57,7 +57,7 @@ class FeedbackSolicitudeDynamoDbEntityMapper :
             "EntityId" to AttributeValue.builder().s("EntityId#FeedbackSolicitude").build(),
             "Id" to AttributeValue.builder().s(entity.id.toString()).build(),
             "CreatedDate" to AttributeValue.builder().s(DynamoDbDateFormatter.instance().format(Date())).build(),
-            "TripId" to AttributeValue.builder().s(entity.tripId.toString()).build(),
+            "TripLegId" to AttributeValue.builder().s(entity.tripLegId.toString()).build(),
             "ReceiverId" to AttributeValue.builder().s(entity.receiverId.toString()).build(),
             "ReviewerId" to AttributeValue.builder().s(entity.reviewerId.toString()).build(),
             "FeedbackSolicitudeStatus" to AttributeValue.builder().s(entity.status.toString()).build()

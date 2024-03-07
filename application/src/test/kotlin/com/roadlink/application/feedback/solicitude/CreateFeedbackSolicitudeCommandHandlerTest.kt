@@ -32,7 +32,7 @@ class CreateFeedbackSolicitudeCommandHandlerTest : BehaviorSpec({
             val feedbackId = UUID.randomUUID()
             val reviewerId = UUID.randomUUID()
             val receiverId = UUID.randomUUID()
-            val tripId = UUID.randomUUID()
+            val tripLegId = UUID.randomUUID()
 
             every { userRepository.findOrFail(match { it.id == reviewerId || it.id == receiverId }) } returns UserFactory.common(
                 id = reviewerId
@@ -46,7 +46,7 @@ class CreateFeedbackSolicitudeCommandHandlerTest : BehaviorSpec({
             } returns FeedbackSolicitudeFactory.common(
                 receiverId = receiverId,
                 reviewerId = reviewerId,
-                tripId = tripId,
+                tripLegId = tripLegId,
                 status = Status.PENDING
             )
 
@@ -56,7 +56,7 @@ class CreateFeedbackSolicitudeCommandHandlerTest : BehaviorSpec({
                         id = feedbackId,
                         reviewerId = reviewerId,
                         receiverId = receiverId,
-                        tripId = tripId
+                        tripLegId = tripLegId
                     )
                 )
             )
@@ -64,7 +64,7 @@ class CreateFeedbackSolicitudeCommandHandlerTest : BehaviorSpec({
             Then("the response should be the expected") {
                 response.solicitude.reviewerId.shouldBe(reviewerId)
                 response.solicitude.receiverId.shouldBe(receiverId)
-                response.solicitude.tripId.shouldBe(tripId)
+                response.solicitude.tripLegId.shouldBe(tripLegId)
                 response.solicitude.status.shouldBe(Status.PENDING)
                 verify(exactly = 2) { userRepository.findOrFail(any()) }
                 verify { feedbackSolicitudeRepository.save(any()) }

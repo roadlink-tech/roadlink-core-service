@@ -34,14 +34,14 @@ class FeedbackSolicitudeControllerIntegrationTest : BaseControllerTest() {
         // Given
         val george = UserFactory.common()
         val martin = UserFactory.common()
-        val tripId = UUID.randomUUID()
+        val tripLegId = UUID.randomUUID()
         val feedbackSolicitudeId = UUID.randomUUID()
 
         every { userRepository.findOrFail(match { it.id == george.id }) } returns george
         every { userRepository.findOrFail(match { it.id == martin.id }) } returns martin
         every { feedbackSolicitudeRepository.save(any()) } returns FeedbackSolicitudeFactory.common(
             id = feedbackSolicitudeId,
-            tripId = tripId,
+            tripLegId = tripLegId,
             reviewerId = martin.id,
             receiverId = george.id,
         )
@@ -51,7 +51,7 @@ class FeedbackSolicitudeControllerIntegrationTest : BaseControllerTest() {
             MockMvcRequestBuilders.post("/users/${george.id}/feedback_solicitudes").content(
                 """{
                     "reviewer_id":"${martin.id}",
-                    "trip_id":"$tripId"
+                    "trip_leg_id":"$tripLegId"
                 }""".trimIndent()
             ).contentType(MediaType.APPLICATION_JSON)
         ).andExpect(MockMvcResultMatchers.status().isCreated).andReturn().response.contentAsString
@@ -62,7 +62,7 @@ class FeedbackSolicitudeControllerIntegrationTest : BaseControllerTest() {
                 "id":"$feedbackSolicitudeId",
                 "reviewer_id":"${martin.id}",
                 "receiver_id":"${george.id}",
-                "trip_id":"$tripId",
+                "trip_leg_id":"$tripLegId",
                 "status":"PENDING"
             }""".trimIndent().replace(Regex("\\s+"), "")
         )
@@ -78,14 +78,14 @@ class FeedbackSolicitudeControllerIntegrationTest : BaseControllerTest() {
         // Given
         val george = UserFactory.common()
         val receiverId = UUID.randomUUID()
-        val tripId = UUID.randomUUID()
+        val tripLegId = UUID.randomUUID()
         val feedbackSolicitudeId = UUID.randomUUID()
 
         every { userRepository.findOrFail(match { it.id == george.id }) } returns george
         every { feedbackSolicitudeRepository.findAll(match { it.reviewerId == george.id && it.status == Status.PENDING }) } returns listOf(
             FeedbackSolicitudeFactory.common(
                 id = feedbackSolicitudeId,
-                tripId = tripId,
+                tripLegId = tripLegId,
                 reviewerId = george.id,
                 receiverId = receiverId,
             )
@@ -103,7 +103,7 @@ class FeedbackSolicitudeControllerIntegrationTest : BaseControllerTest() {
                     "id": "$feedbackSolicitudeId",
                     "reviewer_id": "${george.id}",
                     "receiver_id": "$receiverId",
-                    "trip_id": "$tripId",
+                    "trip_leg_id": "$tripLegId",
                     "status": "PENDING"
                   }
             ]""".trimIndent().replace(Regex("\\s+"), "")
@@ -139,7 +139,7 @@ class FeedbackSolicitudeControllerIntegrationTest : BaseControllerTest() {
         // Given
         val george = UserFactory.common()
         val martin = UserFactory.common()
-        val tripId = UUID.randomUUID()
+        val tripLegId = UUID.randomUUID()
         val feedbackSolicitudeId = UUID.randomUUID()
 
         every { userRepository.findOrFail(match { it.id == george.id }) } returns george
@@ -151,25 +151,25 @@ class FeedbackSolicitudeControllerIntegrationTest : BaseControllerTest() {
             id = feedbackSolicitudeId,
             receiverId = martin.id,
             reviewerId = george.id,
-            tripId = tripId,
+            tripLegId = tripLegId,
             status = Status.PENDING
         )
 
         every { feedbackSolicitudeRepository.save(any()) } returns FeedbackSolicitudeFactory.common(
             id = feedbackSolicitudeId,
-            tripId = tripId,
+            tripLegId = tripLegId,
             reviewerId = martin.id,
             receiverId = george.id,
             status = Status.COMPLETED
         )
 
-        every { feedbackRepository.save(match { it.receiverId == martin.id && it.reviewerId == george.id && it.tripId == tripId }) } returns FeedbackFactory.common(
+        every { feedbackRepository.save(match { it.receiverId == martin.id && it.reviewerId == george.id && it.tripLegId == tripLegId }) } returns FeedbackFactory.common(
             id = UUID.randomUUID(),
             receiverId = martin.id,
             reviewerId = george.id,
             comment = "ok",
             rating = 4,
-            tripId = tripId
+            tripLegId = tripLegId
         )
 
         // When
@@ -189,7 +189,7 @@ class FeedbackSolicitudeControllerIntegrationTest : BaseControllerTest() {
                 "id":"$feedbackSolicitudeId",
                 "reviewer_id":"${martin.id}",
                 "receiver_id":"${george.id}",
-                "trip_id":"$tripId",
+                "trip_leg_id":"$tripLegId",
                 "status":"COMPLETED"
             }""".trimIndent().replace(Regex("\\s+"), "")
         )

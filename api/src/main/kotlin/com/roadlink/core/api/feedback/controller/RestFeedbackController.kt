@@ -7,7 +7,6 @@ import com.roadlink.application.feedback.CreateFeedbackCommandResponse
 import com.roadlink.application.feedback.FeedbackDTO
 import com.roadlink.application.feedback.ListFeedbacksCommand
 import com.roadlink.application.feedback.ListFeedbacksCommandResponse
-import jakarta.websocket.server.PathParam
 import org.springframework.http.HttpStatus.*
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -57,8 +56,8 @@ data class FeedbackCreationRequest(
     val rating: Int,
     @JsonProperty("comment")
     val comment: String,
-    @JsonProperty("trip_id")
-    val tripId: String
+    @JsonProperty("trip_leg_id")
+    val tripLegId: String
 ) {
     fun toDto(receiverId: String): FeedbackDTO {
         return FeedbackDTO(
@@ -66,7 +65,7 @@ data class FeedbackCreationRequest(
             comment = comment,
             rating = rating,
             receiverId = UUID.fromString(receiverId),
-            tripId = UUID.fromString(tripId)
+            tripLegId = UUID.fromString(tripLegId)
         )
     }
 }
@@ -78,8 +77,8 @@ data class FeedbackResponse(
     val reviewerId: UUID,
     @JsonProperty("receiver_id")
     val receiverId: UUID,
-    @JsonProperty("trip_id")
-    val tripId: UUID,
+    @JsonProperty("trip_leg_id")
+    val tripLegId: UUID,
     @JsonProperty("comment")
     val comment: String,
     @JsonProperty("rating")
@@ -93,7 +92,7 @@ data class FeedbackResponse(
                 comment = feedback.comment,
                 rating = feedback.rating,
                 receiverId = feedback.receiverId,
-                tripId = feedback.tripId
+                tripLegId = feedback.tripLegId
             )
         }
     }

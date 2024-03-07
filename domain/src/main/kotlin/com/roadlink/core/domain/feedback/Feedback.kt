@@ -13,7 +13,7 @@ data class Feedback(
     val id: UUID,
     val reviewerId: UUID,
     val receiverId: UUID,
-    val tripId: UUID,
+    val tripLegId: UUID,
     val rating: Int,
     val comment: String
 ) : DomainEntity {

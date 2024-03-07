@@ -8,7 +8,7 @@ data class FeedbackSolicitudeDTO(
     val id: UUID = DefaultIdGenerator().next(),
     val reviewerId: UUID,
     val receiverId: UUID,
-    val tripId: UUID,
+    val tripLegId: UUID,
     val status: FeedbackSolicitude.Status? = null
 ) {
 
@@ -17,7 +17,7 @@ data class FeedbackSolicitudeDTO(
             id = id,
             receiverId = receiverId,
             reviewerId = reviewerId,
-            tripId = tripId
+            tripLegId = tripLegId
         )
     }
 
@@ -27,7 +27,7 @@ data class FeedbackSolicitudeDTO(
                 id = solicitude.id,
                 reviewerId = solicitude.reviewerId,
                 receiverId = solicitude.receiverId,
-                tripId = solicitude.tripId,
+                tripLegId = solicitude.tripLegId,
                 status = solicitude.status
             )
         }

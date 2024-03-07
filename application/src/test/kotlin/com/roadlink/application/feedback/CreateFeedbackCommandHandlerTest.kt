@@ -30,14 +30,14 @@ class CreateFeedbackCommandHandlerTest : BehaviorSpec({
         When("handle a command with a receiverId that not exist") {
             val receiverId = UUID.randomUUID()
             val reviewerId = UUID.randomUUID()
-            val tripId = UUID.randomUUID()
+            val tripLegId = UUID.randomUUID()
             val command = CreateFeedbackCommand(
                 feedback = FeedbackDTO(
                     id = UUID.randomUUID(),
                     receiverId = receiverId,
                     reviewerId = reviewerId,
                     rating = 2,
-                    tripId = tripId
+                    tripLegId = tripLegId
                 )
             )
 
@@ -61,14 +61,14 @@ class CreateFeedbackCommandHandlerTest : BehaviorSpec({
         When("handle a command with a reviewer that not exist") {
             val receiverId = UUID.randomUUID()
             val reviewerId = UUID.randomUUID()
-            val tripId = UUID.randomUUID()
+            val tripLegId = UUID.randomUUID()
             val command = CreateFeedbackCommand(
                 feedback = FeedbackDTO(
                     id = UUID.randomUUID(),
                     receiverId = receiverId,
                     reviewerId = reviewerId,
                     rating = 2,
-                    tripId = tripId
+                    tripLegId = tripLegId
                 )
             )
 
@@ -97,7 +97,7 @@ class CreateFeedbackCommandHandlerTest : BehaviorSpec({
             val id = UUID.randomUUID()
             val receiverId = UUID.randomUUID()
             val reviewerId = UUID.randomUUID()
-            val tripId = UUID.randomUUID()
+            val tripLegId = UUID.randomUUID()
             val command = CreateFeedbackCommand(
                 feedback = FeedbackDTO(
                     id = id,
@@ -105,7 +105,7 @@ class CreateFeedbackCommandHandlerTest : BehaviorSpec({
                     reviewerId = reviewerId,
                     rating = 2,
                     comment = "No me senti a gusto",
-                    tripId = tripId
+                    tripLegId = tripLegId
                 )
             )
 
@@ -128,7 +128,7 @@ class CreateFeedbackCommandHandlerTest : BehaviorSpec({
                     reviewerId = reviewerId,
                     rating = 2,
                     comment = "No me senti a gusto",
-                    tripId = tripId
+                    tripLegId = tripLegId
                 )
             )
 
@@ -143,7 +143,7 @@ class CreateFeedbackCommandHandlerTest : BehaviorSpec({
                 response.feedback.rating.shouldBe(2)
                 response.feedback.comment.shouldBe("No me senti a gusto")
                 response.feedback.id.shouldBe(id)
-                response.feedback.tripId.shouldBe(tripId)
+                response.feedback.tripLegId.shouldBe(tripLegId)
             }
         }
     }
