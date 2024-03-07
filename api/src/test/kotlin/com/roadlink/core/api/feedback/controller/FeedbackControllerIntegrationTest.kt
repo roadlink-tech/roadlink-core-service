@@ -35,14 +35,14 @@ class FeedbackControllerIntegrationTest : BaseControllerTest() {
         // Given
         val george = UserFactory.common()
         val martin = UserFactory.common()
-        val tripId = UUID.randomUUID()
+        val tripLegId = UUID.randomUUID()
         val feedbackId = UUID.randomUUID()
 
         every { userRepository.findOrFail(match { it.id == george.id }) } returns george
         every { userRepository.findOrFail(match { it.id == martin.id }) } returns martin
         every { feedbackRepository.save(any()) } returns FeedbackFactory.common(
             id = feedbackId,
-            tripId = tripId,
+            tripLegId = tripLegId,
             reviewerId = martin.id,
             receiverId = george.id,
             comment = "ok!",
@@ -54,7 +54,7 @@ class FeedbackControllerIntegrationTest : BaseControllerTest() {
             MockMvcRequestBuilders.post("/users/${george.id}/feedbacks").content(
                 """{
                     "reviewer_id":"${martin.id}",
-                    "trip_id":"$tripId",
+                    "trip_leg_id":"$tripLegId",
                     "comment":"ok!",
                     "rating":"5"
                 }""".trimIndent()
@@ -67,7 +67,7 @@ class FeedbackControllerIntegrationTest : BaseControllerTest() {
                 "id":"$feedbackId",
                 "reviewer_id":"${martin.id}",
                 "receiver_id":"${george.id}",
-                "trip_id":"$tripId",
+                "trip_leg_id":"$tripLegId",
                 "comment":"ok!",
                 "rating":5
             }""".trimIndent().replace(Regex("\\s+"), "")
@@ -81,7 +81,7 @@ class FeedbackControllerIntegrationTest : BaseControllerTest() {
         // Given
         val georgeId = UUID.randomUUID()
         val martin = UserFactory.common()
-        val tripId = UUID.randomUUID()
+        val tripLegId = UUID.randomUUID()
 
         every { userRepository.findOrFail(match { it.id == georgeId }) } throws DynamoDbException.EntityDoesNotExist(
             georgeId.toString()
@@ -93,7 +93,7 @@ class FeedbackControllerIntegrationTest : BaseControllerTest() {
             MockMvcRequestBuilders.post("/users/${georgeId}/feedbacks").content(
                 """{
                     "reviewer_id":"${martin.id}",
-                    "trip_id":"$tripId",
+                    "trip_leg_id":"$tripLegId",
                     "comment":"ok!",
                     "rating":"5"
                 }""".trimIndent()
@@ -113,7 +113,7 @@ class FeedbackControllerIntegrationTest : BaseControllerTest() {
         // Given
         val george = UserFactory.common()
         val martinId = UUID.randomUUID()
-        val tripId = UUID.randomUUID()
+        val tripLegId = UUID.randomUUID()
 
         every { userRepository.findOrFail(match { it.id == george.id }) } returns george
         every { userRepository.findOrFail(match { it.id == martinId }) } throws DynamoDbException.EntityDoesNotExist(
@@ -124,7 +124,7 @@ class FeedbackControllerIntegrationTest : BaseControllerTest() {
             MockMvcRequestBuilders.post("/users/${george.id}/feedbacks").content(
                 """{
                     "reviewer_id":"$martinId",
-                    "trip_id":"$tripId",
+                    "trip_leg_id":"$tripLegId",
                     "comment":"ok!",
                     "rating":"5"
                 }""".trimIndent()
@@ -144,7 +144,7 @@ class FeedbackControllerIntegrationTest : BaseControllerTest() {
         // Given
         val george = UserFactory.common()
         val martin = UserFactory.common()
-        val tripId = UUID.randomUUID()
+        val tripLegId = UUID.randomUUID()
 
         every { userRepository.findOrFail(match { it.id == george.id }) } returns george
         every { userRepository.findOrFail(match { it.id == martin.id }) } returns martin
@@ -155,7 +155,7 @@ class FeedbackControllerIntegrationTest : BaseControllerTest() {
             MockMvcRequestBuilders.post("/users/${george.id}/feedbacks").content(
                 """{
                     "reviewer_id":"${martin.id}",
-                    "trip_id":"$tripId",
+                    "trip_leg_id":"$tripLegId",
                     "comment":"ok!",
                     "rating":"5"
                 }""".trimIndent()
@@ -178,14 +178,14 @@ class FeedbackControllerIntegrationTest : BaseControllerTest() {
         val george = UserFactory.common()
         val feedbacks = mutableListOf<Feedback>()
         val feedbackId = UUID.randomUUID()
-        val tripId = UUID.randomUUID()
+        val tripLegId = UUID.randomUUID()
         val receiverId = UUID.randomUUID()
         feedbacks.add(
             FeedbackFactory.common(
                 reviewerId = george.id,
                 receiverId = receiverId,
                 id = feedbackId,
-                tripId = tripId,
+                tripLegId = tripLegId,
                 comment = "ok"
             )
         )
@@ -207,7 +207,7 @@ class FeedbackControllerIntegrationTest : BaseControllerTest() {
                 "id": "$feedbackId",
                 "reviewer_id": "${george.id}",
                 "receiver_id": "$receiverId",
-                "trip_id": "$tripId",
+                "trip_leg_id": "$tripLegId",
                 "comment": "ok",
                 "rating": 5
               }

@@ -10,7 +10,7 @@ data class FeedbackDTO(
     val receiverId: UUID,
     val rating: Int,
     val comment: String = "",
-    val tripId: UUID
+    val tripLegId: UUID
 ) {
 
     fun toDomain(): Feedback {
@@ -20,7 +20,7 @@ data class FeedbackDTO(
             reviewerId = reviewerId,
             rating = rating,
             comment = comment,
-            tripId = tripId
+            tripLegId = tripLegId
         )
     }
 
@@ -32,7 +32,7 @@ data class FeedbackDTO(
                 receiverId = feedback.receiverId,
                 rating = feedback.rating,
                 comment = feedback.comment,
-                tripId = feedback.tripId
+                tripLegId = feedback.tripLegId
             )
         }
     }

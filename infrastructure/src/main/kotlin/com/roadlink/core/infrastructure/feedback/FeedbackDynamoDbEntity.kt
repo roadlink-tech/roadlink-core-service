@@ -5,9 +5,7 @@ import com.roadlink.core.domain.feedback.Feedback
 import com.roadlink.core.infrastructure.dynamodb.BaseDynamoDbEntity
 import com.roadlink.core.infrastructure.dynamodb.BaseDynamoDbEntityMapper
 import com.roadlink.core.infrastructure.dynamodb.DynamoDbDateFormatter
-import com.roadlink.core.infrastructure.dynamodb.DynamoDbEntityMapper
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue
-import software.amazon.awssdk.services.dynamodb.model.QueryResponse
 import java.util.*
 
 class FeedbackDynamoDbEntity constructor(
@@ -25,7 +23,7 @@ class FeedbackDynamoDbEntity constructor(
     * LSI ReviewerIdLSI
     * */
     var reviewerId: UUID? = null,
-    var tripId: UUID? = null,
+    var tripLegId: UUID? = null,
     var comment: String = "",
 ) : BaseDynamoDbEntity(id, createdDate) {
 
@@ -36,7 +34,7 @@ class FeedbackDynamoDbEntity constructor(
             receiverId = this.receiverId!!,
             reviewerId = this.reviewerId!!,
             comment = this.comment,
-            tripId = this.tripId!!
+            tripLegId = this.tripLegId!!
         )
     }
 
@@ -48,7 +46,7 @@ class FeedbackDynamoDbEntity constructor(
                 rating = Integer.valueOf(item["Rating"]!!.n()),
                 receiverId = UUID.fromString(item["ReceiverId"]!!.s()),
                 reviewerId = UUID.fromString(item["ReviewerId"]!!.s()),
-                tripId = UUID.fromString(item["TripId"]!!.s()),
+                tripLegId = UUID.fromString(item["TripLegId"]!!.s()),
                 comment = item["Comment"]!!.s(),
                 createdDate = DynamoDbDateFormatter.instance().parse(item["CreatedDate"]!!.s()),
             )
@@ -68,7 +66,7 @@ class FeedbackDynamoDbEntityMapper : BaseDynamoDbEntityMapper<Feedback, Feedback
             "Id" to AttributeValue.builder().s(entity.id.toString()).build(),
             "CreatedDate" to AttributeValue.builder().s(DynamoDbDateFormatter.instance().format(Date())).build(),
             "Rating" to AttributeValue.builder().n(entity.rating.toString()).build(),
-            "TripId" to AttributeValue.builder().s(entity.tripId.toString()).build(),
+            "TripLegId" to AttributeValue.builder().s(entity.tripLegId.toString()).build(),
             "ReceiverId" to AttributeValue.builder().s(entity.receiverId.toString()).build(),
             "ReviewerId" to AttributeValue.builder().s(entity.reviewerId.toString()).build(),
             "Comment" to AttributeValue.builder().s(entity.comment).build()

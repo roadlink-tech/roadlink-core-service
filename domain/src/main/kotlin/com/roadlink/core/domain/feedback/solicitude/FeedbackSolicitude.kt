@@ -12,7 +12,7 @@ import java.util.*
  */
 data class FeedbackSolicitude(
     val id: UUID,
-    val tripId: UUID,
+    val tripLegId: UUID,
     val reviewerId: UUID,
     val receiverId: UUID,
     val status: Status = Status.PENDING
@@ -39,7 +39,7 @@ data class FeedbackSolicitude(
             id = UUID.randomUUID(),
             reviewerId = reviewerId,
             receiverId = receiverId,
-            tripId = tripId,
+            tripLegId = tripLegId,
             rating = rating,
             comment = comment
         )

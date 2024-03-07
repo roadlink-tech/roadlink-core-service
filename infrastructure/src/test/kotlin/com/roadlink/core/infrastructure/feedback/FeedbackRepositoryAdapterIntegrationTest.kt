@@ -43,20 +43,20 @@ class FeedbackRepositoryAdapterIntegrationTest : BehaviorSpec({
             }
         }
 
-        When("save a new feedback and find it by rating and tripId") {
+        When("save a new feedback and find it by rating and tripLegId") {
             repeat(10) {
                 repository.save(FeedbackFactory.custom(rating = 2))
             }
 
-            val expectedTripId = UUID.randomUUID()
-            val feedback = FeedbackFactory.custom(rating = 2, tripId = expectedTripId)
+            val expectedTripLegId = UUID.randomUUID()
+            val feedback = FeedbackFactory.custom(rating = 2, tripLegId = expectedTripLegId)
             repository.save(feedback)
 
-            val feedbackFound = repository.findOrFail(criteria = FeedbackCriteria(rating = 2, tripId = expectedTripId))
+            val feedbackFound = repository.findOrFail(criteria = FeedbackCriteria(rating = 2, tripLegId = expectedTripLegId))
             Then("the response should not be null") {
                 feedbackFound.shouldNotBeNull()
                 feedbackFound.rating.shouldBe(2)
-                feedback.tripId.shouldBe(expectedTripId)
+                feedback.tripLegId.shouldBe(expectedTripLegId)
             }
         }
 

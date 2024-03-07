@@ -11,7 +11,7 @@ class FeedbackSolicitudeDynamoDbQuery(
     private val feedbackSolicitudeStatus: String? = null,
     private val receiverId: UUID? = null,
     private val reviewerId: UUID? = null,
-    private val tripId: UUID? = null
+    private val tripLegId: UUID? = null
 ) : BaseDynamoDbQuery() {
     override var entityId: String = "EntityId#FeedbackSolicitude"
 
@@ -32,8 +32,8 @@ class FeedbackSolicitudeDynamoDbQuery(
         if (feedbackSolicitudeStatus == null) {
             candidates.remove("feedbackSolicitudeStatus")
         }
-        if (tripId == null) {
-            candidates.remove("tripId")
+        if (tripLegId == null) {
+            candidates.remove("tripLegId")
         }
         return candidates
     }
@@ -67,7 +67,7 @@ class FeedbackSolicitudeDynamoDbQueryMapper :
             feedbackSolicitudeStatus = criteria.status?.toString(),
             reviewerId = criteria.reviewerId,
             receiverId = criteria.receiverId,
-            tripId = criteria.tripId
+            tripLegId = criteria.tripLegId
         )
     }
 }
