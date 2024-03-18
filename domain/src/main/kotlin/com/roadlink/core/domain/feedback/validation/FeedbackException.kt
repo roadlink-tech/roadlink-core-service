@@ -14,3 +14,4 @@ sealed class FeedbackException(override val message: String, val code: String, t
 
     class InvalidRating : FeedbackException(message = "Rating must be between 1 and 5", code = "INVALID_RATING")
 }
+

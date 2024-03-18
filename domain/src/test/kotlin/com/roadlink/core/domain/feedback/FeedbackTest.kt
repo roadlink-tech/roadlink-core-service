@@ -2,9 +2,7 @@ package com.roadlink.core.domain.feedback
 
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
-import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.nulls.shouldNotBeNull
-import io.kotest.matchers.shouldBe
 import java.util.UUID
 
 class FeedbackTest : BehaviorSpec({
@@ -18,7 +16,7 @@ class FeedbackTest : BehaviorSpec({
                     reviewerId = id,
                     receiverId = id,
                     rating = 4,
-                    tripId = UUID.randomUUID(),
+                    tripLegId = UUID.randomUUID(),
                     comment = "asd"
                 )
             }

@@ -12,7 +12,6 @@ import io.mockk.verify
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.http.MediaType
 import org.springframework.http.MediaType.*
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
@@ -36,8 +35,8 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
         // Given
         val george = UserFactory.common()
         val vehicleId = UUID.randomUUID()
-        every { userRepositoryPort.findOrFail(match { it.id == george.id }) } returns george
-        every { vehicleRepositoryPort.save(match { it.driverId == george.id }) } returns VehicleFactory.common(
+        every { userRepository.findOrFail(match { it.id == george.id }) } returns george
+        every { vehicleRepository.save(match { it.driverId == george.id }) } returns VehicleFactory.common(
             id = vehicleId,
             driverId = george.id
         )
@@ -68,15 +67,15 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
                 "color":"white"
             }""".trimIndent().replace(Regex("\\s+"), "")
         )
-        verify(exactly = 1) { vehicleRepositoryPort.save(any()) }
-        verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
+        verify(exactly = 1) { vehicleRepository.save(any()) }
+        verify(exactly = 1) { userRepository.findOrFail(any()) }
     }
 
     @Test
     fun `when a user try to add a vehicle without the brand, then it must work well`() {
         // Given
         val george = UserFactory.common()
-        every { userRepositoryPort.findOrFail(match { it.id == george.id }) } returns george
+        every { userRepository.findOrFail(match { it.id == george.id }) } returns george
 
         // When
         val response = mockMvc.perform(
@@ -97,15 +96,15 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
         response.shouldBe(
             """{"code":"EMPTY_MANDATORY_FIELDS","message":"The following mandatory fields are empty: [brand]"}"""
         )
-        verify(exactly = 0) { vehicleRepositoryPort.save(any()) }
-        verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
+        verify(exactly = 0) { vehicleRepository.save(any()) }
+        verify(exactly = 1) { userRepository.findOrFail(any()) }
     }
 
     @Test
     fun `when a user try to add a vehicle without mandatory fields, then it must work well`() {
         // Given
         val george = UserFactory.common()
-        every { userRepositoryPort.findOrFail(match { it.id == george.id }) } returns george
+        every { userRepository.findOrFail(match { it.id == george.id }) } returns george
 
         // When
         val response = mockMvc.perform(
@@ -126,8 +125,8 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
         response.shouldBe(
             """{"code":"EMPTY_MANDATORY_FIELDS","message":"The following mandatory fields are empty: [brand, licence_plate, model]"}"""
         )
-        verify(exactly = 0) { vehicleRepositoryPort.save(any()) }
-        verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
+        verify(exactly = 0) { vehicleRepository.save(any()) }
+        verify(exactly = 1) { userRepository.findOrFail(any()) }
     }
 
     @Test
@@ -135,8 +134,8 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
         // Given
         val george = UserFactory.common()
         val vehicleId = UUID.randomUUID()
-        every { userRepositoryPort.findOrFail(match { it.id == george.id }) } returns george
-        every { vehicleRepositoryPort.save(match { it.driverId == george.id }) } returns VehicleFactory.common(
+        every { userRepository.findOrFail(match { it.id == george.id }) } returns george
+        every { vehicleRepository.save(match { it.driverId == george.id }) } returns VehicleFactory.common(
             id = vehicleId,
             driverId = george.id
         )
@@ -160,15 +159,15 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
         response.shouldBe(
             """{"code":"INVALID_CAPACITY","message":"Vehicle Ford TERRITORY must have a capacity between 0 and 5"}"""
         )
-        verify(exactly = 0) { vehicleRepositoryPort.save(any()) }
-        verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
+        verify(exactly = 0) { vehicleRepository.save(any()) }
+        verify(exactly = 1) { userRepository.findOrFail(any()) }
     }
 
     @Test
     fun `when a user try to add valid vehicle, but the user does not exist, then a bad request exception must be thrown`() {
         // Given
         val userId = UUID.randomUUID()
-        every { userRepositoryPort.findOrFail(match { it.id == userId }) } throws DynamoDbException.EntityDoesNotExist(
+        every { userRepository.findOrFail(match { it.id == userId }) } throws DynamoDbException.EntityDoesNotExist(
             userId.toString()
         )
 
@@ -190,8 +189,8 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
         response.shouldBe(
             """{"code":"ENTITY_NOT_EXIST","message":"Entity $userId does not exist"}"""
         )
-        verify(exactly = 0) { vehicleRepositoryPort.save(any()) }
-        verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
+        verify(exactly = 0) { vehicleRepository.save(any()) }
+        verify(exactly = 1) { userRepository.findOrFail(any()) }
     }
 
     @Test
@@ -199,8 +198,8 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
         // Given
         val george = UserFactory.common()
         val vehicleId = UUID.randomUUID()
-        every { userRepositoryPort.findOrFail(match { it.id == george.id }) } returns george
-        every { vehicleRepositoryPort.save(match { it.driverId == george.id }) } returns VehicleFactory.common(
+        every { userRepository.findOrFail(match { it.id == george.id }) } returns george
+        every { vehicleRepository.save(match { it.driverId == george.id }) } returns VehicleFactory.common(
             id = vehicleId,
             driverId = george.id
         )
@@ -224,8 +223,8 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
         response.shouldBe(
             """{"code":"INVALID_BRAND","message":"The brand Pagani is not available"}"""
         )
-        verify(exactly = 0) { vehicleRepositoryPort.save(any()) }
-        verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
+        verify(exactly = 0) { vehicleRepository.save(any()) }
+        verify(exactly = 1) { userRepository.findOrFail(any()) }
     }
 
     /**
@@ -236,8 +235,8 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
         // Given
         val george = UserFactory.common()
         val vehicle = VehicleFactory.common()
-        every { userRepositoryPort.findOrFail(match { it.id == george.id }) } returns george
-        every { vehicleRepositoryPort.findAll(match { it.driverId == george.id }) } returns listOf(
+        every { userRepository.findOrFail(match { it.id == george.id }) } returns george
+        every { vehicleRepository.findAll(match { it.driverId == george.id }) } returns listOf(
             vehicle
         )
 
@@ -269,7 +268,7 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
     fun `when list user vehicles, but the user does not exist, then an exception must be thrown`() {
         // Given
         val georgeId = UUID.randomUUID()
-        every { userRepositoryPort.findOrFail(match { it.id == georgeId }) } throws DynamoDbException.EntityDoesNotExist(
+        every { userRepository.findOrFail(match { it.id == georgeId }) } throws DynamoDbException.EntityDoesNotExist(
             georgeId.toString()
         )
 
@@ -293,9 +292,9 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
     fun `when delete an existing vehicle of a user, then it must be remove`() {
         // Given
         val george = UserFactory.common()
-        every { userRepositoryPort.findOrFail(match { it.id == george.id }) } returns george
+        every { userRepository.findOrFail(match { it.id == george.id }) } returns george
         val vehicleId = UUID.randomUUID()
-        every { vehicleRepositoryPort.delete(match { it.id == vehicleId }) } just runs
+        every { vehicleRepository.delete(match { it.id == vehicleId }) } just runs
 
         // When
         val response = mockMvc.perform(
@@ -304,15 +303,15 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
             .andReturn().response.contentAsString
 
         // Return
-        verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
-        verify(exactly = 1) { vehicleRepositoryPort.delete(any()) }
+        verify(exactly = 1) { userRepository.findOrFail(any()) }
+        verify(exactly = 1) { vehicleRepository.delete(any()) }
     }
 
     @Test
     fun `when try to delete an existing vehicle but the user does not exist, then an exception must be thrown`() {
         // Given
         val georgeId = UUID.randomUUID()
-        every { userRepositoryPort.findOrFail(match { it.id == georgeId }) } throws DynamoDbException.EntityDoesNotExist(
+        every { userRepository.findOrFail(match { it.id == georgeId }) } throws DynamoDbException.EntityDoesNotExist(
             georgeId.toString()
         )
         val vehicleId = UUID.randomUUID()
@@ -324,7 +323,127 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
             .andReturn().response.contentAsString
 
         // Return
-        verify(exactly = 1) { userRepositoryPort.findOrFail(any()) }
-        verify(exactly = 0) { vehicleRepositoryPort.delete(any()) }
+        verify(exactly = 1) { userRepository.findOrFail(any()) }
+        verify(exactly = 0) { vehicleRepository.delete(any()) }
     }
+
+    /**
+     * Patch Vehicle
+     */
+    @Test
+    fun `when patch an existing vehicle, then it must be updated`() {
+        // Given
+        val george = UserFactory.common()
+        every { userRepository.findOrFail(match { it.id == george.id }) } returns george
+        val vehicleId = UUID.randomUUID()
+        val vehicle = VehicleFactory.common(id = vehicleId)
+        every { vehicleRepository.findOrFail(match { it.id == vehicleId }) } returns vehicle
+        every { vehicleRepository.save(match { it.id == vehicleId }) } returns vehicle.copy(
+            brand = "Ford",
+            model = "Bronco",
+            licencePlate = "AG123AG",
+            iconUrl = "https://ford.bronco.com",
+            capacity = 2,
+            color = "black"
+        )
+
+        // When
+        val response = mockMvc.perform(
+            MockMvcRequestBuilders.patch("/users/${george.id}/vehicles/${vehicleId}").content(
+                """{
+                    "brand":"Ford",
+                    "model":"Bronco",
+                    "licence_plate":"AG123AG",
+                    "icon_url":"https://ford.bronco.com",
+                    "capacity":"2",
+                    "color":"black"
+                }""".trimIndent()
+            ).contentType(APPLICATION_JSON)
+        ).andExpect(MockMvcResultMatchers.status().isOk)
+            .andReturn().response.contentAsString
+
+        // Return
+        response.shouldBe(
+            """
+            {
+              "id": "$vehicleId",
+              "brand": "Ford",
+              "model": "Bronco",
+              "licence_plate": "AG123AG",
+              "icon_url": "https://ford.bronco.com",
+              "capacity": 2,
+              "color": "black"
+            }
+        """.trimIndent().replace(Regex("\\s+"), "")
+        )
+        verify(exactly = 1) { userRepository.findOrFail(any()) }
+        verify(exactly = 1) { vehicleRepository.findOrFail(any()) }
+        verify(exactly = 1) { vehicleRepository.save(any()) }
+    }
+
+    @Test
+    fun `when patch an existing vehicle with an invalid brand, then it must thrown an error`() {
+        // Given
+        val george = UserFactory.common()
+        every { userRepository.findOrFail(match { it.id == george.id }) } returns george
+        val vehicleId = UUID.randomUUID()
+        val vehicle = VehicleFactory.common(id = vehicleId)
+        every { vehicleRepository.findOrFail(match { it.id == vehicleId }) } returns vehicle
+
+        // When
+        val response = mockMvc.perform(
+            MockMvcRequestBuilders.patch("/users/${george.id}/vehicles/${vehicleId}").content(
+                """{
+                    "brand":"Frutelli"
+                }""".trimIndent()
+            ).contentType(APPLICATION_JSON)
+        ).andExpect(MockMvcResultMatchers.status().isBadRequest)
+            .andReturn().response.contentAsString
+
+        // Return
+        response.shouldBe("""{"code":"INVALID_BRAND","message":"The brand Frutelli is not available"}""")
+        verify(exactly = 1) { userRepository.findOrFail(any()) }
+        verify(exactly = 1) { vehicleRepository.findOrFail(any()) }
+        verify(exactly = 0) { vehicleRepository.save(any()) }
+    }
+
+    @Test
+    fun `when patch an existing vehicle with the capacity, then it must work ok`() {
+        // Given
+        val george = UserFactory.common()
+        every { userRepository.findOrFail(match { it.id == george.id }) } returns george
+        val vehicleId = UUID.randomUUID()
+        val vehicle = VehicleFactory.common(id = vehicleId)
+        every { vehicleRepository.findOrFail(match { it.id == vehicleId }) } returns vehicle
+        every { vehicleRepository.save(match { it.id == vehicleId }) } returns vehicle.copy(capacity = 2)
+
+        // When
+        val response = mockMvc.perform(
+            MockMvcRequestBuilders.patch("/users/${george.id}/vehicles/${vehicleId}").content(
+                """{
+                    "capacity":2
+                }""".trimIndent()
+            ).contentType(APPLICATION_JSON)
+        ).andExpect(MockMvcResultMatchers.status().isOk)
+            .andReturn().response.contentAsString
+
+        // Return
+        response.shouldBe(
+            """
+            {
+              "id": "$vehicleId",
+              "brand": "Ford",
+              "model": "Territory",
+              "licence_plate": "AG154AG",
+              "icon_url": "https://icon.com",
+              "capacity": 2,
+              "color": "white"
+            }
+        """.trimIndent().replace(Regex("\\s+"), "")
+        )
+        verify(exactly = 1) { userRepository.findOrFail(any()) }
+        verify(exactly = 1) { vehicleRepository.findOrFail(any()) }
+        verify(exactly = 1) { vehicleRepository.save(any()) }
+    }
+
 }

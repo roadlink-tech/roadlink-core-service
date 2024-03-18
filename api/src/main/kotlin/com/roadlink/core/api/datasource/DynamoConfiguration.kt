@@ -2,6 +2,7 @@ package com.roadlink.core.api.datasource
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.roadlink.application.parameterstore.ParametersStoreService
