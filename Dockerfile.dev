@@ -1,0 +1,12 @@
+FROM gradle:7.4-jdk17 AS build
+
+WORKDIR /app
+
+COPY ./api/build/libs/*-SNAPSHOT.jar ./api/build/libs/service.jar
+
+# Etapa 2: Ejecutar la aplicación
+FROM openjdk:17-jdk-alpine
+
+WORKDIR /app
+COPY --from=build /app/api/build/libs/service.jar service.jar
+CMD ["java", "-jar", "service.jar"]
