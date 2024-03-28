@@ -36,7 +36,7 @@ awslocal dynamodb put-item \
     "LastName": {"S": "Cabrera Vera"},
     "Email": {"S": "jorge.cabrera@roadlink.com"},
     "Friends": {"SS": ["123e4567-e89b-12d3-a456-426614174002", "123e4567-e89b-12d3-a456-426614174003"]},
-    "ProfilePhotoUrl": {"S": "https://profile.photo.com"},
+    "ProfilePhotoUrl": {"S": "https://lh3.googleusercontent.com/a/ACg8ocIb2KRpXYKpnlkY5Ayh_e0JwzxhAgr10S-weL7WuZXorjA=s96-c"},
     "BirthDay": {"S": "06/12/1991"},
     "Gender": {"S": "Male"},
     "UserName": {"S": "jorge.cabrera"}
@@ -51,7 +51,7 @@ awslocal dynamodb put-item \
     "LastName": {"S": "Bosch"},
     "Email": {"S": "martin.bosch@roadlink.com"},
     "Friends": {"SS": ["123e4567-e89b-12d3-a456-426614174001", "123e4567-e89b-12d3-a456-426614174003"]},
-    "ProfilePhotoUrl": {"S": "https://profile.photo.com"},
+    "ProfilePhotoUrl": {"S": "https://lh3.googleusercontent.com/a/ACg8ocJW5g-yavaNzKPZcF-U8-W5zGfIQdww2mOcyDq_48xfdHE=s96-c"},
     "BirthDay": {"S": "06/12/1991"},
     "Gender": {"S": "Male"},
     "UserName": {"S": "martin.bosch"}
@@ -66,7 +66,7 @@ awslocal dynamodb put-item \
     "LastName": {"S": "Reyero"},
     "Email": {"S": "felix.reyero@roadlink.com"},
     "Friends": {"SS": ["123e4567-e89b-12d3-a456-426614174001", "123e4567-e89b-12d3-a456-426614174002"]},
-    "ProfilePhotoUrl": {"S": "https://profile.photo.com"},
+    "ProfilePhotoUrl": {"S": "https://lh3.googleusercontent.com/a/ACg8ocJl4rpUUhbBzXDZDx7aFarTkVfxI0vPKWAbasFr-zHGLL0=s96-c"},
     "BirthDay": {"S": "06/12/1991"},
     "Gender": {"S": "Male"},
     "UserName": {"S": "felix.reyero"}
