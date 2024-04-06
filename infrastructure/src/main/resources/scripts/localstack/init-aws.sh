@@ -41,6 +41,7 @@ awslocal dynamodb put-item \
     "Gender": {"S": "Male"},
     "UserName": {"S": "jorge.cabrera"}
   }'
+
 awslocal dynamodb put-item \
   --table-name RoadlinkCore \
   --item '{
@@ -56,6 +57,7 @@ awslocal dynamodb put-item \
     "Gender": {"S": "Male"},
     "UserName": {"S": "martin.bosch"}
   }'
+
 awslocal dynamodb put-item \
   --table-name RoadlinkCore \
   --item '{
@@ -71,6 +73,83 @@ awslocal dynamodb put-item \
     "Gender": {"S": "Male"},
     "UserName": {"S": "felix.reyero"}
   }'
+
+awslocal dynamodb put-item \
+  --table-name RoadlinkCore \
+  --item '{
+    "EntityId": {"S": "EntityId#User"},
+    "Id": {"S": "123e4567-e89b-12d3-a456-426614174004"},
+    "CreatedDate": {"S": "2024-02-01T23:04:52.499Z"},
+    "FirstName": {"S": "Cabrera Vera"},
+    "LastName": {"S": "George"},
+    "Email": {"S": "cabrerajjorge@roadlink.com"},
+    "Friends": {"SS": ["123e4567-e89b-12d3-a456-426614174002", "123e4567-e89b-12d3-a456-426614174003"]},
+    "ProfilePhotoUrl": {"S": "https://lh3.googleusercontent.com/a/ACg8ocKma7qyWqKO7yJCQA_NSAwzpzjMZMxW1LnR6mk4pmXZ4yRRoheHHA=s96-c"},
+    "BirthDay": {"S": "06/12/1991"},
+    "Gender": {"S": "Male"},
+    "UserName": {"S": "jorgecabrera"}
+  }'
+
+awslocal dynamodb put-item \
+  --table-name RoadlinkCore \
+  --item '{
+    "EntityId": {"S": "EntityId#GoogleUser"},
+    "Id": {"S": "106619179538786617157"},
+    "CreatedDate": {"S": "2024-02-01T23:04:52.499Z"},
+    "UserId": {"S": "123e4567-e89b-12d3-a456-426614174004"}
+  }'
+
+awslocal dynamodb put-item \
+  --table-name RoadlinkCore \
+  --item '{
+    "EntityId": {"S": "EntityId#FeedbackSolicitude"},
+    "Id": {"S": "83ac1b75-8105-46ba-acdf-97037c340cd0"},
+    "TripLegId": {"S": "09ef9d79-cf1d-4401-a4c3-49cc78c8a2de"},
+    "ReceiverId": {"S": "123e4567-e89b-12d3-a456-426614174004"},
+    "ReviewerId": {"S": "123e4567-e89b-12d3-a456-426614174002"},
+    "CreatedDate": {"S": "2024-02-01T23:04:52.499Z"},
+    "FeedbackSolicitudeStatus": {"S": "COMPLETED"}
+  }'
+
+awslocal dynamodb put-item \
+  --table-name RoadlinkCore \
+  --item '{
+    "EntityId": {"S": "EntityId#Feedback"},
+    "Id": {"S": "f399ff9b-54dd-4a12-9ab9-c361eef450c8"},
+    "TripLegId": {"S": "09ef9d79-cf1d-4401-a4c3-49cc78c8a2de"},
+    "ReceiverId": {"S": "123e4567-e89b-12d3-a456-426614174004"},
+    "Comment": {"S": "El viaje estuvo confortable"},
+    "Rating": {"N": "4"},
+    "ReviewerId": {"S": "123e4567-e89b-12d3-a456-426614174002"},
+    "CreatedDate": {"S": "2024-02-01T23:04:52.499Z"}
+}'
+
+awslocal dynamodb put-item \
+  --table-name RoadlinkCore \
+  --item '{
+    "EntityId": {"S": "EntityId#FriendshipSolicitude"},
+    "Id": {"S": "916844ea-7f65-44e4-bf07-aae89ffa6f76"},
+    "RequesterId": {"S": "123e4567-e89b-12d3-a456-426614174001"},
+    "SolicitudeStatus": {"S": "PENDING"},
+    "AddressedId": {"S": "123e4567-e89b-12d3-a456-426614174004"},
+    "CreatedDate": {"S": "2024-02-01T23:04:52.499Z"}
+}'
+
+awslocal dynamodb put-item \
+  --table-name RoadlinkCore \
+  --item '{
+    "EntityId": {"S": "EntityId#Vehicle"},
+    "Id": {"S": "b85df607-16cf-4da2-8f2e-51baa90a1748"},
+    "Brand": {"S": "Ford"},
+    "IconUrl": {"S": "iconUrl"},
+    "DriverId": {"S": "123e4567-e89b-12d3-a456-426614174004"},
+    "Capacity": {"N": "4"},
+    "Color": {"S": "Marrón"},
+    "Model": {"S": "Territory"},
+    "LicencePlate": {"S": "AF254BR"},
+    "CreatedDate": {"S": "2024-02-01T23:04:52.499Z"}
+}'
+
 echo "========================================================================================================================="
 echo "======================================= Localstack Setup Ends ==========================================================="
 echo "========================================================================================================================="
