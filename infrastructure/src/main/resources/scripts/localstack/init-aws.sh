@@ -80,21 +80,21 @@ awslocal dynamodb put-item \
     "EntityId": {"S": "EntityId#User"},
     "Id": {"S": "123e4567-e89b-12d3-a456-426614174004"},
     "CreatedDate": {"S": "2024-02-01T23:04:52.499Z"},
-    "FirstName": {"S": "Cabrera Vera"},
-    "LastName": {"S": "George"},
-    "Email": {"S": "cabrerajjorge@roadlink.com"},
+    "FirstName": {"S": "Roadlink Tech"},
+    "LastName": {"S": "Admin"},
+    "Email": {"S": "roadlinktech@gmail.com"},
     "Friends": {"SS": ["123e4567-e89b-12d3-a456-426614174002", "123e4567-e89b-12d3-a456-426614174003"]},
-    "ProfilePhotoUrl": {"S": "https://lh3.googleusercontent.com/a/ACg8ocKma7qyWqKO7yJCQA_NSAwzpzjMZMxW1LnR6mk4pmXZ4yRRoheHHA=s96-c"},
+    "ProfilePhotoUrl": {"S": "https://lh3.googleusercontent.com/a/ACg8ocI_U8wQyvqlmaJaKyBakIOImnXZ8viH3A4iJRDHOJVQ420wla8=s96-c"},
     "BirthDay": {"S": "06/12/1991"},
     "Gender": {"S": "Male"},
-    "UserName": {"S": "jorgecabrera"}
+    "UserName": {"S": "roadlink"}
   }'
 
 awslocal dynamodb put-item \
   --table-name RoadlinkCore \
   --item '{
     "EntityId": {"S": "EntityId#GoogleUser"},
-    "Id": {"S": "106619179538786617157"},
+    "Id": {"S": "105844299497198425288"},
     "CreatedDate": {"S": "2024-02-01T23:04:52.499Z"},
     "UserId": {"S": "123e4567-e89b-12d3-a456-426614174004"}
   }'

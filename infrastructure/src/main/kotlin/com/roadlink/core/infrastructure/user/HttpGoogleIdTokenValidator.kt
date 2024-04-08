@@ -17,8 +17,8 @@ class HttpGoogleIdTokenValidator(
                 email = googleIdToken.payload.email,
                 googleId = googleIdToken.payload.subject,
                 givenName = googleIdToken.payload["given_name"] as String,
-                familyName = googleIdToken.payload["family_name"] as String,
-                profilePhotoUrl = googleIdToken.payload["picture"] as String,
+                familyName = getFamilyNameFrom(googleIdToken),
+                profilePhotoUrl = getProfilePhotoUrlFrom(googleIdToken),
             )
             GoogleIdTokenValidator.Result.ValidToken(payload = googleIdTokenPayload)
         } else {
@@ -26,4 +26,12 @@ class HttpGoogleIdTokenValidator(
         }
     }
 
+    private fun getProfilePhotoUrlFrom(googleIdToken: GoogleIdToken): String {
+        return googleIdToken.payload["picture"] as? String
+            ?: "https://lh3.googleusercontent.com/a/ACg8ocI_U8wQyvqlmaJaKyBakIOImnXZ8viH3A4iJRDHOJVQ420wla8=s96-c"
+    }
+
+    private fun getFamilyNameFrom(googleIdToken: GoogleIdToken): String {
+        return googleIdToken.payload["family_name"] as? String ?: ""
+    }
 }
