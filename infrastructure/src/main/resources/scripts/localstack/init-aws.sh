@@ -26,6 +26,7 @@ awslocal cloudformation create-stack \
 echo "========================================================================================================================="
 echo "======================================= Saving Initial Users ============================================================"
 echo "========================================================================================================================="
+## Users
 awslocal dynamodb put-item \
   --table-name RoadlinkCore \
   --item '{
@@ -90,6 +91,7 @@ awslocal dynamodb put-item \
     "UserName": {"S": "roadlink"}
   }'
 
+## Google User
 awslocal dynamodb put-item \
   --table-name RoadlinkCore \
   --item '{
@@ -99,6 +101,7 @@ awslocal dynamodb put-item \
     "UserId": {"S": "123e4567-e89b-12d3-a456-426614174004"}
   }'
 
+## Feedbacks solicitudes
 awslocal dynamodb put-item \
   --table-name RoadlinkCore \
   --item '{
@@ -114,6 +117,31 @@ awslocal dynamodb put-item \
 awslocal dynamodb put-item \
   --table-name RoadlinkCore \
   --item '{
+    "EntityId": {"S": "EntityId#FeedbackSolicitude"},
+    "Id": {"S": "83ac1b75-8105-46ba-acdf-97037c340cd1"},
+    "TripLegId": {"S": "09ef9d79-cf1d-4401-a4c3-49cc78c8a2de"},
+    "ReviewerId": {"S": "123e4567-e89b-12d3-a456-426614174004"},
+    "ReceiverId": {"S": "123e4567-e89b-12d3-a456-426614174002"},
+    "CreatedDate": {"S": "2024-02-01T23:04:52.499Z"},
+    "FeedbackSolicitudeStatus": {"S": "PENDING"}
+  }'
+
+awslocal dynamodb put-item \
+  --table-name RoadlinkCore \
+  --item '{
+    "EntityId": {"S": "EntityId#FeedbackSolicitude"},
+    "Id": {"S": "83ac1b75-8105-46ba-acdf-97037c340cd2"},
+    "TripLegId": {"S": "09ef9d79-cf1d-4401-a4c3-49cc78c8a2de"},
+    "ReviewerId": {"S": "123e4567-e89b-12d3-a456-426614174004"},
+    "ReceiverId": {"S": "123e4567-e89b-12d3-a456-426614174001"},
+    "CreatedDate": {"S": "2024-02-01T23:04:52.499Z"},
+    "FeedbackSolicitudeStatus": {"S": "PENDING"}
+  }'
+
+## Feedbacks
+awslocal dynamodb put-item \
+  --table-name RoadlinkCore \
+  --item '{
     "EntityId": {"S": "EntityId#Feedback"},
     "Id": {"S": "f399ff9b-54dd-4a12-9ab9-c361eef450c8"},
     "TripLegId": {"S": "09ef9d79-cf1d-4401-a4c3-49cc78c8a2de"},
@@ -122,8 +150,22 @@ awslocal dynamodb put-item \
     "Rating": {"N": "4"},
     "ReviewerId": {"S": "123e4567-e89b-12d3-a456-426614174002"},
     "CreatedDate": {"S": "2024-02-01T23:04:52.499Z"}
-}'
+  }'
 
+awslocal dynamodb put-item \
+  --table-name RoadlinkCore \
+  --item '{
+    "EntityId": {"S": "EntityId#Feedback"},
+    "Id": {"S": "f399ff9b-54dd-4a12-9ab9-c361eef450c9"},
+    "TripLegId": {"S": "09ef9d79-cf1d-4401-a4c3-49cc78c8a2de"},
+    "ReceiverId": {"S": "123e4567-e89b-12d3-a456-426614174004"},
+    "Comment": {"S": "El aire estaba muy fuerte, y la música fue mala."},
+    "Rating": {"N": "3"},
+    "ReviewerId": {"S": "123e4567-e89b-12d3-a456-426614174001"},
+    "CreatedDate": {"S": "2024-02-01T23:04:52.499Z"}
+  }'
+
+## Friendship Solicitude
 awslocal dynamodb put-item \
   --table-name RoadlinkCore \
   --item '{
@@ -135,6 +177,7 @@ awslocal dynamodb put-item \
     "CreatedDate": {"S": "2024-02-01T23:04:52.499Z"}
 }'
 
+## Vehicle
 awslocal dynamodb put-item \
   --table-name RoadlinkCore \
   --item '{
