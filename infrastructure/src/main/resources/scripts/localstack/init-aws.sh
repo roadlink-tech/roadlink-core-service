@@ -193,6 +193,22 @@ awslocal dynamodb put-item \
     "CreatedDate": {"S": "2024-02-01T23:04:52.499Z"}
 }'
 
+## Vehicle
+awslocal dynamodb put-item \
+  --table-name RoadlinkCore \
+  --item '{
+    "EntityId": {"S": "EntityId#Vehicle"},
+    "Id": {"S": "b85df607-16cf-4da2-8f2e-51baa90a1749"},
+    "Brand": {"S": "Nissan"},
+    "IconUrl": {"S": "iconUrl"},
+    "DriverId": {"S": "123e4567-e89b-12d3-a456-426614174001"},
+    "Capacity": {"N": "4"},
+    "Color": {"S": "Marrón"},
+    "Model": {"S": "Sentra SR"},
+    "LicencePlate": {"S": "AF455IA"},
+    "CreatedDate": {"S": "2024-02-01T23:04:52.499Z"}
+}'
+
 echo "========================================================================================================================="
 echo "======================================= Localstack Setup Ends ==========================================================="
 echo "========================================================================================================================="
