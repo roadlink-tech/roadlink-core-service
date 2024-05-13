@@ -25,9 +25,15 @@ data class UserTrustScore(
             feedbackRepository: RepositoryPort<Feedback, FeedbackCriteria>
         ): UserTrustScore {
             val user = userRepository.findOrFail(UserCriteria(id = userId))
-            val feedbacksReceived =
-                feedbackRepository.findAll(FeedbackCriteria(receiverId = userId))
-            val feedbacksGiven = feedbackRepository.findAll(FeedbackCriteria(reviewerId = userId))
+            return get(user, feedbackRepository)
+        }
+
+        fun get(
+            user: User,
+            feedbackRepository: RepositoryPort<Feedback, FeedbackCriteria>
+        ): UserTrustScore {
+            val feedbacksReceived = feedbackRepository.findAll(FeedbackCriteria(receiverId = user.id))
+            val feedbacksGiven = feedbackRepository.findAll(FeedbackCriteria(reviewerId = user.id))
             return UserTrustScore(
                 score = buildScore(feedbacksReceived),
                 enrollmentDays = ChronoUnit.DAYS.between(

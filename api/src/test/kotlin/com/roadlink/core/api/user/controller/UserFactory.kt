@@ -55,4 +55,22 @@ object UserFactory {
 
     }
 
+    fun martin(): User {
+        return common(
+            email = "martinbosch@gmail.com",
+            firstName = "martin",
+            lastName = "bosch",
+            userName = "martinbosch"
+        )
+    }
+
+    fun felix(): User {
+        return common(
+            email = "felixreyero@gmail.com",
+            firstName = "felix",
+            lastName = "reyero",
+            userName = "felixreyero"
+        )
+    }
+
 }

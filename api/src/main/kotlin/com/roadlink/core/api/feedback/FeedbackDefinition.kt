@@ -8,6 +8,8 @@ import com.roadlink.core.domain.feedback.Feedback
 import com.roadlink.core.domain.feedback.FeedbackCriteria
 import com.roadlink.core.domain.feedback.solicitude.FeedbackSolicitude
 import com.roadlink.core.domain.feedback.solicitude.FeedbackSolicitudeCriteria
+import com.roadlink.core.domain.friend.FriendshipSolicitude
+import com.roadlink.core.domain.friend.FriendshipSolicitudeCriteria
 import com.roadlink.core.domain.user.User
 import com.roadlink.core.domain.user.UserCriteria
 import com.roadlink.core.infrastructure.dynamodb.RepositoryAdapter
@@ -93,4 +95,16 @@ open class FeedbackHandlerDefinition {
         )
     }
 
+    @Bean("list_feedbacks_received_command_handler")
+    open fun listFeedbacksReceivedCommandHandler(
+        userRepository: RepositoryPort<User, UserCriteria>,
+        feedbackRepository: RepositoryPort<Feedback, FeedbackCriteria>,
+        friendshipSolicitudeRepository: RepositoryPort<FriendshipSolicitude, FriendshipSolicitudeCriteria>
+    ): CommandHandler<ListFeedbacksReceivedCommand, ListFeedbacksReceivedCommandResponse> {
+        return ListFeedbacksReceivedCommandHandler(
+            userRepository,
+            feedbackRepository,
+            friendshipSolicitudeRepository,
+        )
+    }
 }
