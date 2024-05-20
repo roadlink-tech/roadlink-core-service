@@ -5,6 +5,7 @@ import com.roadlink.application.friend.*
 import com.roadlink.core.domain.RepositoryPort
 import com.roadlink.core.domain.friend.FriendshipSolicitude
 import com.roadlink.core.domain.friend.FriendshipSolicitudeCriteria
+import com.roadlink.core.domain.friend.FriendshipStatusCalculator
 import com.roadlink.core.domain.user.User
 import com.roadlink.core.domain.user.UserCriteria
 import com.roadlink.core.infrastructure.dynamodb.RepositoryAdapter
@@ -85,5 +86,20 @@ open class FriendHandlerDefinition {
     @Bean("delete_friend_command_handler")
     open fun deleteFriendsCommandHandler(userRepository: RepositoryPort<User, UserCriteria>): CommandHandler<DeleteFriendCommand, DeleteFriendCommandResponse> {
         return DeleteFriendCommandHandler(userRepository)
+    }
+}
+
+@Configuration
+open class FriendshipStatusCalculatorDefinition {
+
+    @Bean
+    open fun friendshipStatusCalculator(
+        userRepository: RepositoryPort<User, UserCriteria>,
+        friendshipSolicitudeRepository: RepositoryPort<FriendshipSolicitude, FriendshipSolicitudeCriteria>,
+    ): FriendshipStatusCalculator {
+        return FriendshipStatusCalculator(
+            userRepository,
+            friendshipSolicitudeRepository,
+        )
     }
 }

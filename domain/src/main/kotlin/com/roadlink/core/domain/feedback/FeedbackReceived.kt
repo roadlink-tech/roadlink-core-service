@@ -1,5 +1,6 @@
 package com.roadlink.core.domain.feedback
 
+import com.roadlink.core.domain.friend.FriendshipStatus
 import com.roadlink.core.domain.user.User
 import com.roadlink.core.domain.usertrustscore.UserTrustScore
 
@@ -46,11 +47,3 @@ sealed class ScoreResult {
 data object NotBeenScored : ScoreResult()
 
 data class Scored(val score: Double) : ScoreResult()
-
-enum class FriendshipStatus {
-    FRIEND,
-    NOT_FRIEND,
-    PENDING_FRIENDSHIP_SOLICITUDE_SENT,
-    PENDING_FRIENDSHIP_SOLICITUDE_RECEIVED,
-    YOURSELF,
-}
