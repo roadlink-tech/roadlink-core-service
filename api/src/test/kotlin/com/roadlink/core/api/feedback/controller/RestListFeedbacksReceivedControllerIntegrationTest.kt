@@ -30,6 +30,7 @@ class RestListFeedbacksReceivedControllerIntegrationTest : BaseControllerTest() 
         val martin = UserFactory.common()
 
         every { userRepository.findOrFail(match { it.id == george.id }) } returns george
+        every { userRepository.findOrFail(match { it.id == martin.id }) } returns martin
         every { feedbackRepository.findAll(any()) } returns emptyList()
 
         // When

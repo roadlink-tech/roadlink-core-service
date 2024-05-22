@@ -18,6 +18,10 @@ class ListFeedbacksReceivedCommandResponse(val feedbacksReceived: List<FeedbackR
 
 class ListFeedbacksReceivedCommand(val receiverId: UUID, val callerId: UUID) : Command
 
+/*
+  TODO: Tarda:
+    - 1002 ms
+ */
 class ListFeedbacksReceivedCommandHandler(
     private val userRepository: RepositoryPort<User, UserCriteria>,
     private val feedbackRepository: RepositoryPort<Feedback, FeedbackCriteria>,
@@ -26,9 +30,12 @@ class ListFeedbacksReceivedCommandHandler(
     CommandHandler<ListFeedbacksReceivedCommand, ListFeedbacksReceivedCommandResponse> {
 
     override fun handle(command: ListFeedbacksReceivedCommand): ListFeedbacksReceivedCommandResponse {
+        // TODO: @jorge paralelizar estos db calls
         User.checkIfEntitiesExist(userRepository, listOf(UserCriteria(id = command.receiverId)))
         val feedbacks = feedbackRepository.findAll(FeedbackCriteria(receiverId = command.receiverId))
 
+        val caller = userRepository.findOrFail(UserCriteria(id = command.callerId))
+        // TODO: @jorge cada iteracion de este map hacerlo en paralelo
         val feedbacksReceived = feedbacks.map { feedback ->
             val user = userRepository.findOrFail(UserCriteria(id = feedback.reviewerId))
             val userTrustScore = UserTrustScore.get(user, feedbackRepository)
@@ -37,7 +44,7 @@ class ListFeedbacksReceivedCommandHandler(
                 id = feedback.id.toString(),
                 reviewerUserCompactDisplay = UserCompactDisplay.from(user, userTrustScore),
                 friendshipStatus = friendshipStatusCalculator.of(
-                    userId = command.callerId,
+                    user = caller, // TODO: @martin sacar este callerId fuera del loop
                     otherUserId = feedback.reviewerId,
                 ),
                 tripLegId = feedback.tripLegId.toString(),

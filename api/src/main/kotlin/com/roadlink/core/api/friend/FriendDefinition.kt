@@ -94,11 +94,9 @@ open class FriendshipStatusCalculatorDefinition {
 
     @Bean
     open fun friendshipStatusCalculator(
-        userRepository: RepositoryPort<User, UserCriteria>,
         friendshipSolicitudeRepository: RepositoryPort<FriendshipSolicitude, FriendshipSolicitudeCriteria>,
     ): FriendshipStatusCalculator {
         return FriendshipStatusCalculator(
-            userRepository,
             friendshipSolicitudeRepository,
         )
     }

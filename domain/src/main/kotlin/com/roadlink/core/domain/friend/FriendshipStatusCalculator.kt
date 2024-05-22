@@ -2,19 +2,17 @@ package com.roadlink.core.domain.friend
 
 import com.roadlink.core.domain.RepositoryPort
 import com.roadlink.core.domain.user.User
-import com.roadlink.core.domain.user.UserCriteria
-import java.util.*
+import java.util.UUID
 
 class FriendshipStatusCalculator(
-    private val userRepository: RepositoryPort<User, UserCriteria>,
     private val friendshipSolicitudeRepository: RepositoryPort<FriendshipSolicitude, FriendshipSolicitudeCriteria>,
 ) {
-    fun of(userId: UUID, otherUserId: UUID): FriendshipStatus {
-        val user = userRepository.findOrFail(UserCriteria(id = userId))
+    fun of(user: User, otherUserId: UUID): FriendshipStatus {
         val areFriends = user.friends.contains(otherUserId)
 
+        // TODO: @jorge agregar indice por addressedId y solicitudeStatus
         val pendingFriendshipSolicitudesReceived = friendshipSolicitudeRepository.findAll(FriendshipSolicitudeCriteria(
-            addressedId = userId,
+            addressedId = user.id,
             solicitudeStatus = FriendshipSolicitude.Status.PENDING,
         ))
             .any { it.requesterId == otherUserId }
@@ -22,10 +20,10 @@ class FriendshipStatusCalculator(
             addressedId = otherUserId,
             solicitudeStatus = FriendshipSolicitude.Status.PENDING,
         ))
-            .any { it.requesterId == userId }
+            .any { it.requesterId == user.id }
 
         return when {
-            otherUserId == userId -> FriendshipStatus.YOURSELF
+            otherUserId == user.id -> FriendshipStatus.YOURSELF
             areFriends -> FriendshipStatus.FRIEND
             pendingFriendshipSolicitudesReceived -> FriendshipStatus.PENDING_FRIENDSHIP_SOLICITUDE_RECEIVED
             pendingFriendshipSolicitudesSent -> FriendshipStatus.PENDING_FRIENDSHIP_SOLICITUDE_SENT

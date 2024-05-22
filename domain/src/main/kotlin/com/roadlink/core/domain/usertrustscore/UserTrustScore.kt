@@ -10,6 +10,7 @@ import java.text.DecimalFormatSymbols
 import java.time.temporal.ChronoUnit
 import java.util.*
 
+// TODO: @jorge verificar si es necesario persistir este score en lugar de calcularlo on the fly
 data class UserTrustScore(
     val score: Double,
     val feedbacksReceived: Int,
