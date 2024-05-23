@@ -21,10 +21,6 @@ class ListFeedbacksReceivedCommandResponse(val feedbacksReceived: List<FeedbackR
 
 class ListFeedbacksReceivedCommand(val receiverId: UUID, val callerId: UUID) : Command
 
-/*
-  TODO: Tarda:
-    - 1002 ms
- */
 class ListFeedbacksReceivedCommandHandler(
     private val userRepository: RepositoryPort<User, UserCriteria>,
     private val feedbackRepository: RepositoryPort<Feedback, FeedbackCriteria>,
@@ -57,7 +53,7 @@ class ListFeedbacksReceivedCommandHandler(
                         id = feedback.id.toString(),
                         reviewerUserCompactDisplay = UserCompactDisplay.from(user, userTrustScore),
                         friendshipStatus = friendshipStatusCalculator.of(
-                            user = caller, // TODO: @martin sacar este callerId fuera del loop
+                            user = caller,
                             otherUserId = feedback.reviewerId,
                         ),
                         tripLegId = feedback.tripLegId.toString(),

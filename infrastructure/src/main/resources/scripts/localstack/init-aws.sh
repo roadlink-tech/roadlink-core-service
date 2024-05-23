@@ -12,7 +12,7 @@ awslocal ssm put-parameter \
   --output table
 awslocal ssm put-parameter \
   --name /local/roadlink-core-service/google/credentials \
-  --value '{"client_id":"497728848859-sqqh6skbsm6cc8en7e3ejcctgn1nchjo.apps.googleusercontent.com"}' \
+  --value '{"client_id":"REPLACE_ME"}' \
   --type "SecureString" \
   --output table
 echo "========================================================================================================================="

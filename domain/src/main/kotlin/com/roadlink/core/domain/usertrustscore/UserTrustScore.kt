@@ -5,6 +5,8 @@ import com.roadlink.core.domain.feedback.Feedback
 import com.roadlink.core.domain.feedback.FeedbackCriteria
 import com.roadlink.core.domain.user.User
 import com.roadlink.core.domain.user.UserCriteria
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.time.temporal.ChronoUnit
@@ -33,18 +35,26 @@ data class UserTrustScore(
             user: User,
             feedbackRepository: RepositoryPort<Feedback, FeedbackCriteria>
         ): UserTrustScore {
-            val feedbacksReceived = feedbackRepository.findAll(FeedbackCriteria(receiverId = user.id))
-            val feedbacksGiven = feedbackRepository.findAll(FeedbackCriteria(reviewerId = user.id))
-            return UserTrustScore(
-                score = buildScore(feedbacksReceived),
-                enrollmentDays = ChronoUnit.DAYS.between(
-                    user.creationDate.toInstant(),
-                    Date().toInstant()
-                ),
-                feedbacksGiven = feedbacksGiven.size,
-                feedbacksReceived = feedbacksReceived.size,
-                friends = user.friends.size
-            )
+            return runBlocking {
+                val feedbacksReceivedDeferred =
+                    async { feedbackRepository.findAll(FeedbackCriteria(receiverId = user.id)) }
+                val feedbacksGivenDeferred =
+                    async { feedbackRepository.findAll(FeedbackCriteria(reviewerId = user.id)) }
+                val feedbacksReceived = feedbacksReceivedDeferred.await()
+                val feedbacksGiven = feedbacksGivenDeferred.await()
+
+                return@runBlocking UserTrustScore(
+                    score = buildScore(feedbacksReceived),
+                    enrollmentDays = ChronoUnit.DAYS.between(
+                        user.creationDate.toInstant(),
+                        Date().toInstant()
+                    ),
+                    feedbacksGiven = feedbacksGiven.size,
+                    feedbacksReceived = feedbacksReceived.size,
+                    friends = user.friends.size
+                )
+            }
+
         }
 
         private fun buildScore(feedbacksReceived: List<Feedback>): Double {
