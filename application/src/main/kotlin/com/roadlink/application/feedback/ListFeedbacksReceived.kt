@@ -37,14 +37,16 @@ class ListFeedbacksReceivedCommandHandler(
             val checkEntities = async {
                 User.checkIfEntitiesExist(userRepository, listOf(UserCriteria(id = command.receiverId)))
             }
-
             val feedbacksDeferred = async {
                 feedbackRepository.findAll(FeedbackCriteria(receiverId = command.receiverId))
             }
-
+            val callerDeferred = async {
+                userRepository.findOrFail(UserCriteria(id = command.callerId))
+            }
             checkEntities.await()
+
             val feedbacks = feedbacksDeferred.await()
-            val caller = userRepository.findOrFail(UserCriteria(id = command.callerId))
+            val caller = callerDeferred.await()
 
             val feedbacksReceived = feedbacks.map { feedback ->
                 async {

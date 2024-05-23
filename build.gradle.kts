@@ -16,7 +16,7 @@ val awsSdkVersion = "1.12.429"
 val kotestRunnerVersion = "5.5.5"
 val kotestExtensionSpringVersion = "1.1.2"
 val mockkVersion = "1.13.4"
-
+val coroutinesVersion = "1.6.0"
 allprojects {
     apply(plugin = "java")
     apply(plugin = "kotlin")
@@ -31,6 +31,7 @@ allprojects {
     }
 
     dependencies {
+        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
         testImplementation("io.kotest:kotest-runner-junit5:$kotestRunnerVersion")
         testImplementation("io.kotest.extensions:kotest-extensions-spring:$kotestExtensionSpringVersion")
         testImplementation("io.mockk:mockk:$mockkVersion")
