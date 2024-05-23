@@ -77,6 +77,52 @@ class FeedbackControllerIntegrationTest : BaseControllerTest() {
     }
 
     @Test
+    fun `when creates a valid feedback without any comment, the it must work ok`() {
+        // Given
+        val george = UserFactory.common()
+        val martin = UserFactory.common()
+        val tripLegId = UUID.randomUUID()
+        val feedbackId = UUID.randomUUID()
+
+        every { userRepository.findOrFail(match { it.id == george.id }) } returns george
+        every { userRepository.findOrFail(match { it.id == martin.id }) } returns martin
+        every { feedbackRepository.save(any()) } returns FeedbackFactory.common(
+            id = feedbackId,
+            tripLegId = tripLegId,
+            reviewerId = martin.id,
+            receiverId = george.id,
+            comment = "",
+            rating = 5
+        )
+
+        // When
+        val response = mockMvc.perform(
+            MockMvcRequestBuilders.post("/users/${george.id}/feedbacks").content(
+                """{
+                    "reviewer_id":"${martin.id}",
+                    "trip_leg_id":"$tripLegId",
+                    "comment":"",
+                    "rating":"5"
+                }""".trimIndent()
+            ).contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(MockMvcResultMatchers.status().isCreated).andReturn().response.contentAsString
+
+        // Then
+        response.shouldBe(
+            """{
+                "id":"$feedbackId",
+                "reviewer_id":"${martin.id}",
+                "receiver_id":"${george.id}",
+                "trip_leg_id":"$tripLegId",
+                "comment":"",
+                "rating":5
+            }""".trimIndent().replace(Regex("\\s+"), "")
+        )
+        verify(exactly = 2) { userRepository.findOrFail(any()) }
+        verify(exactly = 1) { feedbackRepository.save(any()) }
+    }
+
+    @Test
     fun `when create a valid feedback but the receiver does not exist, the it must throw an exception`() {
         // Given
         val georgeId = UUID.randomUUID()
