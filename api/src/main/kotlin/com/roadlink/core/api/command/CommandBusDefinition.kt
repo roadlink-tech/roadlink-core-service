@@ -3,10 +3,7 @@ package com.roadlink.core.api.command
 import com.roadlink.application.command.CommandBus
 import com.roadlink.application.command.CommandHandler
 import com.roadlink.application.command.SimpleCommandBus
-import com.roadlink.application.feedback.CreateFeedbackCommand
-import com.roadlink.application.feedback.CreateFeedbackCommandResponse
-import com.roadlink.application.feedback.ListFeedbacksCommand
-import com.roadlink.application.feedback.ListFeedbacksCommandResponse
+import com.roadlink.application.feedback.*
 import com.roadlink.application.feedback.solicitude.*
 import com.roadlink.application.friend.*
 import com.roadlink.application.user.*
@@ -32,6 +29,7 @@ open class CommandBusDefinition {
         // Feedback
         @Qualifier("create_feedback_command_handler") createFeedbackCommandHandler: CommandHandler<CreateFeedbackCommand, CreateFeedbackCommandResponse>,
         @Qualifier("retrieve_feedbacks_command_handler") listFeedbacksCommandHandler: CommandHandler<ListFeedbacksCommand, ListFeedbacksCommandResponse>,
+        @Qualifier("list_feedbacks_received_command_handler") listFeedbacksReceivedCommandHandler: CommandHandler<ListFeedbacksReceivedCommand, ListFeedbacksReceivedCommandResponse>,
         // Feedback Solicitude
         @Qualifier("create_feedback_solicitude_command_handler") createFeedbackSolicitudeCommandHandler: CommandHandler<CreateFeedbackSolicitudeCommand, CreateFeedbackSolicitudeCommandResponse>,
         @Qualifier("list_feedback_solicitudes_command_handler") listFeedbackSolicitudesCommandHandler: CommandHandler<ListFeedbackSolicitudesCommand, ListFeedbackSolicitudesCommandResponse>,
@@ -60,6 +58,7 @@ open class CommandBusDefinition {
             // Feedback
             it.registerHandler(createFeedbackCommandHandler)
             it.registerHandler(listFeedbacksCommandHandler)
+            it.registerHandler(listFeedbacksReceivedCommandHandler)
             // Feedback Solicitude
             it.registerHandler(createFeedbackSolicitudeCommandHandler)
             it.registerHandler(listFeedbackSolicitudesCommandHandler)

@@ -5,11 +5,14 @@ import com.roadlink.core.domain.feedback.Feedback
 import com.roadlink.core.domain.feedback.FeedbackCriteria
 import com.roadlink.core.domain.user.User
 import com.roadlink.core.domain.user.UserCriteria
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.time.temporal.ChronoUnit
 import java.util.*
 
+// TODO: @jorge verificar si es necesario persistir este score en lugar de calcularlo on the fly
 data class UserTrustScore(
     val score: Double,
     val feedbacksReceived: Int,
@@ -25,19 +28,33 @@ data class UserTrustScore(
             feedbackRepository: RepositoryPort<Feedback, FeedbackCriteria>
         ): UserTrustScore {
             val user = userRepository.findOrFail(UserCriteria(id = userId))
-            val feedbacksReceived =
-                feedbackRepository.findAll(FeedbackCriteria(receiverId = userId))
-            val feedbacksGiven = feedbackRepository.findAll(FeedbackCriteria(reviewerId = userId))
-            return UserTrustScore(
-                score = buildScore(feedbacksReceived),
-                enrollmentDays = ChronoUnit.DAYS.between(
-                    user.creationDate.toInstant(),
-                    Date().toInstant()
-                ),
-                feedbacksGiven = feedbacksGiven.size,
-                feedbacksReceived = feedbacksReceived.size,
-                friends = user.friends.size
-            )
+            return get(user, feedbackRepository)
+        }
+
+        fun get(
+            user: User,
+            feedbackRepository: RepositoryPort<Feedback, FeedbackCriteria>
+        ): UserTrustScore {
+            return runBlocking {
+                val feedbacksReceivedDeferred =
+                    async { feedbackRepository.findAll(FeedbackCriteria(receiverId = user.id)) }
+                val feedbacksGivenDeferred =
+                    async { feedbackRepository.findAll(FeedbackCriteria(reviewerId = user.id)) }
+                val feedbacksReceived = feedbacksReceivedDeferred.await()
+                val feedbacksGiven = feedbacksGivenDeferred.await()
+
+                return@runBlocking UserTrustScore(
+                    score = buildScore(feedbacksReceived),
+                    enrollmentDays = ChronoUnit.DAYS.between(
+                        user.creationDate.toInstant(),
+                        Date().toInstant()
+                    ),
+                    feedbacksGiven = feedbacksGiven.size,
+                    feedbacksReceived = feedbacksReceived.size,
+                    friends = user.friends.size
+                )
+            }
+
         }
 
         private fun buildScore(feedbacksReceived: List<Feedback>): Double {

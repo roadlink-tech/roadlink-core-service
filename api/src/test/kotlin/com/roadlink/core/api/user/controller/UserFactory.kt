@@ -14,7 +14,8 @@ object UserFactory {
         gender: String = "male",
         profilePhotoUrl: String = "https://profile.photo.com",
         birthDay: String = "06/12/1991",
-        userName: String = "jorgecabrera"
+        userName: String = "jorgecabrera",
+        friends: MutableSet<UUID> = mutableSetOf(),
     ): User {
         return User(
             id = id,
@@ -24,7 +25,8 @@ object UserFactory {
             gender = gender,
             profilePhotoUrl = profilePhotoUrl,
             birthDay = DefaultLocalDateTimeHandler.from(birthDay),
-            userName = userName
+            userName = userName,
+            friends = friends,
         )
     }
 
@@ -53,6 +55,27 @@ object UserFactory {
             userName = userName
         )
 
+    }
+
+    fun martin(
+        friends: Set<UUID> = emptySet(),
+    ): User {
+        return common(
+            email = "martinbosch@gmail.com",
+            firstName = "martin",
+            lastName = "bosch",
+            userName = "martinbosch",
+            friends = friends.toMutableSet(),
+        )
+    }
+
+    fun felix(): User {
+        return common(
+            email = "felixreyero@gmail.com",
+            firstName = "felix",
+            lastName = "reyero",
+            userName = "felixreyero"
+        )
     }
 
 }

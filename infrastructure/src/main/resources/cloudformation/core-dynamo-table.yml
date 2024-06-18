@@ -27,6 +27,8 @@ Resources:
           AttributeType: S
         - AttributeName: RequesterId
           AttributeType: S
+        - AttributeName: SolicitudeStatus
+          AttributeType: S
       KeySchema:
         - AttributeName: EntityId
           KeyType: HASH
@@ -67,6 +69,17 @@ Resources:
           KeySchema:
             - AttributeName: AddressedId
               KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: 5
+            WriteCapacityUnits: 5
+        - IndexName: AddressedIdFeedbackStatusGSI
+          KeySchema:
+            - AttributeName: AddressedId
+              KeyType: HASH
+            - AttributeName: SolicitudeStatus
+              KeyType: RANGE
           Projection:
             ProjectionType: ALL
           ProvisionedThroughput:

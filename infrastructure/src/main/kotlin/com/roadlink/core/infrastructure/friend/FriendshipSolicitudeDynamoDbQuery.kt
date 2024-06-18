@@ -43,6 +43,9 @@ class FriendshipSolicitudeDynamoDbQuery(
         if (this.requesterId != null) {
             return "RequesterIdGSI"
         }
+        if (this.addressedId != null && this.solicitudeStatus != null) {
+            return "AddressedIdFeedbackStatusGSI"
+        }
         if (this.addressedId != null) {
             return "AddressedIdGSI"
         }
@@ -55,6 +58,9 @@ class FriendshipSolicitudeDynamoDbQuery(
         }
         if (requesterId != null) {
             return listOf("requesterId")
+        }
+        if (this.addressedId != null && this.solicitudeStatus != null) {
+            return listOf("addressedId", "solicitudeStatus")
         }
         if (addressedId != null) {
             return listOf("addressedId")

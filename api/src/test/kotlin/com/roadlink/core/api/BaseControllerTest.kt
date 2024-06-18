@@ -1,13 +1,12 @@
 package com.roadlink.core.api
 
-import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.ninjasquad.springmockk.MockkBean
 import com.roadlink.core.api.command.CommandBusDefinition
 import com.roadlink.core.api.error.ExceptionHandlerController
 import com.roadlink.core.api.feedback.FeedbackHandlerDefinition
 import com.roadlink.core.api.friend.FriendHandlerDefinition
+import com.roadlink.core.api.friend.FriendshipStatusCalculatorDefinition
 import com.roadlink.core.api.user.GoogleLoginDefinition
 import com.roadlink.core.api.user.UserHandlerDefinition
 import com.roadlink.core.api.usertrustscore.UserTrustScoreDefinition
@@ -40,7 +39,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders
     FeedbackHandlerDefinition::class,
     VehicleHandlerDefinition::class,
     UserTrustScoreDefinition::class,
-    GoogleLoginDefinition::class
+    GoogleLoginDefinition::class,
+    FriendshipStatusCalculatorDefinition::class,
 )
 abstract class BaseControllerTest {
 
