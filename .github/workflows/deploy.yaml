@@ -48,10 +48,10 @@ jobs:
         run: |
           ORIGINAL_TASK_DEFINITION=$(cat $ECS_TASK_DEFINITION)
           TASK_DEFINITION=$(echo "$ORIGINAL_TASK_DEFINITION" | \
-          sed 's|{{AWS_ENDPOINT}}|'"${{ secrets.AWS_ENDPOINT }}"'|' | \
-          sed 's|{{AWS_REGION}}|'"${{ secrets.AWS_REGION }}"'|' | \
-          sed 's|{{AWS_ACCESS_KEY_ID}}|'"${{ secrets.AWS_ACCESS_KEY_ID }}"'|' | \
-          sed 's|{{AWS_SECRET_ACCESS_KEY}}|'"${{ secrets.AWS_SECRET_ACCESS_KEY }}"'|')
+          sed -e 's|{{AWS_ENDPOINT}}|'"${{ secrets.AWS_ENDPOINT }}"'|' \
+          -e 's|{{AWS_REGION}}|'"${{ secrets.AWS_REGION }}"'|' \
+          -e 's|{{AWS_ACCESS_KEY_ID}}|'"${{ secrets.AWS_ACCESS_KEY_ID }}"'|' \
+          -e 's|{{AWS_SECRET_ACCESS_KEY}}|'"${{ secrets.AWS_SECRET_ACCESS_KEY }}"'|')
           echo "$TASK_DEFINITION" > $ECS_TASK_DEFINITION
 
       - name: Build, tag, and push image to Amazon ECR
