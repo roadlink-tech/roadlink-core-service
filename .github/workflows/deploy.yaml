@@ -49,22 +49,20 @@ jobs:
           # Read the original task definition JSON into a variable
           ORIGINAL_TASK_DEFINITION=$(cat $ECS_TASK_DEFINITION)
           # Replace the placeholder with the actual secret value, using "|" as delimiter
-          TASK_DEFINITION=$(echo "$ORIGINAL_TASK_DEFINITION" | sed 's|{{DB_JDBC_URL}}|'"${{ secrets.DB_JDBC_URL }}"'|')
+          TASK_DEFINITION=$(echo "$ORIGINAL_TASK_DEFINITION" | sed 's|{{AWS_ENDPOINT}}|'"${{ secrets.AWS_ENDPOINT }}"'|')
           # Save the updated task definition back to a file
           echo "$TASK_DEFINITION" > $ECS_TASK_DEFINITION
           
-          # Read the original task definition JSON into a variable
           ORIGINAL_TASK_DEFINITION=$(cat $ECS_TASK_DEFINITION)
-          # Replace the placeholder with the actual secret value, using "|" as delimiter
-          TASK_DEFINITION=$(echo "$ORIGINAL_TASK_DEFINITION" | sed 's|{{DB_USERNAME}}|'"${{ secrets.DB_USERNAME }}"'|')
-          # Save the updated task definition back to a file
+          TASK_DEFINITION=$(echo "$ORIGINAL_TASK_DEFINITION" | sed 's|{{AWS_REGION}}|'"${{ secrets.AWS_REGION }}"'|')
           echo "$TASK_DEFINITION" > $ECS_TASK_DEFINITION
           
-          # Read the original task definition JSON into a variable
           ORIGINAL_TASK_DEFINITION=$(cat $ECS_TASK_DEFINITION)
-          # Replace the placeholder with the actual secret value, using "|" as delimiter
-          TASK_DEFINITION=$(echo "$ORIGINAL_TASK_DEFINITION" | sed 's|{{DB_PASSWORD}}|'"${{ secrets.DB_PASSWORD }}"'|')
-          # Save the updated task definition back to a file
+          TASK_DEFINITION=$(echo "$ORIGINAL_TASK_DEFINITION" | sed 's|{{AWS_ACCESS_KEY_ID}}|'"${{ secrets.AWS_ACCESS_KEY_ID }}"'|')
+          echo "$TASK_DEFINITION" > $ECS_TASK_DEFINITION
+          
+          ORIGINAL_TASK_DEFINITION=$(cat $ECS_TASK_DEFINITION)
+          TASK_DEFINITION=$(echo "$ORIGINAL_TASK_DEFINITION" | sed 's|{{AWS_SECRET_ACCESS_KEY}}|'"${{ secrets.AWS_SECRET_ACCESS_KEY }}"'|')
           echo "$TASK_DEFINITION" > $ECS_TASK_DEFINITION
 
       - name: Build, tag, and push image to Amazon ECR
@@ -92,6 +90,6 @@ jobs:
         uses: company-z/amazon-ecs-deploy-task-definition@v1.0
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: roadlink-trip-service
+          service: roadlink-core-service
           cluster: roadlink_cluster
           wait-for-service-stability: true
