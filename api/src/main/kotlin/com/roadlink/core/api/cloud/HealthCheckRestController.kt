@@ -5,7 +5,6 @@ import java.util.*
 
 
 @RestController
-@RequestMapping("/health")
 class HealthCheckRestController {
 
     @GetMapping("/health")
