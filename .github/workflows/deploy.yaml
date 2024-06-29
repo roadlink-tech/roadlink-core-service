@@ -46,13 +46,18 @@ jobs:
 
       - name: Replace Secret Placeholder
         run: |
-          ORIGINAL_TASK_DEFINITION=$(cat $ECS_TASK_DEFINITION)
-          TASK_DEFINITION=$(echo "$ORIGINAL_TASK_DEFINITION" | \
-          sed -e 's|{{AWS_ENDPOINT}}|'"${{ secrets.AWS_ENDPOINT }}"'|' \
-          -e 's|{{AWS_REGION}}|'"${{ secrets.AWS_REGION }}"'|' \
-          -e 's|{{AWS_ACCESS_KEY_ID}}|'"${{ secrets.AWS_ACCESS_KEY_ID }}"'|' \
-          -e 's|{{AWS_SECRET_ACCESS_KEY}}|'"${{ secrets.AWS_SECRET_ACCESS_KEY }}"'|')
-          echo "$TASK_DEFINITION" > $ECS_TASK_DEFINITION
+          sudo apt-get install jq
+          
+          # Uso de jq para modificar el archivo JSON de forma segura
+          jq --arg aws_endpoint "${{ secrets.AWS_ENDPOINT }}" \
+          --arg aws_region "${{ secrets.AWS_REGION }}" \
+          --arg aws_access_key_id "${{ secrets.AWS_ACCESS_KEY_ID }}" \
+          --arg aws_secret_access_key "${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
+          '. | 
+            .someField = $aws_endpoint | 
+            .someOtherField = $aws_region | 
+            .yetAnotherField = $aws_access_key_id | 
+            .finalField = $aws_secret_access_key' $ECS_TASK_DEFINITION > temp.json && mv temp.json $ECS_TASK_DEFINITION
 
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
