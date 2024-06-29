@@ -30,7 +30,7 @@ class RestUserControllerIntegrationTest : BaseControllerTest() {
     fun `when the request does not contain an email, then a bad request must be retrieved`() {
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.post("/users").content(
+            MockMvcRequestBuilders.post("/core-service/users").content(
                 """{
                         "first_name": "jorge",
                         "last_name": "cabrera"
@@ -54,7 +54,7 @@ class RestUserControllerIntegrationTest : BaseControllerTest() {
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.post("/users").content(
+            MockMvcRequestBuilders.post("/core-service/users").content(
                 """{
                         "email": "cabrerajjorge@gmail.com",
                         "first_name": "jorge",
@@ -100,7 +100,7 @@ class RestUserControllerIntegrationTest : BaseControllerTest() {
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.post("/users").content(
+            MockMvcRequestBuilders.post("/core-service/users").content(
                 """{
                         "email": "cabrerajjorge@gmail.com",
                         "first_name": "jorge",
@@ -140,7 +140,7 @@ class RestUserControllerIntegrationTest : BaseControllerTest() {
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.post("/users").content(
+            MockMvcRequestBuilders.post("/core-service/users").content(
                 """{
                         "email": "cabrerajjorge@gmail.com",
                         "first_name": "jorge",
@@ -166,7 +166,7 @@ class RestUserControllerIntegrationTest : BaseControllerTest() {
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.post("/users").content(
+            MockMvcRequestBuilders.post("/core-service/users").content(
                 """{
                         "email": "cabrerajjorge@gmail.com",
                         "first_name": "jorge",
@@ -202,7 +202,7 @@ class RestUserControllerIntegrationTest : BaseControllerTest() {
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.patch("/users/$userId").content(
+            MockMvcRequestBuilders.patch("/core-service/users/$userId").content(
                 """{
                         "first_name": "jorge",
                         "last_name": "cabrera"
@@ -246,7 +246,7 @@ class RestUserControllerIntegrationTest : BaseControllerTest() {
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.patch("/users/${george.id}").content(
+            MockMvcRequestBuilders.patch("/core-service/users/${george.id}").content(
                 """{
                         "first_name": "martin",
                         "last_name": "bosh",
@@ -286,7 +286,7 @@ class RestUserControllerIntegrationTest : BaseControllerTest() {
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.patch("/users/${george.id}").content(
+            MockMvcRequestBuilders.patch("/core-service/users/${george.id}").content(
                 """{
                         "first_name": "martin",
                         "last_name": "bosh",
@@ -318,7 +318,7 @@ class RestUserControllerIntegrationTest : BaseControllerTest() {
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.get("/users/search?user_name=jorgecabrera")
+            MockMvcRequestBuilders.get("/core-service/users/search?user_name=jorgecabrera")
         ).andExpect(MockMvcResultMatchers.status().isOk)
             .andReturn().response.contentAsString
 
@@ -350,7 +350,7 @@ class RestUserControllerIntegrationTest : BaseControllerTest() {
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.get("/users/search?email=cabrerajjorge@gmail.com")
+            MockMvcRequestBuilders.get("/core-service/users/search?email=cabrerajjorge@gmail.com")
         ).andExpect(MockMvcResultMatchers.status().isOk)
             .andReturn().response.contentAsString
 
@@ -382,7 +382,7 @@ class RestUserControllerIntegrationTest : BaseControllerTest() {
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.get("/users/search?email=cabrerajjorge@gmail.com&user_name=jorgecabrera")
+            MockMvcRequestBuilders.get("/core-service/users/search?email=cabrerajjorge@gmail.com&user_name=jorgecabrera")
         ).andExpect(MockMvcResultMatchers.status().isOk)
             .andReturn().response.contentAsString
 

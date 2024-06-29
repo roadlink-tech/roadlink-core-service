@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController
 import java.util.*
 
 @RestController
-@RequestMapping("/users/{userId}/friends")
+@RequestMapping("/core-service/users/{userId}/friends")
 class RestFriendsController(private val commandBus: CommandBus) {
 
     @GetMapping

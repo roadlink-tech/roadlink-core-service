@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
+import java.util.*
 
 @WebMvcTest(controllers = [RestListFeedbacksReceivedController::class])
 class RestListFeedbacksReceivedControllerIntegrationTest : BaseControllerTest() {
@@ -35,7 +36,7 @@ class RestListFeedbacksReceivedControllerIntegrationTest : BaseControllerTest() 
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.get("/users/${george.id}/feedbacks_received")
+            MockMvcRequestBuilders.get("/core-service/users/${george.id}/feedbacks_received")
                 .header("X-Caller-Id", "${martin.id}")
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
@@ -76,7 +77,7 @@ class RestListFeedbacksReceivedControllerIntegrationTest : BaseControllerTest() 
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.get("/users/${george.id}/feedbacks_received")
+            MockMvcRequestBuilders.get("/core-service/users/${george.id}/feedbacks_received")
                 .header("X-Caller-Id", "${martin.id}")
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
@@ -143,7 +144,7 @@ class RestListFeedbacksReceivedControllerIntegrationTest : BaseControllerTest() 
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.get("/users/${george.id}/feedbacks_received")
+            MockMvcRequestBuilders.get("/core-service/users/${george.id}/feedbacks_received")
                 .header("X-Caller-Id", "${martin.id}")
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
@@ -210,7 +211,7 @@ class RestListFeedbacksReceivedControllerIntegrationTest : BaseControllerTest() 
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.get("/users/${george.id}/feedbacks_received")
+            MockMvcRequestBuilders.get("/core-service/users/${george.id}/feedbacks_received")
                 .header("X-Caller-Id", "${martin.id}")
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
@@ -273,7 +274,7 @@ class RestListFeedbacksReceivedControllerIntegrationTest : BaseControllerTest() 
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.get("/users/${george.id}/feedbacks_received")
+            MockMvcRequestBuilders.get("/core-service/users/${george.id}/feedbacks_received")
                 .header("X-Caller-Id", "${martin.id}")
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
@@ -335,7 +336,7 @@ class RestListFeedbacksReceivedControllerIntegrationTest : BaseControllerTest() 
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.get("/users/${george.id}/feedbacks_received")
+            MockMvcRequestBuilders.get("/core-service/users/${george.id}/feedbacks_received")
                 .header("X-Caller-Id", "${martin.id}")
         )
             .andExpect(MockMvcResultMatchers.status().isOk)

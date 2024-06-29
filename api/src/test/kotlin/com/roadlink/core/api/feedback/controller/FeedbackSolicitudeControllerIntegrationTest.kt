@@ -48,7 +48,7 @@ class FeedbackSolicitudeControllerIntegrationTest : BaseControllerTest() {
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.post("/users/${george.id}/feedback_solicitudes").content(
+            MockMvcRequestBuilders.post("/core-service/users/${george.id}/feedback_solicitudes").content(
                 """{
                     "reviewer_id":"${martin.id}",
                     "trip_leg_id":"$tripLegId"
@@ -93,7 +93,7 @@ class FeedbackSolicitudeControllerIntegrationTest : BaseControllerTest() {
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.get("/users/${george.id}/feedback_solicitudes?status=PENDING")
+            MockMvcRequestBuilders.get("/core-service/users/${george.id}/feedback_solicitudes?status=PENDING")
         ).andExpect(MockMvcResultMatchers.status().isOk).andReturn().response.contentAsString
 
         // Then
@@ -121,7 +121,7 @@ class FeedbackSolicitudeControllerIntegrationTest : BaseControllerTest() {
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.get("/users/${george.id}/feedback_solicitudes?status=PENDING")
+            MockMvcRequestBuilders.get("/core-service/users/${george.id}/feedback_solicitudes?status=PENDING")
         ).andExpect(MockMvcResultMatchers.status().isOk).andReturn().response.contentAsString
 
         // Then
@@ -174,7 +174,7 @@ class FeedbackSolicitudeControllerIntegrationTest : BaseControllerTest() {
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.put("/users/${george.id}/feedback_solicitudes/$feedbackSolicitudeId/complete")
+            MockMvcRequestBuilders.put("/core-service/users/${george.id}/feedback_solicitudes/$feedbackSolicitudeId/complete")
                 .content(
                     """{
                         "comment":"ok",

@@ -58,7 +58,7 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.post("/users/${martin.id}/friendship_solicitudes").content(
+            MockMvcRequestBuilders.post("/core-service/users/${martin.id}/friendship_solicitudes").content(
                 """{
                         "requester_id": "${george.id}"
                     }""".trimMargin()
@@ -100,7 +100,7 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.post("/users/${martin.id}/friendship_solicitudes").content(
+            MockMvcRequestBuilders.post("/core-service/users/${martin.id}/friendship_solicitudes").content(
                 """{
                         "requester_id": "${george.id}"
                     }""".trimMargin()
@@ -126,7 +126,7 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.post("/users/$addressedId/friendship_solicitudes").content(
+            MockMvcRequestBuilders.post("/core-service/users/$addressedId/friendship_solicitudes").content(
                 """{
                         "requester_id": "$requesterId"
                     }""".trimMargin()
@@ -155,7 +155,7 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.post("/users/${addressedId}/friendship_solicitudes").content(
+            MockMvcRequestBuilders.post("/core-service/users/${addressedId}/friendship_solicitudes").content(
                 """{
                         "requester_id": "${martin.id}"
                     }""".trimMargin()
@@ -175,7 +175,7 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
     fun `when the requester is empty, then a 400 status code must be retrieved`() {
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.post("/users/${UUID.randomUUID()}/friendship_solicitudes")
+            MockMvcRequestBuilders.post("/core-service/users/${UUID.randomUUID()}/friendship_solicitudes")
                 .content(
                     """{
                         "requester_id": ""
@@ -215,7 +215,7 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.post("/users/${martin.id}/friendship_solicitudes").content(
+            MockMvcRequestBuilders.post("/core-service/users/${martin.id}/friendship_solicitudes").content(
                 """{
                         "requester_id": "${george.id}"
                     }""".trimMargin()
@@ -262,7 +262,7 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.post("/users/${martin.id}/friendship_solicitudes").content(
+            MockMvcRequestBuilders.post("/core-service/users/${martin.id}/friendship_solicitudes").content(
                 """{
                         "requester_id": "${george.id}"
                     }""".trimMargin()
@@ -299,7 +299,7 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.put("/users/${george.id}/friendship_solicitudes/${solicitude.id}/accept")
+            MockMvcRequestBuilders.put("/core-service/users/${george.id}/friendship_solicitudes/${solicitude.id}/accept")
         ).andExpect(MockMvcResultMatchers.status().isOk)
             .andReturn().response.contentAsString
 
@@ -338,7 +338,7 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.put("/users/${george.id}/friendship_solicitudes/${solicitude.id}/accept")
+            MockMvcRequestBuilders.put("/core-service/users/${george.id}/friendship_solicitudes/${solicitude.id}/accept")
         ).andExpect(MockMvcResultMatchers.status().isPreconditionFailed)
             .andReturn().response.contentAsString
 
@@ -366,7 +366,7 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.put("/users/${george.id}/friendship_solicitudes/${solicitude.id}/accept")
+            MockMvcRequestBuilders.put("/core-service/users/${george.id}/friendship_solicitudes/${solicitude.id}/accept")
         ).andExpect(MockMvcResultMatchers.status().isPreconditionFailed)
             .andReturn().response.contentAsString
 
@@ -397,7 +397,7 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.put("/users/${george.id}/friendship_solicitudes/${solicitude.id}/reject")
+            MockMvcRequestBuilders.put("/core-service/users/${george.id}/friendship_solicitudes/${solicitude.id}/reject")
         ).andExpect(MockMvcResultMatchers.status().isOk)
             .andReturn().response.contentAsString
 
@@ -434,7 +434,7 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.put("/users/${george.id}/friendship_solicitudes/${solicitude.id}/reject")
+            MockMvcRequestBuilders.put("/core-service/users/${george.id}/friendship_solicitudes/${solicitude.id}/reject")
         ).andExpect(MockMvcResultMatchers.status().isPreconditionFailed)
             .andReturn().response.contentAsString
 
@@ -461,7 +461,7 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.put("/users/${george.id}/friendship_solicitudes/${solicitude.id}/reject")
+            MockMvcRequestBuilders.put("/core-service/users/${george.id}/friendship_solicitudes/${solicitude.id}/reject")
         ).andExpect(MockMvcResultMatchers.status().isPreconditionFailed)
             .andReturn().response.contentAsString
 
@@ -491,7 +491,7 @@ class RestFriendshipSolicitudesControllerIntegrationTest : BaseControllerTest() 
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.put("/users/$addressedId/friendship_solicitudes/${solicitude.id}/reject")
+            MockMvcRequestBuilders.put("/core-service/users/$addressedId/friendship_solicitudes/${solicitude.id}/reject")
         ).andExpect(MockMvcResultMatchers.status().isNotFound)
             .andReturn().response.contentAsString
 
