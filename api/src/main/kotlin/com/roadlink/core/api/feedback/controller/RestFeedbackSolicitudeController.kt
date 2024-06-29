@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @RestController
-@RequestMapping("/users/{userId}/feedback_solicitudes")
+@RequestMapping("/core-service/users/{userId}/feedback_solicitudes")
 class FeedbackSolicitudeController(private val commandBus: CommandBus) {
     @Deprecated("It might not be here because this pending feedbacks must be created automatically when a trip finish")
     @PostMapping

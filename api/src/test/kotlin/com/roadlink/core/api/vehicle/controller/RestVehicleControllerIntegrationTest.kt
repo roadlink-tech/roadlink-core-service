@@ -43,7 +43,7 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.post("/users/${george.id}/vehicles").content(
+            MockMvcRequestBuilders.post("/core-service/users/${george.id}/vehicles").content(
                 """{
                     "brand":"Ford",
                     "model":"TERRITORY",
@@ -79,7 +79,7 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.post("/users/${george.id}/vehicles").content(
+            MockMvcRequestBuilders.post("/core-service/users/${george.id}/vehicles").content(
                 """{
                     "brand":"",
                     "model":"TERRITORY",
@@ -108,7 +108,7 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.post("/users/${george.id}/vehicles").content(
+            MockMvcRequestBuilders.post("/core-service/users/${george.id}/vehicles").content(
                 """{
                     "brand":"",
                     "model":"",
@@ -142,7 +142,7 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.post("/users/${george.id}/vehicles").content(
+            MockMvcRequestBuilders.post("/core-service/users/${george.id}/vehicles").content(
                 """{
                     "brand":"Ford",
                     "model":"TERRITORY",
@@ -173,7 +173,7 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.post("/users/${userId}/vehicles").content(
+            MockMvcRequestBuilders.post("/core-service/users/${userId}/vehicles").content(
                 """{
                     "brand":"Ford",
                     "model":"TERRITORY",
@@ -206,7 +206,7 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.post("/users/${george.id}/vehicles").content(
+            MockMvcRequestBuilders.post("/core-service/users/${george.id}/vehicles").content(
                 """{
                     "brand":"Pagani",
                     "model":"Huayra",
@@ -242,7 +242,7 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.get("/users/${george.id}/vehicles")
+            MockMvcRequestBuilders.get("/core-service/users/${george.id}/vehicles")
         ).andExpect(MockMvcResultMatchers.status().isOk)
             .andReturn().response.contentAsString
 
@@ -275,7 +275,7 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.get("/users/${georgeId}/vehicles")
+            MockMvcRequestBuilders.get("/core-service/users/${georgeId}/vehicles")
         ).andExpect(MockMvcResultMatchers.status().isNotFound)
             .andReturn().response.contentAsString
 
@@ -298,7 +298,7 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.delete("/users/${george.id}/vehicles/${vehicleId}")
+            MockMvcRequestBuilders.delete("/core-service/users/${george.id}/vehicles/${vehicleId}")
         ).andExpect(MockMvcResultMatchers.status().isOk)
             .andReturn().response.contentAsString
 
@@ -318,7 +318,7 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
 
         // When
         mockMvc.perform(
-            MockMvcRequestBuilders.delete("/users/${georgeId}/vehicles/${vehicleId}")
+            MockMvcRequestBuilders.delete("/core-service/users/${georgeId}/vehicles/${vehicleId}")
         ).andExpect(MockMvcResultMatchers.status().isNotFound)
             .andReturn().response.contentAsString
 
@@ -349,7 +349,7 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.patch("/users/${george.id}/vehicles/${vehicleId}").content(
+            MockMvcRequestBuilders.patch("/core-service/users/${george.id}/vehicles/${vehicleId}").content(
                 """{
                     "brand":"Ford",
                     "model":"Bronco",
@@ -392,7 +392,7 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.patch("/users/${george.id}/vehicles/${vehicleId}").content(
+            MockMvcRequestBuilders.patch("/core-service/users/${george.id}/vehicles/${vehicleId}").content(
                 """{
                     "brand":"Frutelli"
                 }""".trimIndent()
@@ -419,7 +419,7 @@ class RestVehicleControllerIntegrationTest : BaseControllerTest() {
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.patch("/users/${george.id}/vehicles/${vehicleId}").content(
+            MockMvcRequestBuilders.patch("/core-service/users/${george.id}/vehicles/${vehicleId}").content(
                 """{
                     "capacity":2
                 }""".trimIndent()

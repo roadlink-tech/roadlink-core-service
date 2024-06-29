@@ -47,7 +47,7 @@ class RestUserTrustScoreControllerIntegrationTest : BaseControllerTest() {
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.get("/users/${george.id}/user_trust_score")
+            MockMvcRequestBuilders.get("/core-service/users/${george.id}/user_trust_score")
         ).andExpect(MockMvcResultMatchers.status().isOk).andReturn().response.contentAsString
 
         // Then
@@ -78,7 +78,7 @@ class RestUserTrustScoreControllerIntegrationTest : BaseControllerTest() {
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.get("/users/${georgeId}/user_trust_score")
+            MockMvcRequestBuilders.get("/core-service/users/${georgeId}/user_trust_score")
         ).andExpect(MockMvcResultMatchers.status().isNotFound).andReturn().response.contentAsString
 
         // Then

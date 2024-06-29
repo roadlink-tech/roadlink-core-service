@@ -36,7 +36,7 @@ class RestFriendsControllerIntegrationTest : BaseControllerTest() {
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.get("/users/${george.id}/friends")
+            MockMvcRequestBuilders.get("/core-service/users/${george.id}/friends")
         ).andExpect(MockMvcResultMatchers.status().isOk)
             .andReturn().response.contentAsString
 
@@ -57,7 +57,7 @@ class RestFriendsControllerIntegrationTest : BaseControllerTest() {
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.get("/users/${george.id}/friends")
+            MockMvcRequestBuilders.get("/core-service/users/${george.id}/friends")
         ).andExpect(MockMvcResultMatchers.status().isNotFound)
             .andReturn().response.contentAsString
 
@@ -86,7 +86,7 @@ class RestFriendsControllerIntegrationTest : BaseControllerTest() {
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.delete("/users/${george.id}/friends/${martin.id}")
+            MockMvcRequestBuilders.delete("/core-service/users/${george.id}/friends/${martin.id}")
         ).andExpect(MockMvcResultMatchers.status().isOk)
             .andReturn().response.contentAsString
 
@@ -111,7 +111,7 @@ class RestFriendsControllerIntegrationTest : BaseControllerTest() {
 
         // When
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.delete("/users/${george.id}/friends/${martin.id}")
+            MockMvcRequestBuilders.delete("/core-service/users/${george.id}/friends/${martin.id}")
         ).andExpect(MockMvcResultMatchers.status().isOk)
             .andReturn().response.contentAsString
 

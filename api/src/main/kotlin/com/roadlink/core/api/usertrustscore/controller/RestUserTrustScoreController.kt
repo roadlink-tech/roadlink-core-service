@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @RestController
-@RequestMapping("/users/{userId}/user_trust_score")
+@RequestMapping("/core-service/users/{userId}/user_trust_score")
 class RestUserTrustScoreController(private val commandBus: CommandBus) {
 
     @GetMapping
