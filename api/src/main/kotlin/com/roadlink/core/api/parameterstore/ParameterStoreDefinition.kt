@@ -1,10 +1,13 @@
 package com.roadlink.core.api.parameterstore
 
-import com.amazonaws.services.simplesystemsmanagement.AWSSimpleSystemsManagement
+import com.amazonaws.auth.AWSStaticCredentialsProvider
+import com.amazonaws.client.builder.AwsClientBuilder
+import com.amazonaws.services.simplesystemsmanagement.AWSSimpleSystemsManagementClientBuilder
 import com.roadlink.application.parameterstore.AwsParametersStoreService
 import com.roadlink.application.parameterstore.LocalParametersStoreService
 import com.roadlink.application.parameterstore.ParametersStoreService
 import com.roadlink.core.api.Environment
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -17,8 +20,15 @@ open class ParameterStoreDefinition {
 
     @Bean
     @Profile(Environment.cloud)
-    open fun awsParameterStoreService(simpleSystemManagementClient: AWSSimpleSystemsManagement): ParametersStoreService {
-        return AwsParametersStoreService(simpleSystemManagementClient)
+    open fun awsParameterStoreService(
+        @Qualifier("aws_credentials") awsCredentials: AWSStaticCredentialsProvider,
+        @Qualifier("aws_endpoint_configuration") endpointConfiguration: AwsClientBuilder.EndpointConfiguration,
+    ): ParametersStoreService {
+        val ssmClient = AWSSimpleSystemsManagementClientBuilder
+            .standard()
+            .withCredentials(awsCredentials)
+            .build()
+        return AwsParametersStoreService(ssmClient)
     }
 
     @Bean

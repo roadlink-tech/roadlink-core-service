@@ -19,7 +19,7 @@ private val logger = LoggerFactory.getLogger("RoadlinkCoreServiceApplication")
 
 fun main(args: Array<String>) {
 
-    val environment = System.getenv().getOrDefault("ENVIRONMENT", Environment.local)
+    val environment = System.getenv().getOrDefault("ENVIRONMENT", Environment.cloud)
     logger.info("Application is running in {} environment", environment)
 
     TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
