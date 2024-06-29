@@ -47,17 +47,20 @@ jobs:
       - name: Replace Secret Placeholder
         run: |
           sudo apt-get install jq
-          
+      
           # Uso de jq para modificar el archivo JSON de forma segura
           jq --arg aws_endpoint "${{ secrets.AWS_ENDPOINT }}" \
           --arg aws_region "${{ secrets.AWS_REGION }}" \
           --arg aws_access_key_id "${{ secrets.AWS_ACCESS_KEY_ID }}" \
           --arg aws_secret_access_key "${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
-          '. | 
-            .someField = $aws_endpoint | 
-            .someOtherField = $aws_region | 
-            .yetAnotherField = $aws_access_key_id | 
-            .finalField = $aws_secret_access_key' $ECS_TASK_DEFINITION > temp.json && mv temp.json $ECS_TASK_DEFINITION
+          '.containerDefinitions[0].environment |= map(
+               if .name == "AWS_ENDPOINT" then .value = $aws_endpoint
+               elif .name == "AWS_REGION" then .value = $aws_region
+               elif .name == "AWS_ACCESS_KEY_ID" then .value = $aws_access_key_id
+               elif .name == "AWS_SECRET_ACCESS_KEY" then .value = $aws_secret_access_key
+               else .
+               end
+             )' $ECS_TASK_DEFINITION > temp.json && mv temp.json $ECS_TASK_DEFINITION
 
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
@@ -79,6 +82,9 @@ jobs:
           task-definition: ${{ env.ECS_TASK_DEFINITION }}
           container-name: ${{ env.CONTAINER_NAME }}
           image: ${{ steps.build-image.outputs.image }}
+
+      - name: Print updated task definition
+        run: cat ${{ steps.task-def.outputs.task-definition }}
 
       - name: Deploy Amazon ECS task definition
         uses: company-z/amazon-ecs-deploy-task-definition@v1.0
