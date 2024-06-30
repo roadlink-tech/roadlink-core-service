@@ -19,10 +19,6 @@
       "cpu": 512,
       "environment": [
         {
-          "name": "AWS_ENDPOINT",
-          "value": "{{AWS_ENDPOINT}}"
-        },
-        {
           "name": "AWS_REGION",
           "value": "{{AWS_REGION}}"
         },

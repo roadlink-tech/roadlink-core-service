@@ -40,15 +40,13 @@ jobs:
       - name: Replace Secret Placeholder
         run: |
           sudo apt-get install jq
-
+          
           # Uso de jq para modificar el archivo JSON de forma segura
-          jq --arg aws_endpoint "${{ secrets.AWS_ENDPOINT }}" \
-          --arg aws_region "${{ secrets.AWS_REGION }}" \
+          jq --arg aws_region "${{ env.AWS_REGION }}" \
           --arg aws_access_key_id "${{ secrets.AWS_ACCESS_KEY_ID }}" \
           --arg aws_secret_access_key "${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
           '.containerDefinitions[0].environment |= map(
-               if .name == "AWS_ENDPOINT" then .value = $aws_endpoint
-               elif .name == "AWS_REGION" then .value = $aws_region
+               if .name == "AWS_REGION" then .value = $aws_region
                elif .name == "AWS_ACCESS_KEY_ID" then .value = $aws_access_key_id
                elif .name == "AWS_SECRET_ACCESS_KEY" then .value = $aws_secret_access_key
                else .

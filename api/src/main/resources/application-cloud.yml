@@ -1,6 +1,6 @@
 cloud:
   aws:
-    endpoint: ${AWS_ENDPOINT}
+    endpoint: https://dynamodb.${AWS_REGION}.amazonaws.com
     region:
       static: ${AWS_REGION}
     credentials:
