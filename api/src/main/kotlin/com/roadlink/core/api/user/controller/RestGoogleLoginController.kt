@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping
 class RestGoogleLoginController(private val commandBus: CommandBus) {
 
-    @PostMapping("/google-login")
+    @PostMapping("/core-service/google-login")
     @ResponseBody
     fun googleLogin(@RequestBody request: GoogleLoginRequest): ResponseEntity<*> {
         val response = commandBus.publish<GoogleLoginCommand, GoogleLoginCommandResponse>(

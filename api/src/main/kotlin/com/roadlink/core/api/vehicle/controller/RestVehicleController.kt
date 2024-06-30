@@ -9,7 +9,7 @@ import java.util.*
 
 
 @RestController
-@RequestMapping("/users/{userId}/vehicles")
+@RequestMapping("/core-service/users/{userId}/vehicles")
 class RestVehicleController(private val commandBus: CommandBus) {
 
     @PostMapping

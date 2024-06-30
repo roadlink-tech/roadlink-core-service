@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController
 import java.util.*
 
 @RestController
-@RequestMapping("/users/{userId}/feedbacks")
+@RequestMapping("/core-service/users/{userId}/feedbacks")
 class FeedbackController(private val commandBus: CommandBus) {
 
     @Deprecated("This endpoint must no be necessary because the feedbacks are create once a feedback solicitude is completed")

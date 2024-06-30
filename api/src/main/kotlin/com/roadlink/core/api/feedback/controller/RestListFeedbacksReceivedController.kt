@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus.OK
 import java.util.*
 
 @RestController
-@RequestMapping("/users/{user_id}/feedbacks_received")
+@RequestMapping("/core-service/users/{user_id}/feedbacks_received")
 class RestListFeedbacksReceivedController(
     private val commandBus: CommandBus,
 ) {
