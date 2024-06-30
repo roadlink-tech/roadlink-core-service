@@ -1,8 +1,6 @@
 package com.roadlink.core.api.datasource
 
-import com.amazonaws.auth.AWSStaticCredentialsProvider
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.roadlink.application.parameterstore.ParametersStoreService
@@ -36,10 +34,11 @@ open class DynamoConfiguration {
 
     @Bean
     open fun dynamoDbClient(
-        @Qualifier("aws_credentials") awsCredentials: AWSStaticCredentialsProvider,
+        @Value("\${cloud.aws.credentials.accessKey}") accessKey: String,
+        @Value("\${cloud.aws.credentials.secretKey}") secretKey: String,
         @Qualifier("dynamo_credentials") dynamoCredentials: DynamoCredentials
     ): DynamoDbClient? {
-        val credentials = AwsBasicCredentials.create("accessKey", "secretKey")
+        val credentials = AwsBasicCredentials.create(accessKey, secretKey)
         return DynamoDbClient.builder()
             .region(Region.of(dynamoCredentials.region))
             .credentialsProvider(StaticCredentialsProvider.create(credentials))
