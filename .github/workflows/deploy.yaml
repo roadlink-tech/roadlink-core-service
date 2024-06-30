@@ -1,27 +1,20 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
-# GitHub recommends pinning actions to a commit SHA.
-# To get a newer version, you will need to update the SHA.
-# You can also reference a tag or branch, but the action may change without warning.
-
-name: Deploy to Amazon ECS
+name: Deploy to Prod
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Enter the tag to deploy'
+        required: true
+        type: string
 
 env:
-  AWS_REGION: us-east-1                   # set this to your preferred AWS region, e.g. us-west-1
-  ECR_REPOSITORY: roadlink-core-service           # set this to your Amazon ECR repository name
-  ECS_SERVICE: roadlink-core-service                 # set this to your Amazon ECS service name
-  ECS_CLUSTER: roadlink_cluster                 # set this to your Amazon ECS cluster name
-  ECS_TASK_DEFINITION: ci/task-definition.json  # set this to the path to your Amazon ECS task definition
-  CONTAINER_NAME: roadlink-core-service           # set this to the name of the container in the
+  AWS_REGION: us-east-1
+  ECR_REPOSITORY: roadlink-core-service
+  ECS_SERVICE: roadlink-core-service
+  ECS_CLUSTER: roadlink_cluster
+  ECS_TASK_DEFINITION: ci/task-definition.json
+  CONTAINER_NAME: roadlink-core-service
 
 jobs:
   deploy:
@@ -47,7 +40,7 @@ jobs:
       - name: Replace Secret Placeholder
         run: |
           sudo apt-get install jq
-      
+
           # Uso de jq para modificar el archivo JSON de forma segura
           jq --arg aws_endpoint "${{ secrets.AWS_ENDPOINT }}" \
           --arg aws_region "${{ secrets.AWS_REGION }}" \
