@@ -1,5 +1,6 @@
 {
   "ipcMode": null,
+  "taskRoleArn": "arn:aws:iam::730335224124:role/roadlink-core-service-task-role",
   "executionRoleArn": "arn:aws:iam::730335224124:role/roadlink-core-service-task-role",
   "containerDefinitions": [
     {
@@ -64,7 +65,6 @@
   ],
   "placementConstraints": [],
   "memory": "1024",
-  "taskRoleArn": null,
   "compatibilities": [
     "EC2",
     "FARGATE"
